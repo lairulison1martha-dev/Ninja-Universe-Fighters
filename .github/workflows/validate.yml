@@ -1,0 +1,36 @@
+name: Validate
+
+# Runs the project's own validation suite on every push and pull request.
+# There is no build step — this only checks the data and the GitHub Pages
+# compatibility rules, so the site published from `main` is always sound.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run the validation suite
+        run: node tests/run-all.js
+
+      - name: Confirm the icon set is present
+        run: |
+          set -e
+          for f in icon-16 icon-32 icon-48 icon-72 icon-96 icon-128 icon-144 \
+                   icon-152 icon-180 icon-192 icon-384 icon-512 \
+                   icon-maskable-192 icon-maskable-512 apple-touch-icon \
+                   favicon-16 favicon-32; do
+            test -f "assets/icons/$f.png" || { echo "missing assets/icons/$f.png"; exit 1; }
+          done
+          test -f assets/icons/icon-source.svg
+          echo "all icons present"

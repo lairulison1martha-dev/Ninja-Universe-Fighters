@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Ninja Universe Fighters — app icon (editable master)</title>
+  <desc>
+    Original artwork for Ninja Universe Fighters. Dark ninja universe, eclipse moon,
+    twin blue/red chakra swirl, hooded masked shinobi silhouette with glowing eyes.
+    No copyrighted symbols, logos or character likenesses are used.
+    The exported PNGs are produced by tools/generate-icons.py, which renders the same
+    composition procedurally. Edit this file for design work; re-run the generator to
+    regenerate the PNG set.
+  </desc>
+
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="72%">
+      <stop offset="0%" stop-color="#141f38"/>
+      <stop offset="62%" stop-color="#0a1120"/>
+      <stop offset="100%" stop-color="#05080f"/>
+    </radialGradient>
+
+    <radialGradient id="moonFill" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#243154" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#05080f" stop-opacity="0.2"/>
+    </radialGradient>
+
+    <linearGradient id="blueArc" x1="0%" y1="100%" x2="60%" y2="0%">
+      <stop offset="0%" stop-color="#3d8bff" stop-opacity="0"/>
+      <stop offset="45%" stop-color="#3d8bff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#a8dcff" stop-opacity="1"/>
+    </linearGradient>
+
+    <linearGradient id="redArc" x1="100%" y1="100%" x2="40%" y2="0%">
+      <stop offset="0%" stop-color="#ff3b3b" stop-opacity="0"/>
+      <stop offset="45%" stop-color="#ff3b3b" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#ffb066" stop-opacity="1"/>
+    </linearGradient>
+
+    <linearGradient id="maskBand" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0d1526"/>
+      <stop offset="100%" stop-color="#070c16"/>
+    </linearGradient>
+
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+    <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+    <filter id="eyeGlow" x="-200%" y="-400%" width="500%" height="900%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+  </defs>
+
+  <!-- background void -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <!-- chakra dust -->
+  <g fill="#a8dcff" opacity="0.55">
+    <circle cx="86"  cy="120" r="3"/>
+    <circle cx="150" cy="62"  r="2"/>
+    <circle cx="404" cy="104" r="2.5"/>
+    <circle cx="450" cy="196" r="2"/>
+    <circle cx="62"  cy="286" r="2.5"/>
+    <circle cx="122" cy="404" r="2"/>
+    <circle cx="392" cy="392" r="2.5"/>
+    <circle cx="452" cy="330" r="2"/>
+    <circle cx="256" cy="44"  r="2"/>
+    <circle cx="320" cy="76"  r="1.8"/>
+    <circle cx="196" cy="92"  r="1.8"/>
+  </g>
+
+  <!-- eclipse moon -->
+  <circle cx="256" cy="241" r="179" fill="url(#moonFill)"/>
+  <circle cx="256" cy="241" r="179" fill="none" stroke="#9fc4ff" stroke-opacity="0.14"
+          stroke-width="34" filter="url(#softer)"/>
+  <circle cx="256" cy="241" r="179" fill="none" stroke="#cfe4ff" stroke-opacity="0.85"
+          stroke-width="5"/>
+
+  <!-- twin chakra swirl: two spirals meeting at the centre line -->
+  <g fill="none" stroke-linecap="round" filter="url(#soft)" opacity="0.9">
+    <path d="M 256 500 A 244 244 0 0 1 32 256 A 190 190 0 0 1 210 68"
+          stroke="url(#blueArc)" stroke-width="26"/>
+    <path d="M 256 500 A 244 244 0 0 0 480 256 A 190 190 0 0 0 302 68"
+          stroke="url(#redArc)" stroke-width="26"/>
+  </g>
+  <g fill="none" stroke-linecap="round">
+    <path d="M 256 500 A 244 244 0 0 1 32 256 A 190 190 0 0 1 210 68"
+          stroke="url(#blueArc)" stroke-width="9"/>
+    <path d="M 256 500 A 244 244 0 0 0 480 256 A 190 190 0 0 0 302 68"
+          stroke="url(#redArc)" stroke-width="9"/>
+  </g>
+
+  <!-- hooded shinobi silhouette -->
+  <g fill="#04060c">
+    <!-- hood ties streaming outward -->
+    <ellipse cx="179" cy="197" rx="47" ry="8"  transform="rotate(-35 179 197)"/>
+    <ellipse cx="333" cy="197" rx="47" ry="8"  transform="rotate(35 333 197)"/>
+    <!-- head + hood -->
+    <path d="M 256 106
+             C 300 106 320 148 322 190
+             C 325 240 306 292 256 292
+             C 206 292 187 240 190 190
+             C 192 148 212 106 256 106 Z"/>
+    <!-- neck -->
+    <rect x="218" y="270" width="76" height="70" rx="26"/>
+    <!-- shoulders -->
+    <path d="M 72 512 C 76 404 154 336 256 336 C 358 336 436 404 440 512 Z"/>
+  </g>
+
+  <!-- face wrap / mask band -->
+  <path d="M 193 232 C 210 250 302 250 320 232 C 322 262 300 292 256 292
+           C 212 292 191 262 193 232 Z" fill="url(#maskBand)"/>
+
+  <!-- forehead energy marks -->
+  <g fill="#9fc4ff" opacity="0.9">
+    <rect x="230" y="146" width="7" height="17" rx="3.5"/>
+    <rect x="252" y="142" width="8" height="24" rx="4"/>
+    <rect x="275" y="146" width="7" height="17" rx="3.5"/>
+  </g>
+
+  <!-- glowing eyes -->
+  <g filter="url(#eyeGlow)" opacity="0.75">
+    <ellipse cx="217" cy="212" rx="24" ry="9" transform="rotate(10 217 212)" fill="#3d8bff"/>
+    <ellipse cx="295" cy="212" rx="24" ry="9" transform="rotate(-10 295 212)" fill="#ff3b3b"/>
+  </g>
+  <ellipse cx="217" cy="212" rx="21" ry="7" transform="rotate(10 217 212)" fill="#e6f4ff"/>
+  <ellipse cx="295" cy="212" rx="21" ry="7" transform="rotate(-10 295 212)" fill="#fff0e2"/>
+
+  <!-- vignette -->
+  <radialGradient id="vig" cx="50%" cy="50%" r="72%">
+    <stop offset="55%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0.55"/>
+  </radialGradient>
+  <rect width="512" height="512" fill="url(#vig)"/>
+</svg>

@@ -1,0 +1,156 @@
+/* Settings screen. */
+
+.settings__tabs {
+  display: flex;
+  gap: .3rem;
+  margin-left: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.settings__tabs::-webkit-scrollbar { display: none; }
+
+.settings__body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: .7rem var(--sar) calc(var(--sab) + 1rem) var(--sal);
+}
+
+.settings__group {
+  max-width: 760px;
+  margin: 0 auto 1rem;
+}
+.settings__group > h3 {
+  margin-bottom: .4rem;
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.setting {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  min-height: 52px;
+  padding: .5rem .8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255,255,255,.035);
+  margin-bottom: .35rem;
+}
+.setting__label { flex: 1; min-width: 0; }
+.setting__label strong { display: block; font-size: .88rem; font-weight: 600; }
+.setting__label span { display: block; font-size: .72rem; color: var(--ink-dim); margin-top: .1rem; }
+.setting__control { flex: 0 0 auto; display: flex; align-items: center; gap: .4rem; }
+
+/* Toggle */
+.toggle {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.45);
+  cursor: pointer;
+  transition: background-color var(--dur-fast);
+}
+.toggle::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ink-dim);
+  transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast);
+}
+.toggle.is-on { background: #1c3e78; border-color: #3b6fc4; }
+.toggle.is-on::after { transform: translateX(22px); background: #fff; }
+
+/* Segmented control */
+.segmented { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.segmented button {
+  min-height: 34px;
+  padding: .2em .75em;
+  border: 0;
+  background: transparent;
+  color: var(--ink-dim);
+  font-size: .78rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.segmented button.is-on { background: #1c3e78; color: #fff; }
+
+/* Slider */
+.slider { display: flex; align-items: center; gap: .5rem; min-width: 150px; }
+.slider input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+.slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--blue) var(--fill, 50%), rgba(255,255,255,.14) var(--fill, 50%));
+}
+.slider input[type="range"]::-moz-range-track {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+}
+.slider input[type="range"]::-moz-range-progress { height: 5px; border-radius: 999px; background: var(--blue); }
+.slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -8.5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.5);
+}
+.slider input[type="range"]::-moz-range-thumb {
+  width: 22px; height: 22px; border: 0; border-radius: 50%; background: #fff;
+}
+.slider output { min-width: 46px; text-align: right; font-size: .76rem; font-variant-numeric: tabular-nums; color: var(--ink-dim); }
+
+.settings__note {
+  max-width: 760px;
+  margin: 0 auto 1rem;
+  padding: .6rem .8rem;
+  border-left: 3px solid var(--blue);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: rgba(61,139,255,.08);
+  font-size: .76rem;
+  color: var(--ink-dim);
+  line-height: 1.5;
+}
+
+.settings__io textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: .6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(0,0,0,.4);
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .68rem;
+  resize: vertical;
+}
+
+.credits { max-width: 720px; margin: 0 auto; font-size: .86rem; line-height: 1.65; }
+.credits h3 { margin: 1.1rem 0 .3rem; font-size: .96rem; }
+.credits p { color: var(--ink-dim); }
+.credits ul { margin: .3rem 0 .3rem 1rem; }
+.credits li { color: var(--ink-dim); list-style: disc; margin-left: .6rem; }

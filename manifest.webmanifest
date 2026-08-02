@@ -1,0 +1,36 @@
+{
+  "name": "Ninja Universe Fighters",
+  "short_name": "Ninja Fighters",
+  "description": "Offline mobile ninja arena fighting game. Over 190 fighters, in-battle transformations, story, arcade, survival and a 100-floor challenge tower.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
+  "orientation": "landscape",
+  "background_color": "#070b14",
+  "theme_color": "#0b1020",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["games", "entertainment"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "./assets/icons/icon-48.png", "sizes": "48x48", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-72.png", "sizes": "72x72", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-96.png", "sizes": "96x96", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Versus", "short_name": "Versus", "url": "./?mode=versus", "icons": [{ "src": "./assets/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Training", "short_name": "Training", "url": "./?mode=training", "icons": [{ "src": "./assets/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Story", "short_name": "Story", "url": "./?mode=story", "icons": [{ "src": "./assets/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }] }
+  ]
+}

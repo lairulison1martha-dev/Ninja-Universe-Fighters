@@ -1,0 +1,11 @@
+# Python bytecode from tools/
+__pycache__/
+*.pyc
+
+# Node is only used to run tests/; nothing is installed to play the game.
+node_modules/
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.swp

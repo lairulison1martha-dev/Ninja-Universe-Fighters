@@ -1,0 +1,93 @@
+/* Device-specific adjustments. Loaded last so it can override.
+ *
+ * The game targets landscape phones first. Portrait is handled by the rotate
+ * overlay (shown by JS on any portrait orientation, never relying on the
+ * Screen Orientation API), but these rules keep the menus usable in portrait
+ * on tablets where locking is inappropriate. */
+
+/* ------------------------------------------------ short landscape phones -- */
+@media (orientation: landscape) and (max-height: 430px) {
+  :root { --tap: 40px; }
+  /* Twelve entries do not fit in one column on a short landscape phone without
+     shrinking the touch targets below a usable size, so split into two. */
+  .menu__nav {
+    grid-template-columns: 1fr 1fr;
+    gap: .26rem .3rem;
+    width: min(430px, 54vw);
+  }
+  .menu__item {
+    min-height: 36px;
+    padding: .2rem .55rem;
+    font-size: .72rem;
+    letter-spacing: .03em;
+    border-radius: var(--radius-sm);
+  }
+  .menu__item small { font-size: .56rem; }
+  .menu__panel { width: min(250px, 32vw); }
+  .select__grid { grid-template-columns: repeat(auto-fill, minmax(66px, 1fr)); gap: .28rem; }
+  .fcard__name { font-size: .52rem; }
+  .select__body { grid-template-columns: minmax(78px, 13%) 1fr minmax(78px, 13%); }
+  .list__body { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+  .setting { min-height: 46px; }
+}
+
+@media (orientation: landscape) and (max-height: 360px) {
+  :root { --tap: 36px; --text-scale: .94; }
+  .menu__header { padding-bottom: .2rem; }
+  .menu__mark { width: 34px; height: 34px; }
+  .menu__item { min-height: 32px; font-size: .68rem; }
+  .loading__icon { width: 56px; }
+  .select__bar { padding-bottom: .25rem; }
+  .hud__top { gap: .35rem; }
+}
+
+/* ------------------------------------------------------------- tablets --- */
+@media (min-width: 900px) and (min-height: 600px) {
+  :root { --tap: 48px; }
+  .select__grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: .45rem; }
+  .list__body { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .menu__nav { width: min(340px, 34vw); }
+}
+
+/* ------------------------------------------- portrait fallback (menus) --- */
+@media (orientation: portrait) {
+  .select__body { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; }
+  .select__panel { flex-direction: row; justify-content: flex-start; gap: .6rem; text-align: left; padding: 0 .6rem; }
+  .select__portrait { max-width: 58px; }
+  .menu__nav { width: 100%; padding-right: var(--sar); grid-template-columns: 1fr; }
+  .menu__panel { position: static; width: auto; text-align: left; padding-left: var(--sal); }
+  .menu__stats { justify-content: flex-start; }
+}
+
+/* --------------------------------------------- iPhone notch / island ----- */
+/* Landscape-left vs landscape-right differ; env() handles both, but combat
+ * controls must never sit under the island, so push the HUD in a little more. */
+@supports (padding: max(0px)) {
+  .hud__top { padding-left: max(var(--sal), 16px); padding-right: max(var(--sar), 16px); }
+  .combat__pause { top: calc(var(--sat) + 4px); }
+}
+
+/* --------------------------------------------------- reduced-graphics ---- */
+body[data-quality="low"] .menu__vignette { display: none; }
+body[data-quality="low"] .overlay,
+body[data-quality="low"] .sheet__scrim { backdrop-filter: none; -webkit-backdrop-filter: none; }
+body[data-quality="low"] .loading__logo strong { filter: none; }
+body[data-quality="low"] .ctrl { box-shadow: none; }
+body[data-quality="low"] .btn--primary { box-shadow: none; }
+
+/* --------------------------------------------------------- text scale ---- */
+body[data-textsize="large"] { --text-scale: 1.14; }
+body[data-textsize="xlarge"] { --text-scale: 1.28; }
+body[data-textsize="small"] { --text-scale: .9; }
+
+/* ---------------------------------------------- desktop pointer polish --- */
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { border-color: #3b6fc4; }
+  .chip:hover { color: var(--ink); }
+  .fcard:hover { border-color: #3b6fc4; }
+  .card:hover { border-color: #3b6fc4; }
+  .menu__item:hover { color: #fff; transform: translateX(3px); }
+}
+
+/* Hide touch controls entirely when the player turns them off (desktop). */
+.touch[data-visible="false"] { display: none; }

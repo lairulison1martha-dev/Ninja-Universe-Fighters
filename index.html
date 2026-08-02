@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ninja Universe Fighters</title>
+
+<!-- viewport-fit=cover + user-scalable=no: required for safe-area insets and to
+     stop double-tap zoom / pinch zoom during combat on iOS. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+
+<meta name="description" content="Offline mobile ninja arena fighting game. Install to your Home Screen and play without a connection.">
+<meta name="theme-color" content="#0b1020">
+<meta name="color-scheme" content="dark">
+
+<!-- Apple standalone web app metadata -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ninja Fighters">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="./assets/icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="144x144" href="./assets/icons/icon-144.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16.png">
+<link rel="icon" type="image/svg+xml" href="./assets/icons/icon-source.svg">
+
+<link rel="stylesheet" href="./css/main.css">
+<link rel="stylesheet" href="./css/loading.css">
+<link rel="stylesheet" href="./css/menus.css">
+<link rel="stylesheet" href="./css/roster.css">
+<link rel="stylesheet" href="./css/combat.css">
+<link rel="stylesheet" href="./css/controls.css">
+<link rel="stylesheet" href="./css/settings.css">
+<link rel="stylesheet" href="./css/mobile.css">
+</head>
+<body data-quality="high">
+
+<!-- ===================== LOADING ===================== -->
+<div id="loading-screen" class="loading" role="status" aria-live="polite">
+  <canvas id="loading-particles" class="loading__particles" aria-hidden="true"></canvas>
+  <div class="loading__inner">
+    <img class="loading__icon" src="./assets/icons/icon-192.png" alt="" width="96" height="96" decoding="async">
+    <h1 class="loading__logo"><span>NINJA UNIVERSE</span><strong>FIGHTERS</strong></h1>
+    <div class="loading__barwrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="loading-progressbar">
+      <div class="loading__bar" id="loading-bar"></div>
+    </div>
+    <p class="loading__status" id="loading-status">Starting…</p>
+    <p class="loading__tip" id="loading-tip"></p>
+    <div class="loading__meta">
+      <span id="loading-version">v0.0.0</span>
+      <span class="loading__dot" aria-hidden="true">•</span>
+      <span id="loading-offline">Checking offline support…</span>
+    </div>
+  </div>
+  <div class="loading__error" id="loading-error" hidden>
+    <h2>Something went wrong while starting</h2>
+    <pre id="loading-error-text"></pre>
+    <button type="button" class="btn" id="loading-error-reload">Reload</button>
+  </div>
+</div>
+
+<!-- ===================== ROTATE PROMPT ===================== -->
+<div id="rotate-overlay" class="rotate" hidden aria-hidden="true">
+  <div class="rotate__inner">
+    <div class="rotate__phone"><span class="rotate__phone-screen"></span></div>
+    <h2>Rotate your device</h2>
+    <p>Ninja Universe Fighters is played in landscape. Turn your phone sideways to continue.</p>
+    <p class="rotate__hint">If your screen does not rotate, check that Portrait Orientation Lock is off in Control Centre.</p>
+  </div>
+</div>
+
+<!-- ===================== APP ===================== -->
+<main id="app" class="app" hidden>
+
+  <!-- ---------- MAIN MENU ---------- -->
+  <section class="screen screen--menu" id="screen-menu" data-screen="menu" hidden>
+    <canvas class="menu__bg" id="menu-bg" aria-hidden="true"></canvas>
+    <div class="menu__vignette" aria-hidden="true"></div>
+
+    <header class="menu__header safe-top safe-left">
+      <img class="menu__mark" src="./assets/icons/icon-96.png" alt="" width="44" height="44">
+      <div class="menu__titles">
+        <h1>Ninja Universe Fighters</h1>
+        <p id="menu-player-line">Level 1 · 0 ryo</p>
+      </div>
+    </header>
+
+    <nav class="menu__nav safe-left safe-bottom" id="menu-nav" aria-label="Main menu"></nav>
+
+    <aside class="menu__panel safe-right safe-bottom" id="menu-panel">
+      <h2 id="menu-panel-title">Ninja Universe Fighters</h2>
+      <p id="menu-panel-text">Select a mode to begin.</p>
+      <div class="menu__stats" id="menu-stats"></div>
+    </aside>
+
+    <button type="button" class="menu__install btn btn--ghost safe-top safe-right" id="btn-install" hidden>Install app</button>
+  </section>
+
+  <!-- ---------- CHARACTER SELECT ---------- -->
+  <section class="screen screen--select" id="screen-select" data-screen="select" hidden>
+    <header class="select__bar safe-top">
+      <button type="button" class="btn btn--icon" data-action="back" aria-label="Back">‹</button>
+      <h2 id="select-title">Versus</h2>
+      <div class="select__search">
+        <input type="search" id="select-search" placeholder="Search fighters" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Search fighters">
+      </div>
+      <button type="button" class="btn btn--ghost" id="btn-filters">Filters</button>
+      <button type="button" class="btn btn--ghost" id="btn-random">Random</button>
+    </header>
+
+    <div class="select__body">
+      <div class="select__panel select__panel--p1 safe-left" id="panel-p1">
+        <span class="select__panel-label">Player</span>
+        <div class="select__portrait" id="portrait-p1"></div>
+        <strong id="name-p1">—</strong>
+        <span class="select__meta" id="meta-p1"></span>
+      </div>
+
+      <div class="select__gridwrap">
+        <div class="select__chips" id="select-chips"></div>
+        <div class="select__grid" id="select-grid" role="listbox" aria-label="Fighter roster"></div>
+      </div>
+
+      <div class="select__panel select__panel--p2 safe-right" id="panel-p2">
+        <span class="select__panel-label">Opponent</span>
+        <div class="select__portrait" id="portrait-p2"></div>
+        <strong id="name-p2">—</strong>
+        <span class="select__meta" id="meta-p2"></span>
+      </div>
+    </div>
+
+    <footer class="select__footer safe-bottom">
+      <div class="select__opts" id="select-options"></div>
+      <button type="button" class="btn btn--primary" id="btn-select-confirm" disabled>Choose a fighter</button>
+    </footer>
+
+    <!-- Fighter detail sheet -->
+    <div class="sheet" id="fighter-sheet" hidden>
+      <div class="sheet__scrim" data-action="close-sheet"></div>
+      <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-name">
+        <button type="button" class="btn btn--icon sheet__close" data-action="close-sheet" aria-label="Close">×</button>
+        <div class="sheet__content" id="sheet-content"></div>
+        <div class="sheet__actions">
+          <button type="button" class="btn btn--ghost" id="btn-fav">☆</button>
+          <button type="button" class="btn btn--primary" id="btn-pick-p1">Player</button>
+          <button type="button" class="btn" id="btn-pick-p2">Opponent</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter sheet -->
+    <div class="sheet" id="filter-sheet" hidden>
+      <div class="sheet__scrim" data-action="close-filters"></div>
+      <div class="sheet__panel sheet__panel--wide" role="dialog" aria-modal="true" aria-label="Filters">
+        <button type="button" class="btn btn--icon sheet__close" data-action="close-filters" aria-label="Close">×</button>
+        <div class="sheet__content" id="filter-content"></div>
+        <div class="sheet__actions">
+          <button type="button" class="btn btn--ghost" id="btn-filters-clear">Clear all</button>
+          <button type="button" class="btn btn--primary" data-action="close-filters">Done</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- STAGE SELECT ---------- -->
+  <section class="screen screen--stage" id="screen-stage" data-screen="stage" hidden>
+    <header class="select__bar safe-top">
+      <button type="button" class="btn btn--icon" data-action="back" aria-label="Back">‹</button>
+      <h2>Select Stage</h2>
+    </header>
+    <div class="stage__grid" id="stage-grid"></div>
+    <footer class="select__footer safe-bottom">
+      <div class="select__opts" id="stage-options"></div>
+      <button type="button" class="btn btn--primary" id="btn-stage-confirm">Fight</button>
+    </footer>
+  </section>
+
+  <!-- ---------- GENERIC LIST SCREEN (story / modes / collection / achievements) ---------- -->
+  <section class="screen screen--list" id="screen-list" data-screen="list" hidden>
+    <header class="select__bar safe-top">
+      <button type="button" class="btn btn--icon" data-action="back" aria-label="Back">‹</button>
+      <h2 id="list-title">List</h2>
+      <div class="select__search" id="list-search-wrap" hidden>
+        <input type="search" id="list-search" placeholder="Search" autocomplete="off" aria-label="Search">
+      </div>
+    </header>
+    <div class="list__body" id="list-body"></div>
+    <footer class="select__footer safe-bottom" id="list-footer" hidden></footer>
+  </section>
+
+  <!-- ---------- SETTINGS ---------- -->
+  <section class="screen screen--settings" id="screen-settings" data-screen="settings" hidden>
+    <header class="select__bar safe-top">
+      <button type="button" class="btn btn--icon" data-action="back" aria-label="Back">‹</button>
+      <h2>Settings</h2>
+      <div class="settings__tabs" id="settings-tabs"></div>
+    </header>
+    <div class="settings__body" id="settings-body"></div>
+  </section>
+
+  <!-- ---------- CONTROL LAYOUT EDITOR ---------- -->
+  <section class="screen screen--layout" id="screen-layout" data-screen="layout" hidden>
+    <div class="layout__hint safe-top">Drag any control to move it. Pinch or use the sliders to resize.</div>
+    <div class="layout__stage" id="layout-stage"></div>
+    <div class="layout__tools safe-bottom">
+      <button type="button" class="btn btn--ghost" id="btn-layout-reset">Reset</button>
+      <button type="button" class="btn btn--primary" id="btn-layout-done">Done</button>
+    </div>
+  </section>
+
+  <!-- ---------- COMBAT ---------- -->
+  <section class="screen screen--combat" id="screen-combat" data-screen="combat" hidden>
+    <canvas id="combat-canvas" class="combat__canvas"></canvas>
+
+    <div class="hud" id="hud" aria-hidden="true">
+      <div class="hud__top safe-top">
+        <div class="hud__side hud__side--p1">
+          <div class="hud__name" id="hud-name-p1">—</div>
+          <div class="bar bar--health"><i id="hud-health-p1"></i><b id="hud-healthlag-p1"></b></div>
+          <div class="bar bar--chakra"><i id="hud-chakra-p1"></i></div>
+          <div class="bar bar--guard"><i id="hud-guard-p1"></i></div>
+          <div class="hud__meters">
+            <span class="hud__awaken" id="hud-awaken-p1">0%</span>
+            <span class="hud__subs" id="hud-subs-p1"></span>
+            <span class="hud__rounds" id="hud-rounds-p1"></span>
+          </div>
+          <div class="hud__form" id="hud-form-p1"></div>
+        </div>
+
+        <div class="hud__centre">
+          <div class="hud__timer" id="hud-timer">99</div>
+          <div class="hud__round" id="hud-round">Round 1</div>
+        </div>
+
+        <div class="hud__side hud__side--p2">
+          <div class="hud__name" id="hud-name-p2">—</div>
+          <div class="bar bar--health"><i id="hud-health-p2"></i><b id="hud-healthlag-p2"></b></div>
+          <div class="bar bar--chakra"><i id="hud-chakra-p2"></i></div>
+          <div class="bar bar--guard"><i id="hud-guard-p2"></i></div>
+          <div class="hud__meters">
+            <span class="hud__awaken" id="hud-awaken-p2">0%</span>
+            <span class="hud__subs" id="hud-subs-p2"></span>
+            <span class="hud__rounds" id="hud-rounds-p2"></span>
+          </div>
+          <div class="hud__form" id="hud-form-p2"></div>
+        </div>
+      </div>
+
+      <div class="hud__combo" id="hud-combo" hidden><b id="hud-combo-n">0</b><span>HIT</span><em id="hud-combo-dmg"></em></div>
+      <div class="hud__announce" id="hud-announce" hidden></div>
+      <div class="hud__cutin" id="hud-cutin" hidden><div class="cutin__panel" id="cutin-panel"></div></div>
+      <div class="hud__training" id="hud-training" hidden></div>
+      <div class="hud__conditions" id="hud-conditions"></div>
+    </div>
+
+    <button type="button" class="combat__pause btn btn--icon safe-top" id="btn-pause" aria-label="Pause">❙❙</button>
+
+    <div class="touch" id="touch-controls" hidden></div>
+  </section>
+
+  <!-- ---------- OVERLAYS ---------- -->
+  <div class="overlay" id="overlay-pause" hidden>
+    <div class="overlay__panel">
+      <h2>Paused</h2>
+      <div class="overlay__actions" id="pause-actions"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-results" hidden>
+    <div class="overlay__panel overlay__panel--wide">
+      <h2 id="results-title">Victory</h2>
+      <div class="results__body" id="results-body"></div>
+      <div class="overlay__actions" id="results-actions"></div>
+    </div>
+  </div>
+
+  <div class="overlay overlay--dialogue" id="overlay-dialogue" hidden>
+    <div class="dialogue" id="dialogue">
+      <div class="dialogue__speaker" id="dialogue-speaker"></div>
+      <p class="dialogue__text" id="dialogue-text"></p>
+      <div class="dialogue__hint">Tap to continue</div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-confirm" hidden>
+    <div class="overlay__panel">
+      <h2 id="confirm-title">Are you sure?</h2>
+      <p id="confirm-text"></p>
+      <div class="overlay__actions">
+        <button type="button" class="btn btn--ghost" id="confirm-cancel">Cancel</button>
+        <button type="button" class="btn btn--danger" id="confirm-ok">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <div class="update-banner" id="update-banner" hidden>
+    <span>A new version is available.</span>
+    <button type="button" class="btn btn--primary btn--sm" id="btn-update">Update now</button>
+    <button type="button" class="btn btn--icon" id="btn-update-dismiss" aria-label="Dismiss">×</button>
+  </div>
+</main>
+
+<noscript>
+  <div style="padding:2rem;color:#e6ecf5;font-family:system-ui,sans-serif">
+    <h1>Ninja Universe Fighters</h1>
+    <p>This game needs JavaScript. Please enable it and reload.</p>
+  </div>
+</noscript>
+
+<script type="module" src="./js/boot.js"></script>
+</body>
+</html>
