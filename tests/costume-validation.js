@@ -13,6 +13,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import {
   suite, test, assert, assertEqual, assertAtLeast, assertEmpty, installBrowserStubs,
@@ -41,6 +42,52 @@ const { SIM_DT } = await import('../js/constants.js');
 
 const readMeta = (dir) => JSON.parse(fs.readFileSync(path.join(ROOT, dir, 'fighter.json'), 'utf8'));
 const exists = (rel) => fs.existsSync(path.join(ROOT, rel));
+
+/** Minimal PNG reader — enough for the RGBA atlases this project writes. */
+function decodePng(file) {
+  const data = fs.readFileSync(file);
+  let pos = 8;
+  let width = 0; let height = 0; const idat = [];
+  while (pos < data.length) {
+    const len = data.readUInt32BE(pos);
+    const tag = data.toString('ascii', pos + 4, pos + 8);
+    const body = data.subarray(pos + 8, pos + 8 + len);
+    pos += 12 + len;
+    if (tag === 'IHDR') { width = body.readUInt32BE(0); height = body.readUInt32BE(4); }
+    else if (tag === 'IDAT') idat.push(body);
+    else if (tag === 'IEND') break;
+  }
+  const raw = zlib.inflateSync(Buffer.concat(idat));
+  const stride = width * 4;
+  const px = Buffer.alloc(height * stride);
+  const paeth = (a, b, c) => {
+    const q = a + b - c;
+    const pa = Math.abs(q - a); const pb = Math.abs(q - b); const pc = Math.abs(q - c);
+    if (pa <= pb && pa <= pc) return a;
+    return pb <= pc ? b : c;
+  };
+  let p = 0;
+  for (let y = 0; y < height; y++) {
+    const filter = raw[p++];
+    const row = raw.subarray(p, p + stride);
+    p += stride;
+    const out = px.subarray(y * stride, (y + 1) * stride);
+    const prev = y > 0 ? px.subarray((y - 1) * stride, y * stride) : null;
+    for (let i = 0; i < stride; i++) {
+      const a = i >= 4 ? out[i - 4] : 0;
+      const b = prev ? prev[i] : 0;
+      const c = prev && i >= 4 ? prev[i - 4] : 0;
+      switch (filter) {
+        case 0: out[i] = row[i]; break;
+        case 1: out[i] = (row[i] + a) & 0xff; break;
+        case 2: out[i] = (row[i] + b) & 0xff; break;
+        case 3: out[i] = (row[i] + ((a + b) >> 1)) & 0xff; break;
+        default: out[i] = (row[i] + paeth(a, b, c)) & 0xff; break;
+      }
+    }
+  }
+  return { width, height, alpha: (x, y) => px[(y * width + x) * 4 + 3] };
+}
 
 /** Register metadata-only sheets so resolution can be tested headlessly. */
 function registerSets(ids) {
@@ -413,9 +460,145 @@ export function run() {
     assertEmpty(problems, 'Fighters whose costume picker would be pointless');
   });
 
-  test('costumeSpriteSetId is null for anything without art', () => {
-    assertEqual(costumeSpriteSetId('naruto', 'default'), null, 'default has no set of its own');
-    assertEqual(costumeSpriteSetId('naruto', 'the_last'), null, 'no art yet -> null');
+  test('costumeSpriteSetId points at the set that exists', () => {
+    assertEqual(costumeSpriteSetId('naruto', 'default'), null,
+      'the default outfit is the base body, so it has no set of its own');
     assertEqual(costumeSpriteSetId('naruto', 'hokage'), 'naruto__hokage', 'art -> set id');
+  });
+
+  /* --------------------------------------------------- zero fallback art -- */
+
+  test('every costume has art of its own', () => {
+    const missing = [];
+    for (const fighterId of FIGHTER_ORDER) {
+      for (const c of costumesFor(fighterId)) {
+        if (c.id === 'default') continue;   // the default outfit IS the base body
+        if (c.assetStatus !== ASSET_STATUS.COMPLETE) {
+          missing.push(`${fighterId}/${c.id} is ${c.assetStatus}`);
+        }
+        if (!c.spriteSetId) missing.push(`${fighterId}/${c.id} has no spriteSetId`);
+        if (!exists(`assets/fighters/${fighterId}/costumes/${c.id}/sprite-sheet.png`)) {
+          missing.push(`${fighterId}/${c.id} has no sprite sheet`);
+        }
+      }
+    }
+    assertEmpty(missing, 'Costumes still running on fallback art');
+  });
+
+  test('every transformation has art of its own', () => {
+    const missing = [];
+    for (const t of Object.values(TRANSFORMATIONS)) {
+      if (t.assetStatus !== 'complete') missing.push(`${t.id} is ${t.assetStatus}`);
+      if (!t.spriteSetId) missing.push(`${t.id} has no spriteSetId`);
+      if (!exists(`assets/fighters/${t.fighterId}/forms/${t.id}/sprite-sheet.png`)) {
+        missing.push(`${t.id} has no sprite sheet`);
+      }
+    }
+    assertEmpty(missing, 'Transformations still running on fallback art');
+  });
+
+  test('the asset manifest reports zero fallback entries', () => {
+    const manifest = JSON.parse(
+      fs.readFileSync(path.join(ROOT, 'assets', 'asset-manifest.json'), 'utf8'),
+    );
+    // The 110 default outfits are the base sets and are reported complete;
+    // nothing else may be a fallback.
+    const fallbacks = manifest.entries
+      .filter((e) => e.assetStatus === 'fallback')
+      .map((e) => `${e.fighterId}/${e.costumeId || e.transformationId}`);
+    assertEmpty(fallbacks, 'Manifest entries still on fallback art');
+    assertEqual(manifest.totals.functionalWithFallback, 0, 'functionalWithFallback');
+    assertEqual(manifest.totals.missingArtwork, 0, 'missingArtwork');
+    assertEqual(manifest.totals.missingAnimations, 0, 'missingAnimations');
+    assertEqual(manifest.totals.complete, manifest.entries.length,
+      'every entry should be complete');
+  });
+
+  test('no two entries share a sprite sheet path', () => {
+    const manifest = JSON.parse(
+      fs.readFileSync(path.join(ROOT, 'assets', 'asset-manifest.json'), 'utf8'),
+    );
+    const seen = new Map();
+    const shared = [];
+    for (const e of manifest.entries) {
+      const key = e.spritePath;
+      if (seen.has(key)) shared.push(`${key}: ${seen.get(key)} and ${e.fighterId}`);
+      seen.set(key, `${e.fighterId}/${e.costumeId || e.transformationId}`);
+    }
+    assertEmpty(shared, 'Two entries pointing at one sheet');
+  });
+
+  test('no two sprite sheets are byte-identical', () => {
+    // Distinct art means distinct bytes. Two identical sheets would mean one
+    // body wearing two names, which is exactly what this pass removed.
+    const seen = new Map();
+    const clashes = [];
+    const check = (rel, label) => {
+      const full = path.join(ROOT, rel);
+      if (!fs.existsSync(full)) return;
+      const bytes = fs.readFileSync(full);
+      const key = `${bytes.length}:${bytes.subarray(0, 8192).toString('base64')}`;
+      if (seen.has(key)) clashes.push(`${label} is identical to ${seen.get(key)}`);
+      else seen.set(key, label);
+    };
+    for (const fighterId of FIGHTER_ORDER) {
+      check(`assets/fighters/${fighterId}/sprite-sheet.png`, fighterId);
+      for (const c of costumesFor(fighterId)) {
+        if (c.id === 'default') continue;
+        check(`assets/fighters/${fighterId}/costumes/${c.id}/sprite-sheet.png`,
+          `${fighterId}/${c.id}`);
+      }
+      for (const formId of FIGHTERS[fighterId].transformations || []) {
+        check(`assets/fighters/${fighterId}/forms/${formId}/sprite-sheet.png`, formId);
+      }
+    }
+    assertEmpty(clashes, 'Sprite sheets shared between variants');
+  });
+
+  test('every atlas decodes, fills its declared frames and stays in bounds', () => {
+    // Sampled rather than exhaustive: decoding 342 atlases takes minutes, and
+    // the generator emits them all through one code path.
+    const sample = [
+      'assets/fighters/madara/forms/madara_sixpaths',
+      'assets/fighters/guy/forms/guy_gate8',
+      'assets/fighters/obito/costumes/white_mask',
+      'assets/fighters/lee/forms/lee_gate6',
+      'assets/fighters/hashirama/forms/hashirama_sage',
+      'assets/fighters/tsunade/forms/tsunade_byakugo',
+      'assets/fighters/boruto/forms/boruto_karma2',
+      'assets/fighters/naruto/costumes/hokage',
+    ].filter((d) => exists(`${d}/fighter.json`));
+    assertAtLeast(sample.length, 6, 'The sampled sets should exist');
+
+    const problems = [];
+    for (const dir of sample) {
+      const meta = readMeta(dir);
+      const atlas = decodePng(path.join(ROOT, dir, 'sprite-sheet.png'));
+      const rows = Object.values(meta.animations);
+      const maxFrames = Math.max(...rows.map((a) => a.frames));
+      const maxRow = Math.max(...rows.map((a) => a.row));
+      if (atlas.width !== maxFrames * meta.frameWidth) {
+        problems.push(`${dir}: width ${atlas.width}`);
+      }
+      if (atlas.height !== (maxRow + 1) * meta.frameHeight) {
+        problems.push(`${dir}: height ${atlas.height}`);
+      }
+      for (const [name, a] of Object.entries(meta.animations)) {
+        if ((a.row + 1) * meta.frameHeight > atlas.height
+          || a.frames * meta.frameWidth > atlas.width) {
+          problems.push(`${dir}/${name}: outside atlas bounds`);
+        }
+        for (let i = 0; i < a.frames; i++) {
+          let count = 0;
+          for (let y = 0; y < meta.frameHeight; y++) {
+            for (let x = 0; x < meta.frameWidth; x++) {
+              if (atlas.alpha(i * meta.frameWidth + x, a.row * meta.frameHeight + y) > 60) count++;
+            }
+          }
+          if (count < 120) problems.push(`${dir}/${name}[${i}]: only ${count} pixels`);
+        }
+      }
+    }
+    assertEmpty(problems, 'Atlas problems in the new variant art');
   });
 }

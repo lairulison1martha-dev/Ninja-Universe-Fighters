@@ -1,0 +1,1794 @@
+{
+ "forms": [
+  {
+   "id": "naruto_onetail",
+   "fighterId": "naruto",
+   "displayName": "One-Tail Cloak",
+   "auraColor": "#ff6a3c",
+   "index": 0,
+   "chainLength": 7,
+   "permanent": false
+  },
+  {
+   "id": "naruto_fourtail",
+   "fighterId": "naruto",
+   "displayName": "Four-Tail Cloak",
+   "auraColor": "#ff3a1a",
+   "index": 1,
+   "chainLength": 7,
+   "permanent": false
+  },
+  {
+   "id": "naruto_sage",
+   "fighterId": "naruto",
+   "displayName": "Sage Mode",
+   "auraColor": "#f2c46a",
+   "index": 2,
+   "chainLength": 7,
+   "permanent": false
+  },
+  {
+   "id": "naruto_kcm1",
+   "fighterId": "naruto",
+   "displayName": "Kurama Chakra Mode",
+   "auraColor": "#ffd75a",
+   "index": 3,
+   "chainLength": 7,
+   "permanent": false
+  },
+  {
+   "id": "naruto_kcm2",
+   "fighterId": "naruto",
+   "displayName": "Kurama Avatar",
+   "auraColor": "#ffb020",
+   "index": 4,
+   "chainLength": 7,
+   "permanent": false
+  },
+  {
+   "id": "naruto_sixpaths",
+   "fighterId": "naruto",
+   "displayName": "Six Paths Sage Mode",
+   "auraColor": "#ffe9a8",
+   "index": 5,
+   "chainLength": 7,
+   "permanent": false
+  },
+  {
+   "id": "naruto_baryon",
+   "fighterId": "naruto",
+   "displayName": "Baryon Mode",
+   "auraColor": "#ff5cc0",
+   "index": 6,
+   "chainLength": 7,
+   "permanent": false
+  },
+  {
+   "id": "sasuke_sharingan",
+   "fighterId": "sasuke",
+   "displayName": "Sharingan",
+   "auraColor": "#ff4a4a",
+   "index": 0,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "sasuke_cm1",
+   "fighterId": "sasuke",
+   "displayName": "Curse Mark Level 1",
+   "auraColor": "#8a3ad8",
+   "index": 1,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "sasuke_cm2",
+   "fighterId": "sasuke",
+   "displayName": "Curse Mark Level 2",
+   "auraColor": "#6a1ab8",
+   "index": 2,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "sasuke_mangekyo",
+   "fighterId": "sasuke",
+   "displayName": "Mangekyo Sharingan",
+   "auraColor": "#d81a3a",
+   "index": 3,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "sasuke_ems",
+   "fighterId": "sasuke",
+   "displayName": "Eternal Mangekyo Sharingan",
+   "auraColor": "#ff2a5a",
+   "index": 4,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "sasuke_rinnegan",
+   "fighterId": "sasuke",
+   "displayName": "Rinnegan",
+   "auraColor": "#9a5aff",
+   "index": 5,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "sakura_byakugo",
+   "fighterId": "sakura",
+   "displayName": "Byakugo Seal",
+   "auraColor": "#ff8ab0",
+   "index": 0,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "sakura_hundred",
+   "fighterId": "sakura",
+   "displayName": "Strength of a Hundred",
+   "auraColor": "#ff5a8a",
+   "index": 1,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "kakashi_sharingan",
+   "fighterId": "kakashi",
+   "displayName": "Sharingan",
+   "auraColor": "#ff4a4a",
+   "index": 0,
+   "chainLength": 4,
+   "permanent": false
+  },
+  {
+   "id": "kakashi_mangekyo",
+   "fighterId": "kakashi",
+   "displayName": "Mangekyo Sharingan",
+   "auraColor": "#b57bff",
+   "index": 1,
+   "chainLength": 4,
+   "permanent": false
+  },
+  {
+   "id": "kakashi_double_mangekyo",
+   "fighterId": "kakashi",
+   "displayName": "Double Mangekyo",
+   "auraColor": "#c99bff",
+   "index": 2,
+   "chainLength": 4,
+   "permanent": false
+  },
+  {
+   "id": "kakashi_susanoo",
+   "fighterId": "kakashi",
+   "displayName": "Perfect Susanoo",
+   "auraColor": "#8a5aff",
+   "index": 3,
+   "chainLength": 4,
+   "permanent": false
+  },
+  {
+   "id": "sai_awakening",
+   "fighterId": "sai",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "yamato_awakening",
+   "fighterId": "yamato",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "shikamaru_awakening",
+   "fighterId": "shikamaru",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "choji_awakening",
+   "fighterId": "choji",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "ino_awakening",
+   "fighterId": "ino",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hinata_awakening",
+   "fighterId": "hinata",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kiba_awakening",
+   "fighterId": "kiba",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "shino_awakening",
+   "fighterId": "shino",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "neji_awakening",
+   "fighterId": "neji",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "lee_gate1",
+   "fighterId": "lee",
+   "displayName": "1. Gate of Opening",
+   "auraColor": "#ff9a4a",
+   "index": 0,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "lee_gate2",
+   "fighterId": "lee",
+   "displayName": "2. Gate of Healing",
+   "auraColor": "#ff9a4a",
+   "index": 1,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "lee_gate3",
+   "fighterId": "lee",
+   "displayName": "3. Gate of Life",
+   "auraColor": "#ff9a4a",
+   "index": 2,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "lee_gate4",
+   "fighterId": "lee",
+   "displayName": "4. Gate of Pain",
+   "auraColor": "#ff9a4a",
+   "index": 3,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "lee_gate5",
+   "fighterId": "lee",
+   "displayName": "5. Gate of Limit",
+   "auraColor": "#ff3a2a",
+   "index": 4,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "lee_gate6",
+   "fighterId": "lee",
+   "displayName": "6. Gate of View",
+   "auraColor": "#ff3a2a",
+   "index": 5,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "tenten_awakening",
+   "fighterId": "tenten",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "guy_gate1",
+   "fighterId": "guy",
+   "displayName": "1. Gate of Opening",
+   "auraColor": "#ff9a4a",
+   "index": 0,
+   "chainLength": 8,
+   "permanent": false
+  },
+  {
+   "id": "guy_gate2",
+   "fighterId": "guy",
+   "displayName": "2. Gate of Healing",
+   "auraColor": "#ff9a4a",
+   "index": 1,
+   "chainLength": 8,
+   "permanent": false
+  },
+  {
+   "id": "guy_gate3",
+   "fighterId": "guy",
+   "displayName": "3. Gate of Life",
+   "auraColor": "#ff9a4a",
+   "index": 2,
+   "chainLength": 8,
+   "permanent": false
+  },
+  {
+   "id": "guy_gate4",
+   "fighterId": "guy",
+   "displayName": "4. Gate of Pain",
+   "auraColor": "#ff9a4a",
+   "index": 3,
+   "chainLength": 8,
+   "permanent": false
+  },
+  {
+   "id": "guy_gate5",
+   "fighterId": "guy",
+   "displayName": "5. Gate of Limit",
+   "auraColor": "#ff3a2a",
+   "index": 4,
+   "chainLength": 8,
+   "permanent": false
+  },
+  {
+   "id": "guy_gate6",
+   "fighterId": "guy",
+   "displayName": "6. Gate of View",
+   "auraColor": "#ff3a2a",
+   "index": 5,
+   "chainLength": 8,
+   "permanent": false
+  },
+  {
+   "id": "guy_gate7",
+   "fighterId": "guy",
+   "displayName": "7. Gate of Wonder",
+   "auraColor": "#7fe0ff",
+   "index": 6,
+   "chainLength": 8,
+   "permanent": false
+  },
+  {
+   "id": "guy_gate8",
+   "fighterId": "guy",
+   "displayName": "8. Gate of Death",
+   "auraColor": "#7fe0ff",
+   "index": 7,
+   "chainLength": 8,
+   "permanent": false
+  },
+  {
+   "id": "asuma_awakening",
+   "fighterId": "asuma",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kurenai_awakening",
+   "fighterId": "kurenai",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "ebisu_awakening",
+   "fighterId": "ebisu",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "iruka_awakening",
+   "fighterId": "iruka",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "konohamaru_awakening",
+   "fighterId": "konohamaru",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hanabi_awakening",
+   "fighterId": "hanabi",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hiashi_awakening",
+   "fighterId": "hiashi",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hizashi_awakening",
+   "fighterId": "hizashi",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hashirama_sage",
+   "fighterId": "hashirama",
+   "displayName": "Sage Mode",
+   "auraColor": "#a8e07a",
+   "index": 0,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "hashirama_thousand_hands",
+   "fighterId": "hashirama",
+   "displayName": "True Several Thousand Hands",
+   "auraColor": "#d0f0a0",
+   "index": 1,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "tobirama_awakening",
+   "fighterId": "tobirama",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hiruzen_awakening",
+   "fighterId": "hiruzen",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "minato_kcm",
+   "fighterId": "minato",
+   "displayName": "Kurama Chakra Mode",
+   "auraColor": "#ffd75a",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "tsunade_byakugo",
+   "fighterId": "tsunade",
+   "displayName": "Byakugo Seal",
+   "auraColor": "#ff9ab8",
+   "index": 0,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "tsunade_creation_rebirth",
+   "fighterId": "tsunade",
+   "displayName": "Creation Rebirth",
+   "auraColor": "#ffd0dc",
+   "index": 1,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "jiraiya_sage",
+   "fighterId": "jiraiya",
+   "displayName": "Imperfect Sage Mode",
+   "auraColor": "#f2c46a",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "orochimaru_serpent",
+   "fighterId": "orochimaru",
+   "displayName": "White Serpent Form",
+   "auraColor": "#c8e0a0",
+   "index": 0,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "orochimaru_eight_headed",
+   "fighterId": "orochimaru",
+   "displayName": "Eight-Headed Serpent",
+   "auraColor": "#9ac070",
+   "index": 1,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "kushina_awakening",
+   "fighterId": "kushina",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "shisui_awakening",
+   "fighterId": "shisui",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "fugaku_awakening",
+   "fighterId": "fugaku",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "izuna_awakening",
+   "fighterId": "izuna",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "gaara_sand_armor",
+   "fighterId": "gaara",
+   "displayName": "Sand Armour",
+   "auraColor": "#d8b271",
+   "index": 0,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "gaara_partial_shukaku",
+   "fighterId": "gaara",
+   "displayName": "Partial Shukaku",
+   "auraColor": "#e0c07a",
+   "index": 1,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "gaara_full_shukaku",
+   "fighterId": "gaara",
+   "displayName": "Full Shukaku",
+   "auraColor": "#f0d89a",
+   "index": 2,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "temari_awakening",
+   "fighterId": "temari",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kankuro_awakening",
+   "fighterId": "kankuro",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "chiyo_awakening",
+   "fighterId": "chiyo",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "pakura_awakening",
+   "fighterId": "pakura",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "rasa_awakening",
+   "fighterId": "rasa",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "zabuza_awakening",
+   "fighterId": "zabuza",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "haku_awakening",
+   "fighterId": "haku",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "chojuro_awakening",
+   "fighterId": "chojuro",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "mei_awakening",
+   "fighterId": "mei",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kisame_awakening",
+   "fighterId": "kisame",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "yagura_awakening",
+   "fighterId": "yagura",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "suigetsu_awakening",
+   "fighterId": "suigetsu",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "bee_v1",
+   "fighterId": "bee",
+   "displayName": "Version One Cloak",
+   "auraColor": "#c8b0ff",
+   "index": 0,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "bee_v2",
+   "fighterId": "bee",
+   "displayName": "Version Two Cloak",
+   "auraColor": "#8a6ad8",
+   "index": 1,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "bee_full_gyuki",
+   "fighterId": "bee",
+   "displayName": "Full Gyuki",
+   "auraColor": "#6a5ab0",
+   "index": 2,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "raikage4_awakening",
+   "fighterId": "raikage4",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "darui_awakening",
+   "fighterId": "darui",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "omoi_awakening",
+   "fighterId": "omoi",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "samui_awakening",
+   "fighterId": "samui",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "yugito_awakening",
+   "fighterId": "yugito",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "onoki_awakening",
+   "fighterId": "onoki",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kurotsuchi_awakening",
+   "fighterId": "kurotsuchi",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "deidara_awakening",
+   "fighterId": "deidara",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "roshi_awakening",
+   "fighterId": "roshi",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "han_awakening",
+   "fighterId": "han",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "itachi_mangekyo",
+   "fighterId": "itachi",
+   "displayName": "Mangekyo Sharingan",
+   "auraColor": "#d81a3a",
+   "index": 0,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "itachi_susanoo",
+   "fighterId": "itachi",
+   "displayName": "Susanoo",
+   "auraColor": "#ff5a3a",
+   "index": 1,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "sasori_awakening",
+   "fighterId": "sasori",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kakuzu_awakening",
+   "fighterId": "kakuzu",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hidan_awakening",
+   "fighterId": "hidan",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "konan_awakening",
+   "fighterId": "konan",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "pain_six_paths",
+   "fighterId": "pain",
+   "displayName": "Six Paths Formation",
+   "auraColor": "#a08adc",
+   "index": 0,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "pain_nagato",
+   "fighterId": "pain",
+   "displayName": "Nagato Revealed",
+   "auraColor": "#c8a8ff",
+   "index": 1,
+   "chainLength": 2,
+   "permanent": false
+  },
+  {
+   "id": "nagato_awakening",
+   "fighterId": "nagato",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "obito_masked",
+   "fighterId": "obito",
+   "displayName": "Masked Obito",
+   "auraColor": "#ff7a3a",
+   "index": 0,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "obito_white_mask",
+   "fighterId": "obito",
+   "displayName": "White Mask Obito",
+   "auraColor": "#e0e6f0",
+   "index": 1,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "obito_obito",
+   "fighterId": "obito",
+   "displayName": "Ten-Tails Obito",
+   "auraColor": "#c8b0ff",
+   "index": 2,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "white_zetsu_awakening",
+   "fighterId": "white_zetsu",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "black_zetsu_awakening",
+   "fighterId": "black_zetsu",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "madara_mangekyo",
+   "fighterId": "madara",
+   "displayName": "Mangekyo Sharingan",
+   "auraColor": "#ff4a4a",
+   "index": 0,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "madara_ems",
+   "fighterId": "madara",
+   "displayName": "Eternal Mangekyo Sharingan",
+   "auraColor": "#ff2a5a",
+   "index": 1,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "madara_rinnegan",
+   "fighterId": "madara",
+   "displayName": "Rinnegan",
+   "auraColor": "#9a5aff",
+   "index": 2,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "madara_sixpaths",
+   "fighterId": "madara",
+   "displayName": "Six Paths Madara",
+   "auraColor": "#ffe9a8",
+   "index": 3,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "madara_obito",
+   "fighterId": "madara",
+   "displayName": "Ten-Tails Jinchuriki",
+   "auraColor": "#c8b0ff",
+   "index": 4,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "madara_rinne_sharingan",
+   "fighterId": "madara",
+   "displayName": "Rinne Sharingan",
+   "auraColor": "#f0e0ff",
+   "index": 5,
+   "chainLength": 6,
+   "permanent": false
+  },
+  {
+   "id": "kabuto_sage",
+   "fighterId": "kabuto",
+   "displayName": "Sage Kabuto",
+   "auraColor": "#c8e0a0",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kimimaro_awakening",
+   "fighterId": "kimimaro",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "jugo_awakening",
+   "fighterId": "jugo",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "karin_awakening",
+   "fighterId": "karin",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "danzo_awakening",
+   "fighterId": "danzo",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hanzo_awakening",
+   "fighterId": "hanzo",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "jirobo_awakening",
+   "fighterId": "jirobo",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kidomaru_awakening",
+   "fighterId": "kidomaru",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "tayuya_awakening",
+   "fighterId": "tayuya",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "sakon_awakening",
+   "fighterId": "sakon",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "utakata_awakening",
+   "fighterId": "utakata",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "fu_awakening",
+   "fighterId": "fu",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "boruto_karma",
+   "fighterId": "boruto",
+   "displayName": "Karma",
+   "auraColor": "#7a3adc",
+   "index": 0,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "boruto_karma2",
+   "fighterId": "boruto",
+   "displayName": "Karma Stage Two",
+   "auraColor": "#9a4aff",
+   "index": 1,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "boruto_true_essence",
+   "fighterId": "boruto",
+   "displayName": "True Essence",
+   "auraColor": "#d0a8ff",
+   "index": 2,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "sarada_awakening",
+   "fighterId": "sarada",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "mitsuki_sage_transformation",
+   "fighterId": "mitsuki",
+   "displayName": "Sage Transformation",
+   "auraColor": "#8ad8ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kawaki_karma",
+   "fighterId": "kawaki",
+   "displayName": "Karma",
+   "auraColor": "#5a2a8a",
+   "index": 0,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "kawaki_karma2",
+   "fighterId": "kawaki",
+   "displayName": "Karma Stage Two",
+   "auraColor": "#8a3add",
+   "index": 1,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "kawaki_isshiki",
+   "fighterId": "kawaki",
+   "displayName": "Isshiki Power",
+   "auraColor": "#e8d05a",
+   "index": 2,
+   "chainLength": 3,
+   "permanent": false
+  },
+  {
+   "id": "sumire_awakening",
+   "fighterId": "sumire",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "shinki_awakening",
+   "fighterId": "shinki",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "mirai_awakening",
+   "fighterId": "mirai",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kagura_awakening",
+   "fighterId": "kagura",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "buntan_awakening",
+   "fighterId": "buntan",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "jigen_awakening",
+   "fighterId": "jigen",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "isshiki_awakening",
+   "fighterId": "isshiki",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "delta_awakening",
+   "fighterId": "delta",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "code_awakening",
+   "fighterId": "code",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "boro_awakening",
+   "fighterId": "boro",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "koji_awakening",
+   "fighterId": "koji",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "victor_awakening",
+   "fighterId": "victor",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "deepa_awakening",
+   "fighterId": "deepa",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "eida_awakening",
+   "fighterId": "eida",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "daemon_awakening",
+   "fighterId": "daemon",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "momoshiki_fused",
+   "fighterId": "momoshiki",
+   "displayName": "Fused Momoshiki",
+   "auraColor": "#ff5aa0",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kinshiki_awakening",
+   "fighterId": "kinshiki",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "urashiki_awakening",
+   "fighterId": "urashiki",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "kaguya_awakening",
+   "fighterId": "kaguya",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hagoromo_awakening",
+   "fighterId": "hagoromo",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "hamura_awakening",
+   "fighterId": "hamura",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "toneri_awakening",
+   "fighterId": "toneri",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "shin_awakening",
+   "fighterId": "shin",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  },
+  {
+   "id": "menma_awakening",
+   "fighterId": "menma",
+   "displayName": "Awakening",
+   "auraColor": "#7fd4ff",
+   "index": 0,
+   "chainLength": 1,
+   "permanent": false
+  }
+ ],
+ "costumes": [
+  {
+   "fighterId": "naruto",
+   "id": "kid",
+   "name": "Academy Days"
+  },
+  {
+   "fighterId": "naruto",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "naruto",
+   "id": "the_last",
+   "name": "The Last"
+  },
+  {
+   "fighterId": "naruto",
+   "id": "hokage",
+   "name": "Seventh Hokage"
+  },
+  {
+   "fighterId": "naruto",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "sasuke",
+   "id": "kid",
+   "name": "Academy Days"
+  },
+  {
+   "fighterId": "sasuke",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "sasuke",
+   "id": "the_last",
+   "name": "The Last"
+  },
+  {
+   "fighterId": "sasuke",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "sakura",
+   "id": "genin",
+   "name": "Genin"
+  },
+  {
+   "fighterId": "sakura",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "sakura",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "kakashi",
+   "id": "young",
+   "name": "Young Kakashi"
+  },
+  {
+   "fighterId": "kakashi",
+   "id": "anbu",
+   "name": "ANBU"
+  },
+  {
+   "fighterId": "kakashi",
+   "id": "jonin",
+   "name": "Jonin"
+  },
+  {
+   "fighterId": "kakashi",
+   "id": "hokage",
+   "name": "Sixth Hokage"
+  },
+  {
+   "fighterId": "sai",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "sai",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "shikamaru",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "shikamaru",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "choji",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "choji",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "ino",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "ino",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "hinata",
+   "id": "genin",
+   "name": "Genin"
+  },
+  {
+   "fighterId": "hinata",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "hinata",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "kiba",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "kiba",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "shino",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "shino",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "lee",
+   "id": "genin",
+   "name": "Chunin Exams"
+  },
+  {
+   "fighterId": "lee",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "tenten",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "tenten",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "guy",
+   "id": "young",
+   "name": "Young Guy"
+  },
+  {
+   "fighterId": "guy",
+   "id": "jonin",
+   "name": "Jonin"
+  },
+  {
+   "fighterId": "konohamaru",
+   "id": "genin",
+   "name": "Genin"
+  },
+  {
+   "fighterId": "konohamaru",
+   "id": "adult",
+   "name": "Jonin"
+  },
+  {
+   "fighterId": "hanabi",
+   "id": "genin",
+   "name": "Genin"
+  },
+  {
+   "fighterId": "hanabi",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "hashirama",
+   "id": "young",
+   "name": "Warring States"
+  },
+  {
+   "fighterId": "hashirama",
+   "id": "hokage",
+   "name": "First Hokage"
+  },
+  {
+   "fighterId": "tobirama",
+   "id": "young",
+   "name": "Warring States"
+  },
+  {
+   "fighterId": "tobirama",
+   "id": "hokage",
+   "name": "Second Hokage"
+  },
+  {
+   "fighterId": "hiruzen",
+   "id": "young",
+   "name": "The Professor"
+  },
+  {
+   "fighterId": "hiruzen",
+   "id": "elder",
+   "name": "Third Hokage"
+  },
+  {
+   "fighterId": "minato",
+   "id": "young",
+   "name": "Young Minato"
+  },
+  {
+   "fighterId": "minato",
+   "id": "hokage",
+   "name": "Fourth Hokage"
+  },
+  {
+   "fighterId": "tsunade",
+   "id": "young",
+   "name": "Young Tsunade"
+  },
+  {
+   "fighterId": "tsunade",
+   "id": "hokage",
+   "name": "Fifth Hokage"
+  },
+  {
+   "fighterId": "jiraiya",
+   "id": "young",
+   "name": "Young Jiraiya"
+  },
+  {
+   "fighterId": "jiraiya",
+   "id": "sannin",
+   "name": "Toad Sage"
+  },
+  {
+   "fighterId": "orochimaru",
+   "id": "young",
+   "name": "Young Orochimaru"
+  },
+  {
+   "fighterId": "orochimaru",
+   "id": "sannin",
+   "name": "Sannin"
+  },
+  {
+   "fighterId": "gaara",
+   "id": "genin",
+   "name": "Chunin Exams"
+  },
+  {
+   "fighterId": "gaara",
+   "id": "kazekage",
+   "name": "Fifth Kazekage"
+  },
+  {
+   "fighterId": "gaara",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "temari",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "temari",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "kankuro",
+   "id": "shippuden",
+   "name": "Shippuden"
+  },
+  {
+   "fighterId": "kankuro",
+   "id": "adult",
+   "name": "Adult"
+  },
+  {
+   "fighterId": "obito",
+   "id": "young",
+   "name": "Young Obito"
+  },
+  {
+   "fighterId": "obito",
+   "id": "tobi",
+   "name": "Tobi"
+  },
+  {
+   "fighterId": "obito",
+   "id": "masked",
+   "name": "Masked"
+  },
+  {
+   "fighterId": "obito",
+   "id": "white_mask",
+   "name": "White Mask"
+  },
+  {
+   "fighterId": "obito",
+   "id": "war",
+   "name": "War Arc"
+  },
+  {
+   "fighterId": "white_zetsu",
+   "id": "base",
+   "name": "White Zetsu"
+  },
+  {
+   "fighterId": "madara",
+   "id": "young",
+   "name": "Young Madara"
+  },
+  {
+   "fighterId": "madara",
+   "id": "valley",
+   "name": "Valley of the End"
+  },
+  {
+   "fighterId": "madara",
+   "id": "war",
+   "name": "War Arc"
+  },
+  {
+   "fighterId": "madara",
+   "id": "edo",
+   "name": "Edo Tensei"
+  },
+  {
+   "fighterId": "boruto",
+   "id": "genin",
+   "name": "Genin"
+  },
+  {
+   "fighterId": "boruto",
+   "id": "timeskip",
+   "name": "Time Skip"
+  },
+  {
+   "fighterId": "momoshiki",
+   "id": "base",
+   "name": "Base"
+  }
+ ]
+}

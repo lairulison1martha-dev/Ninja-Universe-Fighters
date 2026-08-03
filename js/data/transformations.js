@@ -64,32 +64,51 @@ const DEFAULTS = {
  * adding the id here, and a test checks every id against the asset manifest.
  */
 export const FORMS_WITH_ART = Object.freeze([
-  // Naruto's chakra modes
-  'naruto_onetail', 'naruto_fourtail', 'naruto_sage', 'naruto_kcm1',
-  'naruto_kcm2', 'naruto_sixpaths', 'naruto_baryon',
-  // Sasuke's eye stages and curse mark
-  'sasuke_sharingan', 'sasuke_cm1', 'sasuke_cm2', 'sasuke_mangekyo',
-  'sasuke_ems', 'sasuke_rinnegan',
-  // Sakura
-  'sakura_byakugo', 'sakura_hundred',
-  // Kakashi's eyes and Susanoo
-  'kakashi_sharingan', 'kakashi_mangekyo', 'kakashi_double_mangekyo',
-  'kakashi_susanoo',
-  // Eight Gates
-  'guy_gate1', 'guy_gate4', 'guy_gate6', 'guy_gate8',
-  'lee_gate1', 'lee_gate4', 'lee_gate6',
-  // Gaara's sand
-  'gaara_sand_armor', 'gaara_partial_shukaku',
-  // Jinchuriki cloaks
-  'bee_v1', 'bee_v2', 'minato_kcm',
-  // Susanoo
-  'itachi_susanoo',
-  // Sage modes
-  'jiraiya_sage', 'kabuto_sage',
-  // Curse mark line
-  'orochimaru_serpent',
-  // Karma
-  'boruto_karma', 'kawaki_karma',
+  "naruto_onetail", "naruto_fourtail", "naruto_sage", "naruto_kcm1",
+  "naruto_kcm2", "naruto_sixpaths", "naruto_baryon", "sasuke_sharingan",
+  "sasuke_cm1", "sasuke_cm2", "sasuke_mangekyo", "sasuke_ems",
+  "sasuke_rinnegan", "sakura_byakugo", "sakura_hundred", "kakashi_sharingan",
+  "kakashi_mangekyo", "kakashi_double_mangekyo", "kakashi_susanoo",
+  "sai_awakening", "yamato_awakening", "shikamaru_awakening",
+  "choji_awakening", "ino_awakening", "hinata_awakening", "kiba_awakening",
+  "shino_awakening", "neji_awakening", "lee_gate1", "lee_gate2", "lee_gate3",
+  "lee_gate4", "lee_gate5", "lee_gate6", "tenten_awakening", "guy_gate1",
+  "guy_gate2", "guy_gate3", "guy_gate4", "guy_gate5", "guy_gate6",
+  "guy_gate7", "guy_gate8", "asuma_awakening", "kurenai_awakening",
+  "ebisu_awakening", "iruka_awakening", "konohamaru_awakening",
+  "hanabi_awakening", "hiashi_awakening", "hizashi_awakening",
+  "hashirama_sage", "hashirama_thousand_hands", "tobirama_awakening",
+  "hiruzen_awakening", "minato_kcm", "tsunade_byakugo",
+  "tsunade_creation_rebirth", "jiraiya_sage", "orochimaru_serpent",
+  "orochimaru_eight_headed", "kushina_awakening", "shisui_awakening",
+  "fugaku_awakening", "izuna_awakening", "gaara_sand_armor",
+  "gaara_partial_shukaku", "gaara_full_shukaku", "temari_awakening",
+  "kankuro_awakening", "chiyo_awakening", "pakura_awakening",
+  "rasa_awakening", "zabuza_awakening", "haku_awakening", "chojuro_awakening",
+  "mei_awakening", "kisame_awakening", "yagura_awakening",
+  "suigetsu_awakening", "bee_v1", "bee_v2", "bee_full_gyuki",
+  "raikage4_awakening", "darui_awakening", "omoi_awakening",
+  "samui_awakening", "yugito_awakening", "onoki_awakening",
+  "kurotsuchi_awakening", "deidara_awakening", "roshi_awakening",
+  "han_awakening", "itachi_mangekyo", "itachi_susanoo", "sasori_awakening",
+  "kakuzu_awakening", "hidan_awakening", "konan_awakening", "pain_six_paths",
+  "pain_nagato", "nagato_awakening", "obito_masked", "obito_white_mask",
+  "obito_obito", "white_zetsu_awakening", "black_zetsu_awakening",
+  "madara_mangekyo", "madara_ems", "madara_rinnegan", "madara_sixpaths",
+  "madara_obito", "madara_rinne_sharingan", "kabuto_sage",
+  "kimimaro_awakening", "jugo_awakening", "karin_awakening",
+  "danzo_awakening", "hanzo_awakening", "jirobo_awakening",
+  "kidomaru_awakening", "tayuya_awakening", "sakon_awakening",
+  "utakata_awakening", "fu_awakening", "boruto_karma", "boruto_karma2",
+  "boruto_true_essence", "sarada_awakening", "mitsuki_sage_transformation",
+  "kawaki_karma", "kawaki_karma2", "kawaki_isshiki", "sumire_awakening",
+  "shinki_awakening", "mirai_awakening", "kagura_awakening",
+  "buntan_awakening", "jigen_awakening", "isshiki_awakening",
+  "delta_awakening", "code_awakening", "boro_awakening", "koji_awakening",
+  "victor_awakening", "deepa_awakening", "eida_awakening", "daemon_awakening",
+  "momoshiki_fused", "kinshiki_awakening", "urashiki_awakening",
+  "kaguya_awakening", "hagoromo_awakening", "hamura_awakening",
+  "toneri_awakening", "shin_awakening", "menma_awakening",
 ]);
 
 const FORM_ART = new Set(FORMS_WITH_ART);

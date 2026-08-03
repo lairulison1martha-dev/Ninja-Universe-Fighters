@@ -1,0 +1,171 @@
+{
+  "id": "temari__adult",
+  "fighter": "temari",
+  "kind": "costume",
+  "variant": "adult",
+  "name": "Temari",
+  "spriteSheet": "assets/fighters/temari/costumes/adult/sprite-sheet.png",
+  "portrait": "assets/fighters/temari/costumes/adult/portrait.png",
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "anchor": {
+    "x": 32,
+    "y": 58
+  },
+  "bodyHeight": 52,
+  "pixelArt": true,
+  "assetStatus": "complete",
+  "source": {
+    "kind": "generated",
+    "tool": "tools/build-fighters.py",
+    "note": "Original pixel art drawn procedurally from this costume's design record. No source image is read."
+  },
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 6,
+      "fps": 7,
+      "loop": true
+    },
+    "combatIdle": {
+      "row": 1,
+      "frames": 4,
+      "fps": 8,
+      "loop": true
+    },
+    "walk": {
+      "row": 2,
+      "frames": 6,
+      "fps": 9,
+      "loop": true
+    },
+    "run": {
+      "row": 3,
+      "frames": 6,
+      "fps": 12,
+      "loop": true
+    },
+    "jump": {
+      "row": 4,
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "fall": {
+      "row": 5,
+      "frames": 3,
+      "fps": 8,
+      "loop": true
+    },
+    "landing": {
+      "row": 6,
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "dash": {
+      "row": 7,
+      "frames": 4,
+      "fps": 16,
+      "loop": false
+    },
+    "guard": {
+      "row": 8,
+      "frames": 2,
+      "fps": 6,
+      "loop": true
+    },
+    "guardBreak": {
+      "row": 9,
+      "frames": 3,
+      "fps": 9,
+      "loop": false
+    },
+    "lightAttack": {
+      "row": 10,
+      "frames": 4,
+      "fps": 15,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "hit"
+    },
+    "heavyAttack": {
+      "row": 11,
+      "frames": 5,
+      "fps": 13,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "hit"
+    },
+    "jutsu1": {
+      "row": 12,
+      "frames": 5,
+      "fps": 13,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "cast"
+    },
+    "jutsu2": {
+      "row": 13,
+      "frames": 5,
+      "fps": 13,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "cast"
+    },
+    "jutsu3": {
+      "row": 14,
+      "frames": 5,
+      "fps": 13,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "cast"
+    },
+    "ultimate": {
+      "row": 15,
+      "frames": 6,
+      "fps": 11,
+      "loop": false,
+      "hitFrame": 3,
+      "event": "cast"
+    },
+    "hurt": {
+      "row": 16,
+      "frames": 3,
+      "fps": 11,
+      "loop": false
+    },
+    "knockdown": {
+      "row": 17,
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "getUp": {
+      "row": 18,
+      "frames": 3,
+      "fps": 9,
+      "loop": false
+    },
+    "victory": {
+      "row": 19,
+      "frames": 5,
+      "fps": 7,
+      "loop": true
+    },
+    "defeat": {
+      "row": 20,
+      "frames": 4,
+      "fps": 7,
+      "loop": false
+    },
+    "transformation": {
+      "row": 21,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "hitFrame": 3,
+      "event": "transform"
+    }
+  }
+}

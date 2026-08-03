@@ -266,6 +266,73 @@ def contact_sheet(entries, path, anim="idle", frame_index=0, scale=3):
     return path
 
 
+VARIANTS_JSON = os.path.join(HERE, "variants.json")
+
+
+def load_variants():
+    """Costume + transformation rows, regenerated from the game data if stale."""
+    src = os.path.join(ROOT, "js", "data", "transformations.js")
+    stale = (not os.path.exists(VARIANTS_JSON)
+             or os.path.getmtime(VARIANTS_JSON) < os.path.getmtime(src))
+    if stale:
+        with open(VARIANTS_JSON, "w") as fh:
+            subprocess.run(["node", os.path.join(HERE, "dump-transformations.mjs")],
+                           stdout=fh, check=True, cwd=ROOT)
+    with open(VARIANTS_JSON) as fh:
+        return json.load(fh)
+
+
+def write_variant_lists(variants):
+    """
+    Rewrite the two `*_WITH_ART` lists in the JS from what is actually on disk.
+
+    Generating them (rather than editing by hand) is what keeps the game's
+    claim about a costume or form matching the filesystem: a set that failed to
+    build simply does not appear, and its status stays `fallback`.
+    """
+    costumes = []
+    for c in variants["costumes"]:
+        rel = f"assets/fighters/{c['fighterId']}/costumes/{c['id']}/sprite-sheet.png"
+        if os.path.exists(os.path.join(ROOT, rel)):
+            costumes.append(f"{c['fighterId']}:{c['id']}")
+    forms = []
+    for f in variants["forms"]:
+        rel = f"assets/fighters/{f['fighterId']}/forms/{f['id']}/sprite-sheet.png"
+        if os.path.exists(os.path.join(ROOT, rel)):
+            forms.append(f["id"])
+
+    _replace_list(
+        os.path.join(ROOT, "js", "data", "costumes.js"),
+        "COSTUMES_WITH_ART", costumes,
+    )
+    _replace_list(
+        os.path.join(ROOT, "js", "data", "transformations.js"),
+        "FORMS_WITH_ART", forms,
+    )
+    print(f"wrote COSTUMES_WITH_ART ({len(costumes)}) and FORMS_WITH_ART ({len(forms)})")
+
+
+def _replace_list(path, const_name, items):
+    """Replace `export const <NAME> = Object.freeze([...]);` in a JS file."""
+    with open(path) as fh:
+        src = fh.read()
+    start = src.index(f"export const {const_name} = Object.freeze([")
+    end = src.index("]);", start) + len("]);")
+    lines = [f"export const {const_name} = Object.freeze(["]
+    line = " "
+    for item in items:
+        piece = f" {json.dumps(item)},"
+        if len(line) + len(piece) > 78:
+            lines.append(line)
+            line = " "
+        line += piece
+    if line.strip():
+        lines.append(line)
+    lines.append("]);")
+    with open(path, "w") as fh:
+        fh.write(src[:start] + "\n".join(lines) + src[end:])
+
+
 def write_manifest(ids, precached):
     """
     Index of every generated sprite set.
@@ -310,23 +377,36 @@ def main(argv):
 
     if "--variants" in args:
         args.remove("--variants")
+        only = set(args)
+        variants = load_variants()
         built = []
-        for (fid, cid), override in sorted(dz.COSTUME_DESIGNS.items()):
-            if fid not in by_id:
-                print(f"  !! costume for unknown fighter {fid}")
+        skipped = 0
+
+        for c in variants["costumes"]:
+            fid = c["fighterId"]
+            if fid not in by_id or (only and fid not in only):
+                skipped += 1
                 continue
-            info = build_variant(by_id[fid], "costume", cid, override)
+            base = dz.for_fighter(by_id[fid])
+            # Hand-authored keys win; the rules fill in everything else.
+            override = dz.merge_costume(fid, c["id"], c["name"], base)
+            info = build_variant(by_id[fid], "costume", c["id"], override)
             built.append(info)
-            print(f"  costume  {fid:12s} {cid:12s} {info['frames']:3d} frames")
-        for form_id, override in sorted(dz.FORM_DESIGNS.items()):
-            fid = form_id.split("_")[0]
-            if fid not in by_id:
-                print(f"  !! form for unknown fighter {fid} ({form_id})")
+            print(f"  costume  {fid:14s} {c['id']:14s} {info['frames']:3d} frames")
+
+        for f in variants["forms"]:
+            fid = f["fighterId"]
+            if fid not in by_id or (only and fid not in only):
+                skipped += 1
                 continue
-            info = build_variant(by_id[fid], "form", form_id, override)
+            base = dz.for_fighter(by_id[fid])
+            override = dz.merge_form(f, base)
+            info = build_variant(by_id[fid], "form", f["id"], override)
             built.append(info)
-            print(f"  form     {fid:12s} {form_id:24s} {info['frames']:3d} frames")
-        print(f"\n{len(built)} variant sprite sets")
+            print(f"  form     {fid:14s} {f['id']:26s} {info['frames']:3d} frames")
+
+        print(f"\n{len(built)} variant sprite sets" + (f" ({skipped} skipped)" if skipped else ""))
+        write_variant_lists(variants)
         return 0
 
     if "--pass1" in args:

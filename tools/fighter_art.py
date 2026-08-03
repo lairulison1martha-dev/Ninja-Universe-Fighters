@@ -461,6 +461,11 @@ def frame(design, anim, index):
     arm_col_b = shade(arm_col_f, 0.78)
 
     # ---- behind the body --------------------------------------------------
+    # Shroud flames go down first so they read as backlight rather than
+    # covering the fighter's face.
+    if design.get("shroud"):
+        _shroud_flames(c, pal, design, float(design["shroud"]),
+                       head_x, head_y, chest_y, head_r)
     if p["fx"] and p["fxT"] > 0:
         _effect_back(c, pal, p["fx"], p["fxT"], chest_x, chest_y, head_y, design)
     if design.get("coat") in ("cloak", "akatsuki", "robe", "coat"):
@@ -497,6 +502,45 @@ def frame(design, anim, index):
     c.clear_below(ANCHOR_Y + 1)
     c.shade_pass(light_dx=-1, amount=0.20)
     c.outline(pal.ink)
+
+    # A transformation has to be recognisable while the fighter is just
+    # standing there, so the chakra shroud is drawn into every frame rather
+    # than left to the effect system. `shroud` is 0..1 and drives how far it
+    # reaches and how many flame tongues rise off it.
+    shroud = design.get("shroud")
+    if shroud:
+        col = pal.aura or hex_to_rgb(design.get("trim", "#7fd4ff"))
+        c.halo(shade(col, 1.35), 1)
+        if float(shroud) >= 0.55:
+            c.halo(shade(col, 0.72), 1)
+
+    c.clear_below(ANCHOR_Y + 1)
+    return c
+
+
+def _shroud_flames(c, pal, d, intensity, head_x, head_y, chest_y, head_r):
+    """
+    Chakra flames licking up behind the fighter.
+
+    Drawn before the body so a heavy shroud frames the character instead of
+    hiding their face — the intensity is meant to read at a glance, not to
+    obscure who is wearing it.
+    """
+    col = pal.aura or hex_to_rgb(d.get("trim", "#7fd4ff"))
+    inner = shade(col, 1.3)
+    outer = shade(col, 0.72)
+    # Narrow tongues hugging the body: a shroud, not a pair of wings. The
+    # profile is tallest at the edges so the silhouette stays readable.
+    tongues = int(4 + intensity * 7)
+    span = head_r * (0.95 + intensity * 0.75)
+    for k in range(tongues):
+        t = (k + 0.5) / tongues
+        bx = head_x - span + span * 2 * t
+        by = chest_y + head_r * 1.5
+        edge = abs(t - 0.5) * 2
+        rise = head_r * (0.8 + intensity * 1.9) * (0.5 + 0.5 * edge)
+        c.capsule(bx, by, bx + (t - 0.5) * head_r * 0.8, by - rise,
+                  0.45 + intensity * 0.3, inner if k % 2 else outer)
     return c
 
 

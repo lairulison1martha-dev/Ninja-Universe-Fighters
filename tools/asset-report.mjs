@@ -163,6 +163,9 @@ for (const [fid, n] of worst) console.log(`    ${fid.padEnd(14)} ${n} awaiting a
 
 console.log(`\nMISSING ARTWORK                   ${groups.fallback.length}`);
 console.log('  (same set: a fallback IS the missing-artwork list)');
+if (groups.fallback.length === 0) {
+  console.log('  none — every costume and every transformation has its own art');
+}
 
 console.log(`\nMISSING ANIMATIONS                ${missingAnims.length}`);
 if (missingAnims.length) {
@@ -173,12 +176,19 @@ if (missingAnims.length) {
   console.log('  none — every set that exists has all 18 required animations');
 }
 
-console.log('\nCOSTUMES WITH THEIR OWN ART');
-for (const e of groups.complete.filter((x) => x.costumeId && x.costumeId !== 'default')) {
-  console.log(`    ${e.fighterId} / ${e.costumeId}`);
+const ownCostumes = groups.complete.filter((x) => x.costumeId && x.costumeId !== 'default');
+const ownForms = groups.complete.filter((x) => x.transformationId);
+console.log(`\nCOSTUMES WITH THEIR OWN ART       ${ownCostumes.length}`);
+console.log(`TRANSFORMATIONS WITH THEIR OWN ART${String(ownForms.length).padStart(4)}`);
+console.log(`BASE FIGHTER SETS                 ${groups.complete.filter((x) => x.costumeId === 'default').length}`);
+
+// Two sets must never share a sheet — that would be one body wearing two names.
+const paths = new Map();
+const shared = [];
+for (const e of entries) {
+  if (paths.has(e.spritePath)) shared.push(`${e.spritePath} used by two entries`);
+  paths.set(e.spritePath, e);
 }
-console.log('\nTRANSFORMATIONS WITH THEIR OWN ART');
-for (const e of groups.complete.filter((x) => x.transformationId)) {
-  console.log(`    ${e.transformationId}`);
-}
+console.log(`\nSHARED SPRITE PATHS               ${shared.length}`);
+for (const s of shared.slice(0, 10)) console.log(`    ${s}`);
 console.log('');

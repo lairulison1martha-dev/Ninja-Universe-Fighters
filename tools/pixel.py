@@ -222,6 +222,28 @@ class Canvas:
             self.put(x, y, color)
         return edge
 
+    def halo(self, color, rings=1):
+        """Grow a coloured band outward from the silhouette.
+
+        Used for chakra shrouds: a transformation has to be readable on a
+        standing idle frame, not only on the frames that spawn effects, so the
+        glow is baked into the sprite rather than left to the particle system.
+        Returns the pixels it painted so a caller can build a second ring."""
+        painted = []
+        for _ in range(max(1, rings)):
+            edge = []
+            for y in range(self.h):
+                for x in range(self.w):
+                    if self.alpha(x, y):
+                        continue
+                    if (self.alpha(x - 1, y) or self.alpha(x + 1, y)
+                            or self.alpha(x, y - 1) or self.alpha(x, y + 1)):
+                        edge.append((x, y))
+            for x, y in edge:
+                self.put(x, y, color)
+            painted += edge
+        return painted
+
     def shade_pass(self, light_dx=-1, amount=0.22):
         """
         Cheap directional shading.

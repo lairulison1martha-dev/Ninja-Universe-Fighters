@@ -166,8 +166,9 @@ Storage → **Clear site data**.
 | Assists and summons | 24 |
 | Achievements | 31 |
 | Fighter sprite sets | **110** — one per fighter, 22 animations / 94 frames each |
-| Costume sprite sets | **18** with their own art; 75 costumes in total |
-| Transformation sprite sets | **37** with their own art; 157 forms in total |
+| Costume sprite sets | **75** — every costume has its own art |
+| Transformation sprite sets | **157** — every form has its own art |
+| Total sprite sets | **342**, zero fallbacks |
 
 ### Roster
 
@@ -381,10 +382,11 @@ are no dependencies and nothing to install to play or deploy the game.
 ### Rebuilding the fighter sprites
 
 ```bash
-python3 tools/build-fighters.py                # every fighter (~8 minutes)
-python3 tools/build-fighters.py --variants     # costume + transformation sets
-python3 tools/build-fighters.py naruto sasuke  # just these
-python3 tools/build-fighters.py --pass1        # the twenty starters
+python3 tools/build-fighters.py                     # every fighter (~8 minutes)
+python3 tools/build-fighters.py --variants          # all 232 costume + form sets
+python3 tools/build-fighters.py --variants madara   # just one fighter's variants
+python3 tools/build-fighters.py naruto sasuke       # just these fighters
+python3 tools/build-fighters.py --pass1             # the twenty starters
 python3 tools/build-fighters.py --contact out.png --pass1   # visual check grid
 ```
 
@@ -409,6 +411,32 @@ frame is a posed skeleton rasterised into a 64×64 grid:
 The roster is read through `tools/dump-roster.mjs`, so colours and proportions
 can never drift from what the game uses.
 
+**Costume and transformation sets** come from the same rig, one step further
+down. `tools/dump-transformations.mjs` writes every costume and every form to
+`tools/variants.json`, and `designs.py` turns each one into an *override* on the
+fighter's own design record:
+
+- `costume_override()` reads what the costume actually is. A kid/genin outfit
+  shortens the body and drops the coat; a Hokage or Kazekage set adds the robe
+  and hat trim; ANBU adds the mask and darkens the kit; Edo Tensei greys the
+  skin and adds tear lines; war and Valley-era sets add shoulder guards and a
+  cloak. Anything without a keyword takes a hash-selected variation off the
+  costume id, so it is still a different outfit and never only a recolour.
+- `form_override()` reads the form's own name, its aura colour, and its position
+  in its chain. Sage, Sharingan, Susanoo, Tailed Beast, Kurama, Six Paths, Gates
+  and Karma each change the body differently — markings, eye treatment, hair,
+  bulk, height, armour. Chain depth drives the escalation, so form 3 of a chain
+  reads as further gone than form 1. The Eight Gates run on their gate number:
+  gate 8 forces the white-hot skin, blown-back hair, red steam and a bulked-up
+  frame.
+- Every transformation carries a **baked chakra shroud** — `Canvas.halo()` plus
+  flame tongues drawn *behind* the body so they read as backlight rather than
+  covering the face. Aura colour only tints effect frames; the shroud is what
+  makes a form recognisable on a plain idle frame.
+
+`--variants` rewrites `COSTUMES_WITH_ART` and `FORMS_WITH_ART` from what is
+actually on disk, so those lists cannot claim art that was never built.
+
 ### Costumes, transformations and the asset report
 
 A costume or a transformation can carry a sprite set of its own. The renderer
@@ -420,9 +448,10 @@ active transformation -> selected costume -> base fighter -> procedural silhouet
 
 Every step that falls through is recorded by `js/asset-report.js` and shown as a
 console warning **in development only** (localhost, `file://`, or
-`?devassets=1`). A fallback is a designed state, not an error — but it is never
-allowed to pass for finished art: `assetStatus` is `complete` only when the set
-exists *and* has all 18 required animations.
+`?devassets=1`). The chain is still there as a safety net, but **nothing selectable
+uses it any more**: all 75 costumes and all 157 transformations ship their own
+sprite set, so the report lists zero fallbacks. `assetStatus` is `complete` only
+when the set exists *and* has all 18 required animations.
 
 ```bash
 node tools/asset-report.mjs           # the developer report
@@ -510,20 +539,27 @@ any other project.
   to play yet — the slider currently controls an empty bus.
 - The language framework exists (setting, `lang` attribute, `LANGUAGES` table)
   but only English strings ship.
-- **Fighter sprites are generated, not hand-drawn.** All 192 sets are original
+- **Fighter sprites are generated, not hand-drawn.** All 342 sets are original
   and genuinely distinct, but they come from one rig, so they share a drawing
   language: the same skeleton proportions, the same capsule-and-outline style,
-  the same 19 pose tables. A character artist would give each fighter unique
+  the same 22 pose tables. A character artist would give each fighter unique
   timing and posing; this gives each fighter unique *design*. Design records are
   plain data in `tools/designs.py`, so refining one fighter is a small edit and
   a rebuild.
-- **Most costumes and transformations still render with the base fighter's
-  art.** 18 costumes and 37 transformations have their own sprite sets; the
-  other 57 costumes and 120 forms fall back to the fighter's base body. That is
-  a tracked, reported state — `node tools/asset-report.mjs` lists every one of
-  them — not a claim of completion. Adding art is a design record in
-  `tools/designs.py` plus an id in the relevant `*_WITH_ART` list.
-- **The 172 derived fighters are drawn from roster data.** They are distinct
+- **Costume and transformation sets are derived, not individually
+  art-directed.** Every one of the 75 costumes and 157 forms has its own atlas
+  with its own silhouette, gear, palette and shroud — none of them reuse another
+  set's sheet, and the tests check that byte-for-byte. But the overrides come
+  from rules in `designs.py` reading each variant's name, keywords and chain
+  depth, not from a per-variant art pass. Distinct is not the same as
+  hand-tuned.
+- **The 88 generic Awakenings share one shroud colour.** Their bodies differ —
+  five treatments crossed with each fighter's own palette, hair, gear and
+  build — but `transformations.js` gives every unnamed Awakening the same
+  default `auraColor`, and the baked shroud uses it so the sprite matches the
+  glow the renderer draws. Giving each fighter's Awakening its own colour is a
+  data change, not an art change, and it has not been made.
+- **The 90 derived fighters are drawn from roster data.** They are distinct
   from one another, but their designs were not individually art-directed the
   way the twenty starters were.
 - **The game is deliberately single-player.** Every match is one human against
