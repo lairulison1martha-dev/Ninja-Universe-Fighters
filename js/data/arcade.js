@@ -15,10 +15,10 @@ export const ARCADE_LADDERS = [
     stages: ['exam_arena', 'forest_training', 'leaf_village', 'desert_arena', 'rain_rooftops', 'final_valley', 'war_battlefield'],
     /** `random` picks from the pool; explicit ids are fixed encounters. */
     opponents: [
-      { pick: 'random', pool: ['iruka', 'mizuki', 'konohamaru', 'udon', 'moegi'], difficulty: 'easy' },
+      { pick: 'random', pool: ['iruka', 'iruka', 'konohamaru', 'konohamaru', 'konohamaru'], difficulty: 'easy' },
       { pick: 'random', pool: ['kiba', 'choji', 'ino', 'tenten', 'shino'], difficulty: 'easy' },
       { pick: 'random', pool: ['neji', 'shikamaru', 'hinata', 'temari', 'kankuro'], difficulty: 'normal' },
-      { pick: 'random', pool: ['zabuza', 'haku', 'kimimaro', 'anko', 'asuma'], difficulty: 'normal' },
+      { pick: 'random', pool: ['zabuza', 'haku', 'kimimaro', 'orochimaru', 'asuma'], difficulty: 'normal' },
       { pick: 'random', pool: ['kakashi', 'guy', 'jiraiya', 'tsunade'], difficulty: 'hard' },
       { pick: 'random', pool: ['itachi', 'kisame', 'sasori', 'deidara', 'orochimaru'], difficulty: 'hard' },
       { pick: 'fixed', id: 'madara', difficulty: 'veryhard', boss: true, healthBonus: 0.35 },
@@ -49,8 +49,8 @@ export const ARCADE_LADDERS = [
     unlockRequirement: { type: 'arcade', value: 1 },
     stages: ['exam_arena', 'training_dojo', 'leaf_village', 'forest_training', 'stone_canyon', 'otsutsuki_dimension'],
     opponents: [
-      { pick: 'random', pool: ['denki', 'iwabe', 'metal_lee', 'wasabi', 'namida', 'houki'], difficulty: 'easy' },
-      { pick: 'random', pool: ['inojin', 'shikadai', 'chocho', 'sumire'], difficulty: 'normal' },
+      { pick: 'random', pool: ['boruto', 'boruto', 'lee', 'sumire', 'sumire', 'boruto'], difficulty: 'easy' },
+      { pick: 'random', pool: ['ino', 'shikamaru', 'choji', 'sumire'], difficulty: 'normal' },
       { pick: 'fixed', id: 'mitsuki', difficulty: 'normal' },
       { pick: 'fixed', id: 'sarada', difficulty: 'hard' },
       { pick: 'fixed', id: 'delta', difficulty: 'hard' },
@@ -65,7 +65,7 @@ export const ARCADE_LADDERS = [
     unlockRequirement: { type: 'level', value: 10 },
     stages: ['desert_arena', 'cloud_mountain', 'stone_canyon', 'snow_bridge', 'exam_arena', 'final_valley', 'war_battlefield'],
     opponents: [
-      { pick: 'fixed', id: 'gaara_kazekage', difficulty: 'normal' },
+      { pick: 'fixed', id: 'gaara', difficulty: 'normal' },
       { pick: 'fixed', id: 'mei', difficulty: 'normal' },
       { pick: 'fixed', id: 'onoki', difficulty: 'hard' },
       { pick: 'fixed', id: 'raikage4', difficulty: 'hard' },
@@ -88,11 +88,11 @@ export const BOSS_RUSHES = [
     description: 'Nine beasts, no healing between fights.',
     unlockRequirement: { type: 'default' },
     healBetween: 0,
-    opponents: ['shukaku', 'matatabi', 'isobu', 'songoku', 'kokuo', 'saiken', 'chomei', 'gyuki', 'kurama'],
+    opponents: ['gaara', 'yugito', 'yagura', 'roshi', 'han', 'utakata', 'fu', 'bee', 'naruto'],
     stage: 'war_battlefield',
     difficulty: 'hard',
     healthBonus: 0.5,
-    rewards: { coins: 2500, xp: 2000, unlockFighters: ['shukaku', 'matatabi', 'isobu', 'songoku', 'kokuo', 'saiken', 'chomei', 'gyuki'] },
+    rewards: { coins: 2500, xp: 2000, unlockFighters: ['gaara', 'yugito', 'yagura', 'roshi', 'han', 'utakata', 'fu', 'bee'] },
   },
   {
     id: 'rush_kage',
@@ -100,7 +100,7 @@ export const BOSS_RUSHES = [
     description: 'Five leaders back to back. 30% health restored between fights.',
     unlockRequirement: { type: 'level', value: 8 },
     healBetween: 0.30,
-    opponents: ['gaara_kazekage', 'mei', 'onoki', 'raikage4', 'tsunade'],
+    opponents: ['gaara', 'mei', 'onoki', 'raikage4', 'tsunade'],
     stage: 'exam_arena',
     difficulty: 'veryhard',
     healthBonus: 0.35,
@@ -155,18 +155,18 @@ export const CONDITIONS = {
 /** Deterministic 100-floor tower. Every 10th floor is a boss floor. */
 function buildTower() {
   const pools = [
-    ['iruka', 'mizuki', 'udon', 'moegi', 'konohamaru', 'denki', 'ebisu'],
-    ['kiba', 'choji', 'ino', 'tenten', 'shino', 'metal_lee', 'iwabe', 'wasabi'],
-    ['neji', 'hinata', 'shikamaru', 'temari', 'kankuro', 'sarada', 'mitsuki', 'anko'],
-    ['zabuza', 'haku', 'kimimaro', 'asuma', 'kurenai', 'baki', 'jugo', 'suigetsu'],
+    ['iruka', 'iruka', 'konohamaru', 'konohamaru', 'konohamaru', 'boruto', 'ebisu'],
+    ['kiba', 'choji', 'ino', 'tenten', 'shino', 'lee', 'boruto', 'sumire'],
+    ['neji', 'hinata', 'shikamaru', 'temari', 'kankuro', 'sarada', 'mitsuki', 'orochimaru'],
+    ['zabuza', 'haku', 'kimimaro', 'asuma', 'kurenai', 'temari', 'jugo', 'suigetsu'],
     ['kakashi', 'guy', 'jiraiya', 'tsunade', 'orochimaru', 'kabuto', 'darui', 'chojuro'],
-    ['itachi', 'kisame', 'sasori', 'deidara', 'hidan', 'kakuzu', 'konan', 'zetsu'],
-    ['mei', 'onoki', 'raikage4', 'gaara_kazekage', 'kurotsuchi', 'mangetsu', 'hanzo'],
+    ['itachi', 'kisame', 'sasori', 'deidara', 'hidan', 'kakuzu', 'konan', 'white_zetsu'],
+    ['mei', 'onoki', 'raikage4', 'gaara', 'kurotsuchi', 'suigetsu', 'hanzo'],
     ['minato', 'hashirama', 'tobirama', 'hiruzen', 'shisui', 'danzo', 'nagato'],
-    ['obito', 'madara_edo', 'kawaki', 'code', 'boro', 'delta', 'koji', 'daemon'],
+    ['obito', 'madara', 'kawaki', 'code', 'boro', 'delta', 'koji', 'daemon'],
     ['momoshiki', 'kinshiki', 'urashiki', 'toneri', 'jigen', 'isshiki'],
   ];
-  const bosses = ['zabuza', 'kimimaro', 'itachi', 'pain', 'orochimaru', 'madara_edo', 'obito', 'kurama', 'momoshiki', 'kaguya'];
+  const bosses = ['zabuza', 'kimimaro', 'itachi', 'pain', 'orochimaru', 'madara', 'obito', 'naruto', 'momoshiki', 'kaguya'];
   const conditionPool = [
     [], [], ['no_regen'], ['player_low_health'], ['time_attack'],
     ['no_substitution'], ['double_damage'], ['ranged_only'], ['no_guard'], ['no_ultimate'],
@@ -204,8 +204,8 @@ export const TOWER_HEIGHT = TOWER_FLOORS.length;
 export const TOWER_MILESTONES = {
   10: { coins: 600, xp: 400 },
   25: { coins: 1200, xp: 900, unlockFighters: ['kimimaro'] },
-  50: { coins: 2500, xp: 1800, unlockFighters: ['raikage3'] },
-  75: { coins: 4000, xp: 3000, unlockFighters: ['mu'] },
+  50: { coins: 2500, xp: 1800, unlockFighters: ['raikage4'] },
+  75: { coins: 4000, xp: 3000, unlockFighters: ['onoki'] },
   100: { coins: 8000, xp: 6000, unlockFighters: ['hagoromo', 'hamura'] },
 };
 

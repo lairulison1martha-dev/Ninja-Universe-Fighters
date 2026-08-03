@@ -397,24 +397,16 @@ proto('shino', 'Shino Aburame', { e: 'shippuden', v: 'leaf', c: 'aburame', a: 'z
 proto('iruka', 'Iruka Umino', { e: 'classic', v: 'leaf', a: 'balanced', d: 1, n: ['water'], rank: 'chunin', unlock: { type: 'default' }, desc: 'Academy fundamentals — a good place to learn the system.', tags: ['academy', 'starter'] });
 proto('asuma', 'Asuma Sarutobi', { e: 'shippuden', v: 'leaf', c: 'sarutobi', a: 'weapon', d: 3, n: ['wind', 'fire'], desc: 'Wind-charged trench knives.', tags: ['sarutobi'] });
 proto('kurenai', 'Kurenai Yuhi', { e: 'shippuden', v: 'leaf', a: 'zoning', d: 3, n: ['yin'], desc: 'Genjutsu illusions and misdirection.', tags: ['genjutsu'] });
-proto('anko', 'Anko Mitarashi', { e: 'shippuden', v: 'leaf', a: 'rushdown', d: 3, n: ['fire', 'earth'], desc: 'Snake strikes and sealing traps.', tags: ['snake'] });
 proto('konohamaru', 'Konohamaru Sarutobi', { e: 'boruto', v: 'leaf', c: 'sarutobi', a: 'balanced', d: 2, n: ['fire', 'wind'], desc: 'A Rasengan of his own.', tags: ['sarutobi', 'next-gen'] });
-proto('shizune', 'Shizune', { e: 'shippuden', v: 'leaf', a: 'healer', d: 2, n: ['water'], desc: 'Poison mist and field medicine.', tags: ['medic'] });
 proto('ebisu', 'Ebisu', { e: 'classic', v: 'leaf', a: 'support', d: 1, n: ['earth'], desc: 'Elite tutor. Solid fundamentals, no flash.', tags: ['academy'] });
-proto('moegi', 'Moegi Kazamatsuri', { e: 'boruto', v: 'leaf', a: 'support', d: 2, n: ['wood', 'earth'], desc: 'Wood-style support.', tags: ['next-gen'] });
-proto('udon', 'Udon Ise', { e: 'boruto', v: 'leaf', a: 'ranged', d: 2, n: ['water'], desc: 'Analytical ranged control.', tags: ['next-gen'] });
 
 /* --- Hokage and Leaf legends ---------------------------------------------- */
 proto('tobirama', 'Tobirama Senju', { e: 'ancient', v: 'leaf', c: 'senju', a: 'ranged', d: 4, n: ['water', 'lightning', 'yin', 'yang'], rank: 'kage', ai: 'zoner', unlock: { type: 'level', value: 11 }, desc: 'Water walls, flying-raijin markers and reanimation.', tags: ['hokage', 'senju', 'legend'] });
 proto('hiruzen', 'Hiruzen Sarutobi', { e: 'classic', v: 'leaf', c: 'sarutobi', a: 'summoner', d: 4, n: ['fire', 'wind', 'lightning', 'earth', 'water', 'yin', 'yang'], rank: 'kage', unlock: { type: 'level', value: 10 }, desc: 'The Professor. Every nature, plus Enma.', assists: ['assist_enma'], tags: ['hokage', 'legend'] });
-proto('kakashi_hokage', 'Hokage Kakashi', { e: 'blank-period', v: 'leaf', c: 'hatake', a: 'counter', d: 4, n: ['lightning', 'fire', 'water', 'earth', 'wind'], rank: 'kage', unlock: { type: 'story', value: 'chapter_9' }, desc: 'Era variant — the Sixth Hokage, no Sharingan.', tags: ['hokage', 'era-variant'] });
-proto('naruto_hokage', 'Hokage Naruto', { e: 'boruto', v: 'leaf', c: 'uzumaki', a: 'transformation', d: 4, n: ['wind', 'yang', 'yinyang'], rank: 'kage', unlock: { type: 'story', value: 'chapter_10' }, desc: 'Era variant — the Seventh Hokage.', tags: ['hokage', 'era-variant', 'jinchuriki'] });
 proto('shisui', 'Shisui Uchiha', { e: 'classic', v: 'leaf', c: 'uchiha', a: 'rushdown', d: 4, n: ['fire', 'lightning', 'yin'], unlock: { type: 'level', value: 13 }, desc: 'Body-flicker rushdown and Kotoamatsukami.', tags: ['uchiha', 'sharingan'] });
 proto('fugaku', 'Fugaku Uchiha', { e: 'classic', v: 'leaf', c: 'uchiha', a: 'balanced', d: 3, n: ['fire', 'yin'], desc: 'Uchiha clan head.', tags: ['uchiha'] });
 proto('izuna', 'Izuna Uchiha', { e: 'ancient', v: 'leaf', c: 'uchiha', a: 'weapon', d: 4, n: ['fire', 'yin'], unlock: { type: 'level', value: 14 }, desc: 'Madara\'s brother. Blade-first Sharingan duellist.', tags: ['uchiha', 'ancient'] });
-proto('sakumo', 'Sakumo Hatake', { e: 'classic', v: 'leaf', c: 'hatake', a: 'weapon', d: 4, n: ['lightning'], unlock: { type: 'level', value: 12 }, desc: 'The White Fang. Chakra-sabre pressure.', tags: ['legend'] });
 proto('danzo', 'Danzo Shimura', { e: 'shippuden', v: 'leaf', o: 'root', a: 'transformation', d: 5, n: ['wind', 'fire', 'water', 'yin', 'yang'], unlock: { type: 'story', value: 'chapter_5' }, desc: 'Izanagi rewrites his mistakes — for a price.', tags: ['root', 'sharingan'] });
-proto('kagami', 'Kagami Uchiha', { e: 'ancient', v: 'leaf', c: 'uchiha', a: 'balanced', d: 3, n: ['fire', 'yin'], desc: 'Second-generation Uchiha.', tags: ['uchiha', 'ancient'] });
 
 /* --- Akatsuki -------------------------------------------------------------- */
 proto('nagato', 'Nagato', { e: 'shippuden', v: 'rain', c: 'uzumaki', o: 'akatsuki', a: 'summoner', d: 5, n: ['yin', 'yang', 'yinyang'], unlock: { type: 'story', value: 'chapter_4' }, desc: 'The true body behind Pain. Frail, enormous range.', tags: ['akatsuki', 'rinnegan'] });
@@ -424,8 +416,6 @@ proto('deidara', 'Deidara', { e: 'shippuden', v: 'stone', o: 'akatsuki', a: 'aer
 proto('sasori', 'Sasori', { e: 'shippuden', v: 'sand', o: 'akatsuki', a: 'puppet', d: 4, n: ['none'], desc: 'Poisoned puppets at every range.', tags: ['akatsuki', 'puppet', 'sand'] });
 proto('hidan', 'Hidan', { e: 'shippuden', v: 'hotsprings', o: 'akatsuki', a: 'grappler', d: 4, n: ['none'], desc: 'Curse ritual: damage he takes is damage you take.', tags: ['akatsuki', 'immortal'] });
 proto('kakuzu', 'Kakuzu', { e: 'shippuden', v: 'waterfall', o: 'akatsuki', a: 'transformation', d: 4, n: ['fire', 'wind', 'lightning', 'earth', 'water'], desc: 'Five hearts, five masks, five elements.', tags: ['akatsuki', 'immortal'] });
-proto('zetsu', 'Zetsu', { e: 'war', o: 'akatsuki', a: 'support', d: 3, n: ['wood', 'yin'], desc: 'Splits, clones and burrows.', tags: ['akatsuki'] });
-proto('madara_edo', 'Edo Madara', { e: 'war', v: 'leaf', c: 'uchiha', o: 'akatsuki', a: 'transformation', d: 5, n: ['fire', 'wood', 'yin', 'yang'], rank: 'legend', unlock: { type: 'story', value: 'chapter_6' }, desc: 'Era variant — the reanimated Madara, before he regained his body. Infinite chakra, no fatigue.', tags: ['uchiha', 'edo-tensei', 'era-variant', 'boss'] });
 
 /* --- Early / Shippuden villains -------------------------------------------- */
 proto('zabuza', 'Zabuza Momochi', { e: 'classic', v: 'mist', a: 'weapon', d: 2, n: ['water'], unlock: { type: 'default' }, desc: 'Hidden Mist and a very large sword.', tags: ['swordsman', 'mist', 'starter'] });
@@ -436,13 +426,6 @@ proto('jugo', 'Jugo', { e: 'shippuden', v: 'sound', o: 'taka', a: 'transformatio
 proto('suigetsu', 'Suigetsu Hozuki', { e: 'shippuden', v: 'mist', c: 'hozuki', o: 'taka', a: 'weapon', d: 3, n: ['water'], desc: 'Liquefies to avoid damage.', tags: ['taka', 'mist', 'swordsman'] });
 proto('karin', 'Karin Uzumaki', { e: 'shippuden', v: 'sound', c: 'uzumaki', o: 'taka', a: 'healer', d: 2, n: ['none'], desc: 'Sensory support and bite healing.', tags: ['taka', 'uzumaki'] });
 proto('hanzo', 'Hanzo', { e: 'classic', v: 'rain', a: 'weapon', d: 4, n: ['fire', 'water'], desc: 'Salamander poison and a kusarigama.', tags: ['rain', 'legend'] });
-proto('ginkaku', 'Ginkaku', { e: 'war', v: 'cloud', a: 'summoner', d: 3, n: ['lightning'], desc: 'Wields the Benihisago.', tags: ['cloud', 'gold-silver'] });
-proto('kinkaku', 'Kinkaku', { e: 'war', v: 'cloud', a: 'summoner', d: 3, n: ['lightning'], desc: 'Wields the Kohaku no Johei.', tags: ['cloud', 'gold-silver'] });
-proto('gato', 'Gato', { e: 'classic', a: 'ranged', d: 1, n: ['none'], rank: 'civilian', unlock: { type: 'coins', value: 1500 }, desc: 'Joke-tier unlock. Hires mercenaries instead of fighting.', tags: ['bonus', 'joke'] });
-proto('mizuki', 'Mizuki', { e: 'academy', v: 'leaf', a: 'rushdown', d: 1, n: ['none'], rank: 'chunin', unlock: { type: 'default' }, desc: 'Academy-era traitor.', tags: ['academy', 'starter'] });
-proto('dosu', 'Dosu Kinuta', { e: 'classic', v: 'sound', o: 'otogakure', a: 'counter', d: 2, n: ['none'], desc: 'Sound melody arm — disrupts inputs.', tags: ['sound'] });
-proto('zaku', 'Zaku Abumi', { e: 'classic', v: 'sound', o: 'otogakure', a: 'ranged', d: 2, n: ['wind'], desc: 'Air-cutter arm cannons.', tags: ['sound'] });
-proto('kin', 'Kin Tsuchi', { e: 'classic', v: 'sound', o: 'otogakure', a: 'zoning', d: 2, n: ['none'], desc: 'Bell genjutsu and senbon.', tags: ['sound'] });
 
 /* --- Sound Four ------------------------------------------------------------ */
 proto('jirobo', 'Jirobo', { e: 'classic', v: 'sound', o: 'sound-four', a: 'grappler', d: 2, n: ['earth'], desc: 'Earth Release absorption tank.', tags: ['sound-four'] });
@@ -460,93 +443,36 @@ proto('fu', 'Fu', { e: 'shippuden', v: 'waterfall', a: 'aerial', d: 3, n: ['yang
 
 /* --- Tailed beasts (boss entries) ------------------------------------------ */
 const BEAST_UNLOCK = { type: 'bossrush', value: 1 };
-proto('shukaku', 'Shukaku', { e: 'ancient', a: 'zoning', d: 4, n: ['wind', 'magnet'], rank: 'beast', unlock: BEAST_UNLOCK, desc: 'One-Tail. Boss-scale sand control.', tags: ['tailed-beast', 'boss'] });
-proto('matatabi', 'Matatabi', { e: 'ancient', a: 'rushdown', d: 4, n: ['fire'], rank: 'beast', unlock: BEAST_UNLOCK, desc: 'Two-Tails. Blue flame rushdown.', tags: ['tailed-beast', 'boss'] });
-proto('isobu', 'Isobu', { e: 'ancient', a: 'defensive', d: 4, n: ['water'], rank: 'beast', unlock: BEAST_UNLOCK, desc: 'Three-Tails. Shell defence and coral.', tags: ['tailed-beast', 'boss'] });
-proto('songoku', 'Son Goku', { e: 'ancient', a: 'grappler', d: 4, n: ['lava', 'fire'], rank: 'beast', unlock: BEAST_UNLOCK, desc: 'Four-Tails. Lava Release brawler.', tags: ['tailed-beast', 'boss'] });
-proto('kokuo', 'Kokuo', { e: 'ancient', a: 'grappler', d: 4, n: ['boil'], rank: 'beast', unlock: BEAST_UNLOCK, desc: 'Five-Tails. Steam-charged charges.', tags: ['tailed-beast', 'boss'] });
-proto('saiken', 'Saiken', { e: 'ancient', a: 'zoning', d: 4, n: ['water'], rank: 'beast', unlock: BEAST_UNLOCK, desc: 'Six-Tails. Corrosive gas control.', tags: ['tailed-beast', 'boss'] });
-proto('chomei', 'Chomei', { e: 'ancient', a: 'aerial', d: 4, n: ['yang'], rank: 'beast', unlock: BEAST_UNLOCK, desc: 'Seven-Tails. Flight and scale dust.', tags: ['tailed-beast', 'boss'] });
-proto('gyuki', 'Gyuki', { e: 'ancient', a: 'grappler', d: 4, n: ['lightning', 'water'], rank: 'beast', unlock: BEAST_UNLOCK, desc: 'Eight-Tails. Tentacles and ink.', tags: ['tailed-beast', 'boss'] });
-proto('kurama', 'Kurama', { e: 'ancient', a: 'transformation', d: 5, n: ['fire', 'yin', 'yang'], rank: 'beast', unlock: { type: 'bossrush', value: 2 }, desc: 'Nine-Tails. The benchmark beast boss.', tags: ['tailed-beast', 'boss'] });
-proto('tentails', 'Ten-Tails', { e: 'ancient', a: 'transformation', d: 5, n: ['yinyang'], rank: 'beast', unlock: { type: 'bossrush', value: 3 }, desc: 'The origin. Final boss-scale statline.', tags: ['tailed-beast', 'boss', 'final'] });
 
 /* --- Kage ------------------------------------------------------------------ */
-proto('kazekage1', 'First Kazekage', { e: 'ancient', v: 'sand', a: 'summoner', d: 3, n: ['magnet', 'wind'], rank: 'kage', desc: 'Founder of the Sand.', tags: ['kage', 'sand', 'ancient'] });
-proto('reto', 'Reto', { e: 'ancient', v: 'sand', a: 'balanced', d: 3, n: ['wind'], rank: 'kage', desc: 'Second Kazekage.', tags: ['kage', 'sand', 'ancient'] });
-proto('shamon', 'Shamon', { e: 'ancient', v: 'sand', a: 'defensive', d: 3, n: ['earth'], rank: 'kage', desc: 'Second-era Sand leader.', tags: ['kage', 'sand', 'ancient'] });
-proto('kazekage3', 'Third Kazekage', { e: 'classic', v: 'sand', a: 'puppet', d: 4, n: ['magnet'], rank: 'kage', desc: 'Iron Sand magnet release.', tags: ['kage', 'sand'] });
 proto('rasa', 'Rasa', { e: 'classic', v: 'sand', a: 'zoning', d: 3, n: ['magnet', 'earth'], rank: 'kage', desc: 'Fourth Kazekage. Gold Dust control.', tags: ['kage', 'sand'] });
-proto('gaara_kazekage', 'Kazekage Gaara', { e: 'shippuden', v: 'sand', a: 'defensive', d: 3, n: ['wind', 'earth', 'magnet'], rank: 'kage', unlock: { type: 'story', value: 'chapter_3' }, desc: 'Era variant — Gaara after taking the hat. Calmer, more defensive.', tags: ['kage', 'sand', 'era-variant'] });
-proto('raikage3', 'Third Raikage', { e: 'classic', v: 'cloud', a: 'grappler', d: 5, n: ['lightning'], rank: 'kage', unlock: { type: 'level', value: 15 }, desc: 'Effectively unkillable. Hell Stab.', tags: ['kage', 'cloud'] });
 proto('raikage4', 'Fourth Raikage', { e: 'shippuden', v: 'cloud', a: 'rushdown', d: 4, n: ['lightning'], rank: 'kage', desc: 'Lightning armour. The fastest raw movement of the Kage.', tags: ['kage', 'cloud'] });
 proto('darui', 'Darui', { e: 'shippuden', v: 'cloud', a: 'weapon', d: 3, n: ['lightning', 'water', 'storm'], rank: 'kage', desc: 'Storm Release beams.', tags: ['kage', 'cloud'] });
-proto('gengetsu', 'Gengetsu Hozuki', { e: 'ancient', v: 'mist', c: 'hozuki', a: 'zoning', d: 4, n: ['water', 'yin'], rank: 'kage', desc: 'Second Mizukage. Steam and illusion.', tags: ['kage', 'mist'] });
 proto('mei', 'Mei Terumi', { e: 'shippuden', v: 'mist', a: 'ranged', d: 3, n: ['lava', 'boil', 'water', 'fire', 'earth'], rank: 'kage', desc: 'Fifth Mizukage. Lava and corrosive mist.', tags: ['kage', 'mist'] });
 proto('chojuro', 'Chojuro', { e: 'boruto', v: 'mist', a: 'weapon', d: 3, n: ['water', 'lightning'], rank: 'kage', desc: 'Hiramekarei twin hammers.', tags: ['kage', 'mist', 'swordsman'] });
-proto('mu', 'Mu', { e: 'ancient', v: 'stone', a: 'ranged', d: 5, n: ['dust', 'earth', 'wind', 'fire'], rank: 'kage', unlock: { type: 'level', value: 16 }, desc: 'Second Tsuchikage. Dust Release disintegration.', tags: ['kage', 'stone'] });
 proto('onoki', 'Onoki', { e: 'shippuden', v: 'stone', a: 'ranged', d: 4, n: ['dust', 'earth', 'wind', 'lightning'], rank: 'kage', desc: 'Third Tsuchikage. Weight manipulation and Dust Release.', tags: ['kage', 'stone'] });
 proto('kurotsuchi', 'Kurotsuchi', { e: 'boruto', v: 'stone', a: 'ranged', d: 3, n: ['lava', 'earth', 'water'], rank: 'kage', desc: 'Fourth Tsuchikage. Quicklime and lava.', tags: ['kage', 'stone'] });
 
 /* --- Sand ------------------------------------------------------------------ */
 proto('temari', 'Temari', { e: 'shippuden', v: 'sand', a: 'zoning', d: 2, n: ['wind'], unlock: { type: 'default' }, desc: 'Giant fan wind walls. Excellent starter zoner.', assists: ['assist_kamatari'], tags: ['sand', 'starter'] });
 proto('kankuro', 'Kankuro', { e: 'shippuden', v: 'sand', a: 'puppet', d: 3, n: ['none'], desc: 'Three puppets, all poisoned.', tags: ['sand', 'puppet'] });
-proto('baki', 'Baki', { e: 'classic', v: 'sand', a: 'weapon', d: 2, n: ['wind'], desc: 'Blade of Wind.', tags: ['sand'] });
 proto('chiyo', 'Chiyo', { e: 'shippuden', v: 'sand', a: 'puppet', d: 4, n: ['none'], desc: 'Ten-puppet control and the transmutation seal.', tags: ['sand', 'puppet', 'elder'] });
 
 /* --- Mist / Seven Swordsmen ------------------------------------------------ */
-proto('mangetsu', 'Mangetsu Hozuki', { e: 'war', v: 'mist', c: 'hozuki', a: 'weapon', d: 4, n: ['water'], desc: 'Mastered all seven swords.', tags: ['mist', 'swordsman'] });
-proto('jinin', 'Jinin Akebino', { e: 'war', v: 'mist', a: 'grappler', d: 3, n: ['none'], desc: 'Kabutowari — the axe that breaks any defence.', tags: ['mist', 'swordsman'] });
-proto('jinpachi', 'Jinpachi Munashi', { e: 'war', v: 'mist', a: 'ranged', d: 3, n: ['explosion'], desc: 'Shibuki, the explosive blade.', tags: ['mist', 'swordsman'] });
-proto('kushimaru', 'Kushimaru Kuriarare', { e: 'war', v: 'mist', a: 'weapon', d: 3, n: ['none'], desc: 'Nuibari sews opponents together.', tags: ['mist', 'swordsman'] });
-proto('ameyuri', 'Ameyuri Ringo', { e: 'war', v: 'mist', a: 'weapon', d: 3, n: ['lightning'], desc: 'Kiba, the twin lightning blades.', tags: ['mist', 'swordsman'] });
-proto('fuguki', 'Fuguki Suikazan', { e: 'war', v: 'mist', a: 'grappler', d: 3, n: ['water'], desc: 'Samehada\'s previous wielder.', tags: ['mist', 'swordsman'] });
 
 /* --- Cloud ----------------------------------------------------------------- */
-proto('c_cloud', 'C', { e: 'shippuden', v: 'cloud', a: 'support', d: 2, n: ['lightning', 'yin'], desc: 'Sensor and medical support.', tags: ['cloud'] });
 proto('omoi', 'Omoi', { e: 'boruto', v: 'cloud', a: 'weapon', d: 3, n: ['lightning'], desc: 'Overthinks everything, cuts anyway.', tags: ['cloud'] });
-proto('karui', 'Karui', { e: 'shippuden', v: 'cloud', a: 'weapon', d: 2, n: ['lightning'], desc: 'Aggressive blade pressure.', tags: ['cloud'] });
 proto('samui', 'Samui', { e: 'shippuden', v: 'cloud', a: 'weapon', d: 2, n: ['water'], desc: 'Calm, efficient swordplay.', tags: ['cloud'] });
-proto('atsui', 'Atsui', { e: 'shippuden', v: 'cloud', a: 'rushdown', d: 2, n: ['fire'], desc: 'Fire-charged blade rushdown.', tags: ['cloud'] });
-proto('mabui', 'Mabui', { e: 'shippuden', v: 'cloud', a: 'support', d: 2, n: ['yin'], desc: 'Teleportation support jutsu.', tags: ['cloud'] });
 
 /* --- Stone ----------------------------------------------------------------- */
-proto('akatsuchi', 'Akatsuchi', { e: 'shippuden', v: 'stone', a: 'grappler', d: 2, n: ['earth'], desc: 'Earth golem bruiser.', tags: ['stone'] });
 
 /* --- Next generation -------------------------------------------------------- */
 proto('sarada', 'Sarada Uchiha', { e: 'boruto', v: 'leaf', c: 'uchiha', o: 'team-seven-next', a: 'balanced', d: 2, n: ['fire', 'lightning'], rank: 'genin', unlock: { type: 'default' }, desc: 'Sharingan plus Tsunade-style strength.', tags: ['next-gen', 'uchiha', 'starter'] });
 proto('mitsuki', 'Mitsuki', { e: 'boruto', v: 'leaf', o: 'team-seven-next', a: 'transformation', d: 3, n: ['wind', 'lightning'], rank: 'genin', transformations: TF.MITSUKI_CHAIN, unlock: { type: 'default' }, desc: 'Synthetic human with a sage transformation.', tags: ['next-gen', 'starter'] });
-proto('himawari', 'Himawari Uzumaki', { e: 'boruto', v: 'leaf', c: 'uzumaki', a: 'counter', d: 2, n: ['none'], rank: 'academy', desc: 'Byakugan gentle fist. Do not make her angry.', tags: ['next-gen', 'hyuga'] });
-proto('inojin', 'Inojin Yamanaka', { e: 'boruto', v: 'leaf', c: 'yamanaka', a: 'ranged', d: 2, n: ['yin'], rank: 'genin', desc: 'Ink beasts and mind transfer.', tags: ['next-gen'] });
-proto('shikadai', 'Shikadai Nara', { e: 'boruto', v: 'leaf', c: 'nara', a: 'zoning', d: 3, n: ['yin'], rank: 'genin', desc: 'Shadow traps, next generation.', tags: ['next-gen'] });
-proto('chocho', 'Chocho Akimichi', { e: 'boruto', v: 'leaf', c: 'akimichi', a: 'grappler', d: 2, n: ['earth', 'yang'], rank: 'genin', desc: 'Butterfly mode expansion.', tags: ['next-gen'] });
-proto('metal_lee', 'Metal Lee', { e: 'boruto', v: 'leaf', a: 'rushdown', d: 2, n: ['none'], rank: 'genin', desc: 'Taijutsu, and he stops choking under pressure at low health.', tags: ['next-gen', 'taijutsu'] });
-proto('iwabe', 'Iwabe Yuino', { e: 'boruto', v: 'leaf', a: 'grappler', d: 2, n: ['earth'], rank: 'genin', desc: 'Earth Release bruiser.', tags: ['next-gen'] });
-proto('denki', 'Denki Kaminarimon', { e: 'boruto', v: 'leaf', a: 'ranged', d: 2, n: ['lightning'], rank: 'genin', desc: 'Scientific ninja tools.', tags: ['next-gen'] });
 proto('sumire', 'Sumire Kakei', { e: 'boruto', v: 'leaf', a: 'support', d: 3, n: ['water'], rank: 'genin', desc: 'Nue summoning and support.', tags: ['next-gen'] });
-proto('wasabi', 'Wasabi Izuno', { e: 'boruto', v: 'leaf', a: 'rushdown', d: 2, n: ['none'], rank: 'genin', desc: 'Cat-style claw rushdown.', tags: ['next-gen'] });
-proto('namida', 'Namida Suzumeno', { e: 'boruto', v: 'leaf', a: 'ranged', d: 2, n: ['none'], rank: 'genin', desc: 'Sound-based crying jutsu.', tags: ['next-gen'] });
-proto('houki', 'Houki Taketori', { e: 'boruto', v: 'leaf', a: 'weapon', d: 2, n: ['none'], rank: 'genin', desc: 'Tool-assisted swordplay.', tags: ['next-gen'] });
 
 /* --- Adult era variants ----------------------------------------------------- */
 const ADULT_UNLOCK = { type: 'story', value: 'chapter_9' };
-proto('naruto_adult', 'Adult Naruto', { e: 'boruto', v: 'leaf', c: 'uzumaki', a: 'transformation', d: 4, n: ['wind', 'yang', 'yinyang'], rank: 'kage', unlock: ADULT_UNLOCK, desc: 'Era variant. Slower than his younger self, far more chakra.', tags: ['era-variant', 'jinchuriki'] });
-proto('sasuke_adult', 'Adult Sasuke', { e: 'boruto', v: 'leaf', c: 'uchiha', a: 'counter', d: 5, n: ['lightning', 'fire', 'blaze', 'yin', 'yinyang'], unlock: ADULT_UNLOCK, desc: 'Era variant. One arm, Rinnegan, no wasted movement.', tags: ['era-variant', 'uchiha'] });
-proto('sakura_adult', 'Adult Sakura', { e: 'boruto', v: 'leaf', a: 'grappler', d: 3, n: ['earth', 'water', 'yin'], unlock: ADULT_UNLOCK, desc: 'Era variant. Byakugo permanently available.', tags: ['era-variant', 'medic'] });
-proto('shikamaru_adult', 'Adult Shikamaru', { e: 'boruto', v: 'leaf', c: 'nara', a: 'zoning', d: 4, n: ['yin', 'fire'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant'] });
-proto('ino_adult', 'Adult Ino', { e: 'boruto', v: 'leaf', c: 'yamanaka', a: 'support', d: 3, n: ['yin'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant'] });
-proto('choji_adult', 'Adult Choji', { e: 'boruto', v: 'leaf', c: 'akimichi', a: 'grappler', d: 3, n: ['earth', 'yang'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant'] });
-proto('hinata_adult', 'Adult Hinata', { e: 'boruto', v: 'leaf', c: 'hyuga', a: 'counter', d: 3, n: ['none'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant', 'hyuga'] });
-proto('kiba_adult', 'Adult Kiba', { e: 'boruto', v: 'leaf', c: 'inuzuka', a: 'rushdown', d: 3, n: ['none'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant'] });
-proto('shino_adult', 'Adult Shino', { e: 'boruto', v: 'leaf', c: 'aburame', a: 'zoning', d: 3, n: ['none'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant'] });
-proto('lee_adult', 'Adult Rock Lee', { e: 'boruto', v: 'leaf', a: 'rushdown', d: 3, n: ['none'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant', 'taijutsu'] });
-proto('tenten_adult', 'Adult Tenten', { e: 'boruto', v: 'leaf', a: 'weapon', d: 3, n: ['none'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant'] });
-proto('temari_adult', 'Adult Temari', { e: 'boruto', v: 'leaf', a: 'zoning', d: 3, n: ['wind'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant'] });
-proto('kankuro_adult', 'Adult Kankuro', { e: 'boruto', v: 'sand', a: 'puppet', d: 3, n: ['none'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant', 'puppet'] });
-proto('gaara_adult', 'Adult Gaara', { e: 'boruto', v: 'sand', a: 'defensive', d: 4, n: ['wind', 'earth', 'magnet'], rank: 'kage', unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant', 'kage'] });
-proto('konohamaru_adult', 'Adult Konohamaru', { e: 'boruto', v: 'leaf', c: 'sarutobi', a: 'balanced', d: 3, n: ['fire', 'wind'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant'] });
-proto('hanabi_adult', 'Adult Hanabi', { e: 'boruto', v: 'leaf', c: 'hyuga', a: 'counter', d: 3, n: ['none'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant', 'hyuga'] });
-proto('sai_adult', 'Adult Sai', { e: 'boruto', v: 'leaf', o: 'root', a: 'ranged', d: 3, n: ['yin'], unlock: ADULT_UNLOCK, desc: 'Era variant.', tags: ['era-variant'] });
 
 /* --- Kara ------------------------------------------------------------------- */
 proto('jigen', 'Jigen', { e: 'boruto', o: 'kara', a: 'counter', d: 5, n: ['none'], rank: 'boss', unlock: { type: 'story', value: 'chapter_10' }, desc: 'Kara\'s leader. Shrinks anything he touches.', tags: ['kara', 'boss'] });
@@ -559,15 +485,11 @@ proto('daemon', 'Daemon', { e: 'boruto', o: 'kara', a: 'counter', d: 4, n: ['non
 proto('eida', 'Eida', { e: 'boruto', o: 'kara', a: 'support', d: 3, n: ['none'], desc: 'Omniscience and enchantment.', tags: ['kara'] });
 proto('victor', 'Victor', { e: 'boruto', o: 'kara', a: 'grappler', d: 2, n: ['none'], desc: 'Kara inner with modified strength.', tags: ['kara'] });
 proto('deepa', 'Deepa', { e: 'boruto', o: 'kara', a: 'defensive', d: 3, n: ['none'], desc: 'Carbon body — nearly unbreakable defence.', tags: ['kara'] });
-proto('amado', 'Amado Sanzu', { e: 'boruto', o: 'kara', a: 'support', d: 2, n: ['none'], desc: 'Scientist. Fights with tools, not jutsu.', tags: ['kara'] });
-proto('ao', 'Ao', { e: 'boruto', o: 'kara', a: 'ranged', d: 3, n: ['none'], desc: 'Prosthetic-body tool specialist.', tags: ['kara', 'mist'] });
 
 /* --- Otsutsuki -------------------------------------------------------------- */
 proto('kaguya', 'Kaguya Otsutsuki', { e: 'ancient', c: 'otsutsuki', o: 'otsutsuki', a: 'transformation', d: 5, n: ['yinyang'], rank: 'boss', unlock: { type: 'story', value: 'chapter_10' }, desc: 'Dimension shifting and expansive truth-seeking control. Final-boss statline.', tags: ['otsutsuki', 'boss', 'final'] });
 proto('hagoromo', 'Hagoromo Otsutsuki', { e: 'ancient', c: 'otsutsuki', a: 'summoner', d: 5, n: ['yinyang'], rank: 'legend', unlock: { type: 'level', value: 20 }, desc: 'The Sage of Six Paths.', tags: ['otsutsuki', 'legend'] });
 proto('hamura', 'Hamura Otsutsuki', { e: 'ancient', c: 'otsutsuki', a: 'counter', d: 5, n: ['yinyang'], rank: 'legend', unlock: { type: 'level', value: 20 }, desc: 'Tenseigan gentle fist.', tags: ['otsutsuki', 'legend'] });
-proto('indra', 'Indra Otsutsuki', { e: 'ancient', c: 'otsutsuki', a: 'ranged', d: 5, n: ['fire', 'lightning', 'yin'], rank: 'legend', unlock: { type: 'level', value: 18 }, desc: 'The first Susanoo.', tags: ['otsutsuki', 'uchiha', 'legend'] });
-proto('ashura', 'Ashura Otsutsuki', { e: 'ancient', c: 'otsutsuki', a: 'transformation', d: 5, n: ['yang'], rank: 'legend', unlock: { type: 'level', value: 18 }, desc: 'The first six-armed avatar.', tags: ['otsutsuki', 'senju', 'legend'] });
 proto('toneri', 'Toneri Otsutsuki', { e: 'blank-period', c: 'otsutsuki', a: 'counter', d: 4, n: ['yinyang'], desc: 'Tenseigan and golem control.', tags: ['otsutsuki'] });
 proto('kinshiki', 'Kinshiki Otsutsuki', { e: 'boruto', c: 'otsutsuki', o: 'otsutsuki', a: 'weapon', d: 4, n: ['yinyang'], desc: 'Converts chakra into an enormous blade.', tags: ['otsutsuki'] });
 proto('urashiki', 'Urashiki Otsutsuki', { e: 'boruto', c: 'otsutsuki', o: 'otsutsuki', a: 'zoning', d: 4, n: ['yinyang'], desc: 'Time-shifting fishing rod. Steals chakra at range.', tags: ['otsutsuki'] });
@@ -575,22 +497,98 @@ proto('urashiki', 'Urashiki Otsutsuki', { e: 'boruto', c: 'otsutsuki', o: 'otsut
 /* --- Movie and bonus -------------------------------------------------------- */
 const BONUS_UNLOCK = { type: 'coins', value: 4000 };
 proto('menma', 'Menma Uzumaki', { e: 'blank-period', v: 'leaf', c: 'uzumaki', a: 'transformation', d: 4, n: ['wind', 'yin'], unlock: BONUS_UNLOCK, desc: 'Alternate-world Naruto. Dark Nine-Tails chakra.', tags: ['bonus', 'alternate'] });
-proto('rtn_naruto', 'Road to Ninja Naruto', { e: 'blank-period', v: 'leaf', c: 'uzumaki', a: 'balanced', d: 3, n: ['wind'], unlock: BONUS_UNLOCK, desc: 'Alternate-world variant.', tags: ['bonus', 'alternate'] });
-proto('rtn_sasuke', 'Road to Ninja Sasuke', { e: 'blank-period', v: 'leaf', c: 'uchiha', a: 'rushdown', d: 3, n: ['fire', 'lightning'], unlock: BONUS_UNLOCK, desc: 'Alternate-world variant.', tags: ['bonus', 'alternate'] });
-proto('guren', 'Guren', { e: 'shippuden', v: 'sound', o: 'otogakure', a: 'zoning', d: 3, n: ['crystal'], desc: 'Crystal Release. Original filler-arc antagonist.', tags: ['bonus', 'crystal'] });
-proto('rin', 'Rin Nohara', { e: 'classic', v: 'leaf', a: 'healer', d: 2, n: ['water', 'yin'], desc: 'Field medic of Team Minato.', tags: ['bonus', 'medic'] });
-proto('obito_young', 'Young Obito', { e: 'classic', v: 'leaf', c: 'uchiha', a: 'rushdown', d: 2, n: ['fire'], desc: 'Era variant — before the mask.', tags: ['bonus', 'era-variant', 'uchiha'] });
-proto('kakashi_young', 'Young Kakashi', { e: 'classic', v: 'leaf', c: 'hatake', o: 'anbu', a: 'weapon', d: 3, n: ['lightning'], desc: 'Era variant — ANBU-era blade work.', tags: ['bonus', 'era-variant'] });
-proto('minato_young', 'Young Minato', { e: 'classic', v: 'leaf', c: 'namikaze', a: 'rushdown', d: 3, n: ['wind', 'lightning'], desc: 'Era variant — before the Raijin was perfected.', tags: ['bonus', 'era-variant'] });
-proto('jiraiya_young', 'Young Jiraiya', { e: 'classic', v: 'leaf', a: 'summoner', d: 3, n: ['fire', 'earth'], desc: 'Era variant.', tags: ['bonus', 'era-variant'] });
-proto('orochimaru_young', 'Young Orochimaru', { e: 'classic', v: 'leaf', a: 'ranged', d: 3, n: ['fire', 'wind', 'earth'], desc: 'Era variant — still a Leaf shinobi.', tags: ['bonus', 'era-variant'] });
-proto('tsunade_young', 'Young Tsunade', { e: 'classic', v: 'leaf', c: 'senju', a: 'grappler', d: 3, n: ['earth', 'yang'], desc: 'Era variant.', tags: ['bonus', 'era-variant'] });
-proto('hiruzen_young', 'Young Hiruzen', { e: 'ancient', v: 'leaf', c: 'sarutobi', a: 'summoner', d: 4, n: ['fire', 'wind', 'lightning', 'earth', 'water'], desc: 'Era variant — at his peak.', tags: ['bonus', 'era-variant'] });
-proto('hashirama_young', 'Young Hashirama', { e: 'ancient', v: 'leaf', c: 'senju', a: 'summoner', d: 4, n: ['wood', 'water', 'earth'], desc: 'Era variant — the warring states era.', tags: ['bonus', 'era-variant'] });
-proto('tobirama_young', 'Young Tobirama', { e: 'ancient', v: 'leaf', c: 'senju', a: 'ranged', d: 4, n: ['water', 'lightning'], desc: 'Era variant.', tags: ['bonus', 'era-variant'] });
-proto('madara_young', 'Young Madara', { e: 'ancient', v: 'leaf', c: 'uchiha', a: 'weapon', d: 4, n: ['fire', 'yin'], desc: 'Era variant — the warring states era.', tags: ['bonus', 'era-variant', 'uchiha'] });
-proto('guy_young', 'Young Might Guy', { e: 'classic', v: 'leaf', a: 'rushdown', d: 2, n: ['none'], desc: 'Era variant.', tags: ['bonus', 'era-variant'] });
-proto('dai', 'Might Dai', { e: 'classic', v: 'leaf', a: 'rushdown', d: 4, n: ['none'], unlock: { type: 'level', value: 17 }, desc: 'The Eternal Genin. Eighth Gate on demand — at the usual price.', tags: ['bonus', 'eight-gates'] });
+
+/* --- Hyuga main house ------------------------------------------------------ */
+proto('hanabi', 'Hanabi Hyuga', { e: 'boruto', v: 'leaf', c: 'hyuga', a: 'counter', d: 3, n: ['none'], ai: 'counter', desc: 'Gentle Fist heir. Faster palm strings than her sister, less reach.', tags: ['hyuga', 'byakugan'] });
+proto('hiashi', 'Hiashi Hyuga', { e: 'shippuden', v: 'leaf', c: 'hyuga', a: 'counter', d: 4, n: ['none'], ai: 'counter', desc: 'Head of the main house. Textbook Eight Trigrams pressure.', tags: ['hyuga', 'byakugan'] });
+proto('hizashi', 'Hizashi Hyuga', { e: 'classic', v: 'leaf', c: 'hyuga', a: 'counter', d: 4, n: ['none'], ai: 'counter', desc: 'Branch-house twin. Trades defence for reach.', tags: ['hyuga', 'byakugan'] });
+
+/* --- Uzumaki --------------------------------------------------------------- */
+proto('kushina', 'Kushina Uzumaki', { e: 'classic', v: 'leaf', c: 'uzumaki', a: 'zoning', d: 4, n: ['wind', 'yin'], ai: 'trapper', desc: 'Adamantine sealing chains. Locks a fighter down and punishes the struggle.', tags: ['uzumaki', 'jinchuriki'] });
+
+/* --- Sand ------------------------------------------------------------------ */
+proto('pakura', 'Pakura', { e: 'classic', v: 'sand', a: 'ranged', d: 3, n: ['scorch'], ai: 'zoner', desc: 'Scorch Release. Drains a target dry at mid range.', tags: ['sand', 'scorch'] });
+
+/* --- Zetsu ----------------------------------------------------------------- */
+proto('white_zetsu', 'White Zetsu', { e: 'war', o: 'akatsuki', a: 'support', d: 3, n: ['wood'], ai: 'trapper', desc: 'Clones, burrows and copies. Attrition rather than damage.', tags: ['akatsuki', 'zetsu'] });
+proto('black_zetsu', 'Black Zetsu', { e: 'war', o: 'akatsuki', a: 'counter', d: 4, n: ['yin'], ai: 'counter', desc: 'Latches on, steers the fight and turns your own move against you.', tags: ['akatsuki', 'zetsu'] });
+
+/* --- Boruto generation ------------------------------------------------------ */
+proto('shinki', 'Shinki', { e: 'boruto', v: 'sand', a: 'zoning', d: 4, n: ['magnet'], ai: 'trapper', desc: 'Iron Sand. Gaara\u2019s successor, with a harder edge.', tags: ['sand', 'magnet'] });
+proto('mirai', 'Mirai Sarutobi', { e: 'boruto', v: 'leaf', c: 'sarutobi', a: 'weapon', d: 3, n: ['fire', 'yin'], ai: 'zoner', desc: 'Chakra blades and genjutsu. Asuma\u2019s daughter.', tags: ['sarutobi'] });
+proto('kagura', 'Kagura Karatachi', { e: 'boruto', v: 'mist', a: 'weapon', d: 4, n: ['water'], ai: 'counter', desc: 'Hiramekarei. Precise, defensive swordwork.', tags: ['mist', 'swordsman'] });
+proto('buntan', 'Buntan Kurosuki', { e: 'boruto', v: 'mist', a: 'weapon', d: 3, n: ['lightning'], ai: 'rusher', desc: 'Kiba blades. All offence, no patience.', tags: ['mist', 'swordsman'] });
+
+/* --- Special ---------------------------------------------------------------- */
+proto('shin', 'Shin Uchiha', { e: 'blank-period', c: 'uchiha', a: 'weapon', d: 4, n: ['yin'], ai: 'zoner', unlock: BONUS_UNLOCK, desc: 'Grafted Sharingan and a swarm of blades.', tags: ['uchiha', 'bonus'] });
+
+/**
+ * The canonical roster order.
+ *
+ * Exactly these 110 people, once each. Alternate ages, costumes, titles,
+ * masked and Edo versions, awakenings and tailed beasts are NOT roster cards —
+ * they hang off their main fighter as costumes and transformations (see
+ * js/data/costumes.js and js/data/transformations.js), and old save ids for
+ * them are redirected by js/data/roster-migration.js.
+ *
+ * Declaring the order here rather than relying on definition order means the
+ * select screen groups by village, and a fighter added or dropped without
+ * updating this list fails a test instead of quietly changing the roster.
+ */
+export const ROSTER_ORDER = Object.freeze([
+  // Leaf Village
+  "naruto", "sasuke", "sakura", "kakashi", "sai", "yamato", "shikamaru",
+  "choji", "ino", "hinata", "kiba", "shino", "neji", "lee", "tenten",
+  "guy", "asuma", "kurenai", "ebisu", "iruka", "konohamaru", "hanabi",
+  "hiashi", "hizashi",
+  // Hokage, Sannin and Leaf legends
+  "hashirama", "tobirama", "hiruzen", "minato", "tsunade", "jiraiya",
+  "orochimaru", "kushina", "shisui", "fugaku", "izuna",
+  // Sand
+  "gaara", "temari", "kankuro", "chiyo", "pakura", "rasa",
+  // Mist
+  "zabuza", "haku", "chojuro", "mei", "kisame", "yagura", "suigetsu",
+  // Cloud
+  "bee", "raikage4", "darui", "omoi", "samui", "yugito",
+  // Stone
+  "onoki", "kurotsuchi", "deidara", "roshi", "han",
+  // Akatsuki and major villains
+  "itachi", "sasori", "kakuzu", "hidan", "konan", "pain", "nagato",
+  "obito", "white_zetsu", "black_zetsu", "madara", "kabuto", "kimimaro",
+  "jugo", "karin", "danzo", "hanzo",
+  // Sound Four
+  "jirobo", "kidomaru", "tayuya", "sakon",
+  // Other jinchuriki
+  "utakata", "fu",
+  // Boruto generation
+  "boruto", "sarada", "mitsuki", "kawaki", "sumire", "shinki", "mirai",
+  "kagura", "buntan",
+  // Kara
+  "jigen", "isshiki", "delta", "code", "boro", "koji", "victor", "deepa",
+  "eida", "daemon",
+  // Otsutsuki and ancient
+  "momoshiki", "kinshiki", "urashiki", "kaguya", "hagoromo", "hamura",
+  "toneri",
+  // Special
+  "shin", "menma",
+]);
+
+// Put FIGHTER_ORDER into roster order, and refuse to start if the two
+// disagree — a mismatch means a fighter was defined or removed without the
+// roster being updated.
+{
+  const defined = new Set(FIGHTER_ORDER);
+  const missing = ROSTER_ORDER.filter((id) => !defined.has(id));
+  const extra = FIGHTER_ORDER.filter((id) => !ROSTER_ORDER.includes(id));
+  if (missing.length || extra.length) {
+    throw new Error(
+      `Roster mismatch. Missing: ${missing.join(', ') || 'none'}. `
+      + `Not in ROSTER_ORDER: ${extra.join(', ') || 'none'}.`,
+    );
+  }
+  FIGHTER_ORDER.length = 0;
+  FIGHTER_ORDER.push(...ROSTER_ORDER);
+}
 
 /* -------------------------------------------------------------------------- */
 

@@ -42,10 +42,12 @@ export class SelectScreen {
       this.renderGrid();
     });
     $('btn-filters').addEventListener('click', () => this.openFilters());
+    // "Random AI Opponent" rerolls the opponent only — the player's own
+    // fighter is theirs to choose, and rerolling it under them is surprising.
     $('btn-random').addEventListener('click', () => {
       audio.play('sfx_ui_select');
-      this.setP1(roster.random());
       if (this.allowOpponent) this.setP2(roster.randomAny(this.p1));
+      else this.setP1(roster.random());
     });
     $('btn-select-confirm').addEventListener('click', () => {
       if (!this.p1) return;
@@ -83,6 +85,8 @@ export class SelectScreen {
       $('fighter-sheet').hidden = true;
     });
     $('btn-pick-p2').addEventListener('click', () => {
+      // Every roster fighter can be the AI opponent, including the one the
+      // player is using — a mirror match is still one human and one AI.
       if (this.sheetId) this.setP2(this.sheetId);
       $('fighter-sheet').hidden = true;
     });
@@ -104,7 +108,7 @@ export class SelectScreen {
     this.mode = cfg.mode || 'versus';
     this.allowOpponent = cfg.allowOpponent !== false;
     this.showOptions = cfg.showOptions !== false;
-    $('select-title').textContent = cfg.title || 'Versus';
+    $('select-title').textContent = cfg.title || 'Player vs AI';
     $('panel-p2').style.display = this.allowOpponent ? '' : 'none';
     $('btn-pick-p2').style.display = this.allowOpponent ? '' : 'none';
 
@@ -287,7 +291,11 @@ export class SelectScreen {
     const btn = $('btn-select-confirm');
     const ok = !!this.p1 && (!this.allowOpponent || !!this.p2);
     btn.disabled = !ok;
-    btn.textContent = ok ? 'Fight' : 'Choose a fighter';
+    if (ok) {
+      btn.textContent = this.allowOpponent ? 'Start Player vs AI Match' : 'Start Match';
+    } else {
+      btn.textContent = this.p1 ? 'Choose Opponent' : 'Choose Your Fighter';
+    }
   }
 
   _panel(n, id) {
@@ -332,7 +340,7 @@ export class SelectScreen {
       wrap.appendChild(el);
     };
 
-    cycle('AI', DIFFICULTIES, this.options.difficulty,
+    cycle('AI Difficulty', DIFFICULTIES, this.options.difficulty,
       (v) => DIFFICULTY_LABELS[v], (v) => { this.options.difficulty = v; });
     cycle('Rounds', ROUND_COUNT_OPTIONS, this.options.rounds,
       (v) => String(v), (v) => { this.options.rounds = v; });

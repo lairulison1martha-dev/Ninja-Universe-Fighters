@@ -13,6 +13,9 @@
  *   - Three slots plus autosave.
  */
 
+import { FIGHTERS } from './data/fighters.js';
+import { resolveFighterId, LEGACY_FIGHTER_IDS } from './data/roster-migration.js';
+import { COSTUME_BY_LEGACY_ID } from './data/costumes.js';
 import {
   SAVE_KEY, SAVE_BACKUP_KEY, SAVE_SLOT_KEY, SAVE_SLOT_COUNT, SAVE_VERSION,
   STORAGE_PREFIX, APP_VERSION,
@@ -64,6 +67,9 @@ export function defaultSave() {
 
     achievements: [],
     activeTitle: null,
+
+    /** { [fighterId]: string[] } — costume ids the player has unlocked. */
+    costumes: {},
 
     story: { completedChapters: [], completedNodes: {}, current: null },
     arcade: { cleared: {}, bestScore: {} },
@@ -119,6 +125,102 @@ const MIGRATIONS = {
     // v3 → v4: transformation unlocks tracked separately from fighters.
     s.transformationsUnlocked = s.transformationsUnlocked || [];
     s.activeTitle = s.activeTitle ?? null;
+    return s;
+  },
+  4: (s) => {
+    // v4 → v5: the roster collapsed from 192 cards to 110 unique people.
+    //
+    // Alternate ages, Edo versions, masked versions, tailed beasts and the
+    // original characters stopped being fighters and became costumes,
+    // transformations and summons. Every id a v4 save can hold is redirected
+    // to the fighter that absorbed it, and an unlock that corresponds to a
+    // costume is recorded as that costume rather than thrown away.
+    //
+    // Nothing is deleted here: mastery is merged, not replaced, and progress
+    // keyed by a removed fighter lands on the fighter you now play instead.
+    s.costumes = s.costumes || {};
+
+    const remap = (id) => resolveFighterId(id) || id;
+    const known = (id) => !!FIGHTERS[id];
+
+    const unlockCostume = (legacyId) => {
+      const entry = COSTUME_BY_LEGACY_ID[legacyId];
+      if (!entry) return;
+      const list = s.costumes[entry.fighterId] || (s.costumes[entry.fighterId] = []);
+      if (!list.includes(entry.costumeId)) list.push(entry.costumeId);
+    };
+
+    // Unlocked fighters: redirect, de-duplicate, and keep the costume.
+    const fighters = new Set();
+    for (const id of s.unlockedFighters || []) {
+      unlockCostume(id);
+      const to = remap(id);
+      if (known(to)) fighters.add(to);
+    }
+    s.unlockedFighters = [...fighters];
+
+    // Favourites and recents: same redirect, order preserved, no duplicates.
+    const dedupe = (list) => {
+      const out = [];
+      for (const id of list || []) {
+        const to = remap(id);
+        if (known(to) && !out.includes(to)) out.push(to);
+      }
+      return out;
+    };
+    s.favorites = dedupe(s.favorites);
+    s.recent = dedupe(s.recent);
+
+    // Mastery: two old cards can land on one fighter, so merge rather than
+    // overwrite — a player does not lose the xp they earned on either.
+    const mastery = {};
+    for (const [id, m] of Object.entries(s.mastery || {})) {
+      const to = remap(id);
+      if (!known(to)) continue;
+      const cur = mastery[to];
+      if (!cur) {
+        mastery[to] = { ...m };
+        continue;
+      }
+      mastery[to] = {
+        ...cur,
+        xp: (cur.xp || 0) + (m.xp || 0),
+        wins: (cur.wins || 0) + (m.wins || 0),
+        matches: (cur.matches || 0) + (m.matches || 0),
+        level: Math.max(cur.level || 1, m.level || 1),
+      };
+    }
+    s.mastery = mastery;
+
+    // Transformation unlock ids are `<fighter>_<form>`. Fighter ids contain
+    // underscores themselves (`madara_edo_rinnegan`), so match the longest
+    // legacy id that prefixes the key rather than splitting on the first `_`.
+    const legacyByLength = Object.keys(LEGACY_FIGHTER_IDS)
+      .sort((a, b) => b.length - a.length);
+    const forms = new Set();
+    for (const key of s.transformationsUnlocked || []) {
+      const owner = legacyByLength.find((id) => key.startsWith(`${id}_`));
+      forms.add(owner ? `${LEGACY_FIGHTER_IDS[owner]}${key.slice(owner.length)}` : key);
+    }
+    s.transformationsUnlocked = [...forms];
+
+    // Story / arcade / boss-rush progress keyed by fighter id.
+    const remapKeys = (obj) => {
+      if (!obj || typeof obj !== 'object') return obj;
+      const out = {};
+      for (const [k, v] of Object.entries(obj)) {
+        const to = remap(k);
+        out[known(to) ? to : k] = v;
+      }
+      return out;
+    };
+    if (s.arcade) {
+      s.arcade.cleared = remapKeys(s.arcade.cleared);
+      s.arcade.bestScore = remapKeys(s.arcade.bestScore);
+    }
+    if (s.bossRush) s.bossRush.cleared = remapKeys(s.bossRush.cleared);
+    if (s.story) s.story.completedNodes = remapKeys(s.story.completedNodes);
+
     return s;
   },
 };

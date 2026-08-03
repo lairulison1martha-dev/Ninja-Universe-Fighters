@@ -154,9 +154,10 @@ Storage → **Clear site data**.
 
 | | |
 |---|---|
-| Roster entries | **192** |
+| Roster entries | **110** unique fighters, one card each |
 | Hand-authored complete move sets | **20** |
 | Abilities | **530** (362 hand-authored, 168 clearly-labelled archetype templates) |
+| Mode | **Player vs AI** — single-player, offline, no PvP and no networking |
 | Transformations | **239**, in linked chains with real activation requirements |
 | Stages | **14**, each with day and night variants |
 | Story chapters | **10** (original campaign, "The Severed Accord") |
@@ -164,7 +165,16 @@ Storage → **Clear site data**.
 | Arcade ladders / Boss Rushes | 4 / 4 |
 | Assists and summons | 24 |
 | Achievements | 31 |
-| Fighter sprite sets | **192** — one per fighter, 19 animations / 84 frames each |
+| Fighter sprite sets | **110** — one per fighter, 19 animations / 84 frames each |
+
+### Roster
+
+110 unique people, one card each. Alternate ages, titles, masked and Edo
+versions, awakenings and the tailed beasts are **not** separate cards — they are
+costumes (`js/data/costumes.js`) and transformations
+(`js/data/transformations.js`) on the fighter they belong to, and every id the
+old 192-entry roster used is redirected by `js/data/roster-migration.js` so an
+existing save keeps its progress.
 
 ### The twenty fighters with complete, unique kits
 
@@ -317,9 +327,9 @@ Gamepads are polled with the standard mapping.
 │   │                           effects, camera, combo/guard/substitution/
 │   │                           transformation/assist systems, AI, training,
 │   │                           stage + fighter renderers, sprite animator
-│   ├── data/                   fighters, abilities, transformations, assists,
-│   │                           stages, story, arcade, achievements, unlocks,
-│   │                           ai-profiles
+│   ├── data/                   fighters, roster-migration, costumes, abilities,
+│   │                           transformations, assists, stages, story, arcade,
+│   │                           achievements, unlocks, ai-profiles
 │   └── ui/                     menu, select, stage, list, settings, layout
 │                               editor, HUD, overlays
 ├── assets/icons/               generated PNG icon set + editable SVG master
@@ -330,6 +340,7 @@ Gamepads are polled with the standard mapping.
 ├── tools/fighter_art.py        the pixel-art rig: poses, body, hair, gear
 ├── tools/designs.py            per-fighter design records
 ├── tools/pixel.py              integer-only pixel canvas
+├── tools/roster-plan.py        the canonical 110 roster + legacy id map
 ├── tools/pngio.py              dependency-free PNG read/write
 └── tests/                      validation suite (plain Node, no dependencies)
 ```
@@ -463,7 +474,7 @@ any other project.
 
 ## Known limitations
 
-- **172 of the 192 fighters use archetype template move sets.** They are fully
+- **90 of the 110 fighters use archetype template move sets.** They are fully
   playable and the archetypes genuinely differ from one another, but they are
   not hand-authored kits. The UI labels them **Prototype** everywhere they
   appear.
@@ -489,9 +500,9 @@ any other project.
 - **The 172 derived fighters are drawn from roster data.** They are distinct
   from one another, but their designs were not individually art-directed the
   way the twenty starters were.
-- Local two-player versus on one device is not implemented; Versus is
-  player-versus-AI. The input manager already carries a second player state for
-  it.
+- **The game is deliberately single-player.** Every match is one human against
+  one AI, asserted at match setup by `CombatEngine.assertPvE()`. There is no
+  second human controller, no local versus, and no networking of any kind.
 - Assists render as a coloured silhouette rather than a distinct summon design.
 
 ---

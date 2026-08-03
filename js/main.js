@@ -160,7 +160,9 @@ export class Game {
 
   startVersusFlow() {
     this.flow = { kind: 'versus' };
-    this.select.configure({ title: 'Versus', mode: 'versus', allowOpponent: true, showOptions: true });
+    this.select.configure({
+      title: 'Player vs AI', mode: 'versus', allowOpponent: true, showOptions: true,
+    });
     screens.show('select');
   }
 
@@ -471,7 +473,7 @@ export class Game {
       sections: [],
       html: `
         <h3>Ninja Universe Fighters</h3>
-        <p>Version ${APP_VERSION}. An offline, installable mobile arena fighter built with vanilla HTML, CSS and JavaScript — no framework, no build step, no backend.</p>
+        <p>Version ${APP_VERSION}. An offline, installable, single-player mobile arena fighter built with vanilla HTML, CSS and JavaScript — no framework, no build step, no backend. Every match is Player vs AI: you control one fighter, the CPU controls the one you chose to fight.</p>
 
         <h3>Original assets</h3>
         <ul>
@@ -480,6 +482,7 @@ export class Game {
           <li>Fighter sprites are generated pixel art — see below.</li>
           <li>All music and sound effects are synthesised with the Web Audio API at runtime.</li>
           <li>All ${ROSTER_SIZE} fighters have their own sprite set and portrait; the procedural silhouette renderer remains as the fallback if art fails to load.</li>
+          <li>Alternate ages, masks, Edo versions and awakenings are costumes and transformations on their main fighter, not extra roster cards.</li>
         </ul>
 
         <h3>Fighter sprites</h3>

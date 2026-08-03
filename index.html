@@ -104,17 +104,17 @@
   <section class="screen screen--select" id="screen-select" data-screen="select" hidden>
     <header class="select__bar safe-top">
       <button type="button" class="btn btn--icon" data-action="back" aria-label="Back">‹</button>
-      <h2 id="select-title">Versus</h2>
+      <h2 id="select-title">Player vs AI</h2>
       <div class="select__search">
         <input type="search" id="select-search" placeholder="Search fighters" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Search fighters">
       </div>
       <button type="button" class="btn btn--ghost" id="btn-filters">Filters</button>
-      <button type="button" class="btn btn--ghost" id="btn-random">Random</button>
+      <button type="button" class="btn btn--ghost" id="btn-random">Random AI Opponent</button>
     </header>
 
     <div class="select__body">
       <div class="select__panel select__panel--p1 safe-left" id="panel-p1">
-        <span class="select__panel-label">Player</span>
+        <span class="select__panel-label">Your Fighter</span>
         <div class="select__portrait" id="portrait-p1"></div>
         <strong id="name-p1">—</strong>
         <span class="select__meta" id="meta-p1"></span>
@@ -126,7 +126,7 @@
       </div>
 
       <div class="select__panel select__panel--p2 safe-right" id="panel-p2">
-        <span class="select__panel-label">Opponent</span>
+        <span class="select__panel-label">AI Opponent</span>
         <div class="select__portrait" id="portrait-p2"></div>
         <strong id="name-p2">—</strong>
         <span class="select__meta" id="meta-p2"></span>
@@ -135,7 +135,7 @@
 
     <footer class="select__footer safe-bottom">
       <div class="select__opts" id="select-options"></div>
-      <button type="button" class="btn btn--primary" id="btn-select-confirm" disabled>Choose a fighter</button>
+      <button type="button" class="btn btn--primary" id="btn-select-confirm" disabled>Choose your fighter</button>
     </footer>
 
     <!-- Fighter detail sheet -->
@@ -146,8 +146,8 @@
         <div class="sheet__content" id="sheet-content"></div>
         <div class="sheet__actions">
           <button type="button" class="btn btn--ghost" id="btn-fav">☆</button>
-          <button type="button" class="btn btn--primary" id="btn-pick-p1">Player</button>
-          <button type="button" class="btn" id="btn-pick-p2">Opponent</button>
+          <button type="button" class="btn btn--primary" id="btn-pick-p1">Choose Fighter</button>
+          <button type="button" class="btn" id="btn-pick-p2">Choose Opponent</button>
         </div>
       </div>
     </div>

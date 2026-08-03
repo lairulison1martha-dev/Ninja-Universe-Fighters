@@ -147,8 +147,40 @@ export class CombatEngine extends EventTarget {
       };
     }
 
+    this.assertPvE();
     this.startRound(1);
     return this;
+  }
+
+  /**
+   * Ninja Universe Fighters is single-player PvE: one human, one AI, always.
+   *
+   * There is no second human controller anywhere in the codebase and no
+   * networking, but the shape of a match is easy to break by accident (a mode
+   * that forgets to build an AI, a training setup that marks both sides as the
+   * player), so the rule is asserted at setup rather than assumed. It throws
+   * because a match with two humans or two AIs is not playable — better to fail
+   * loudly at the start than to hand the player an unresponsive fight.
+   *
+   * @returns {{ human: number, ai: number }}
+   */
+  assertPvE() {
+    const human = this.fighters.filter((f) => f.isPlayer);
+    const ai = this.fighters.filter((f) => this.controllers.has(f.id));
+
+    if (this.fighters.length !== 2) {
+      throw new Error(`A match needs exactly 2 fighters, got ${this.fighters.length}`);
+    }
+    if (human.length !== 1) {
+      throw new Error(`Player vs AI needs exactly 1 human-controlled fighter, got ${human.length}`);
+    }
+    if (ai.length !== 1) {
+      throw new Error(`Player vs AI needs exactly 1 AI-controlled fighter, got ${ai.length}`);
+    }
+    if (human[0] === ai[0]) {
+      throw new Error('The same fighter cannot be both human- and AI-controlled');
+    }
+    return { human: human.length, ai: ai.length };
   }
 
   startRound(n) {

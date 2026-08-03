@@ -15,7 +15,7 @@ const $ = (id) => document.getElementById(id);
 const ITEMS = [
   { id: 'continue', label: 'Continue', hint: 'Resume the story where you left off.' },
   { id: 'story', label: 'Story', hint: 'The Severed Accord — an original ninja-world campaign.' },
-  { id: 'versus', label: 'Versus', hint: 'Pick a fighter, an opponent, a stage and the rules.' },
+  { id: 'versus', label: 'Player vs AI', hint: 'Pick your fighter, an AI opponent, a stage and the rules.' },
   { id: 'arcade', label: 'Arcade', hint: 'A ladder of opponents ending with a boss.' },
   { id: 'survival', label: 'Survival', hint: 'Fight until you fall. Healing between waves is limited.' },
   { id: 'training', label: 'Training', hint: 'Dummy settings, frame data, combo damage and input display.' },

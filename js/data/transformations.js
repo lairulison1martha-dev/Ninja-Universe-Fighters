@@ -490,7 +490,7 @@ export const MADARA_CHAIN = chain('madara', [
     description: '',
   },
   {
-    id: 'tentails', displayName: 'Ten-Tails Jinchuriki',
+    id: 'obito', displayName: 'Ten-Tails Jinchuriki',
     activationRequirement: { awakening: 100, chakra: 60, healthBelow: 0.6, oncePerMatch: true },
     awakeningCost: 100, chakraCost: 60, duration: 16, chakraDrain: 2.6,
     statModifiers: { attack: 1.72, defense: 1.55, speed: 1.20, guard: 1.7, chakraRegen: 2.0 },
@@ -532,7 +532,7 @@ export const OBITO_CHAIN = chain('obito', [
     description: '',
   },
   {
-    id: 'tentails', displayName: 'Ten-Tails Obito',
+    id: 'obito', displayName: 'Ten-Tails Obito',
     activationRequirement: { awakening: 100, chakra: 50 },
     awakeningCost: 100, chakraCost: 50, duration: 17, chakraDrain: 2.2,
     statModifiers: { attack: 1.60, defense: 1.46, speed: 1.24, guard: 1.6, chakraRegen: 1.8 },

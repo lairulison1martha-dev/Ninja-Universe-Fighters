@@ -20,7 +20,7 @@ export const SAVE_SLOT_KEY = (slot) => `${STORAGE_PREFIX}.save.slot${slot}`;
 export const SAVE_SLOT_COUNT = 3;
 
 /** Save schema version. Migrations live in save-manager.js. */
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 
 /* -------------------------------------------------------------------------- */
 /* Combat tuning                                                              */

@@ -86,7 +86,7 @@ export function evaluateUnlock(req, save, ctx = {}) {
 /** Fighters available before any progression at all. */
 export const STARTER_FIGHTERS = [
   'naruto', 'sasuke', 'sakura', 'kakashi', 'lee', 'gaara', 'boruto',
-  'iruka', 'mizuki', 'zabuza', 'haku', 'temari', 'sarada', 'mitsuki',
+  'iruka', 'iruka', 'zabuza', 'haku', 'temari', 'sarada', 'mitsuki',
 ];
 
 /** Stages available immediately. */

@@ -160,6 +160,20 @@ HAND = {
         sash="#6a4a86", aura="#8ad06a", markings="tearlines",
         height=1.04, bulk=0.94,
     ),
+    "white_zetsu": dict(
+        skin="#e8ece4", hair="#dfe6da", hairStyle="bald",
+        outfit="#3f4a3c", outfit2="#2a3228", trim="#8fa07e", pants="#2f382c",
+        boots="#232a20", eyes="#c9d84a", torso="wrap", sleeves="long",
+        coat="cloak", coatColor="#dfe6da", aura="#9fd06a",
+        height=1.0, bulk=1.0,
+    ),
+    "black_zetsu": dict(
+        skin="#2a2f38", hair="#1a1e26", hairStyle="wild",
+        outfit="#20242c", outfit2="#12151b", trim="#5a6270", pants="#1a1e26",
+        boots="#101319", eyes="#e8e4dc", torso="wrap", sleeves="long",
+        coat="cloak", coatColor="#171b22", aura="#7a8494",
+        height=1.0, bulk=1.0,
+    ),
     "tsunade": dict(
         skin="#f4d0ae", hair="#f0d878", hairStyle="twin-tails",
         outfit="#4a7a5c", outfit2="#2a4a6a", trim="#e8e4dc", pants="#2f4a66",

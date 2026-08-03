@@ -18,6 +18,7 @@ const SUITES = [
   './save-validation.js',
   './combat-validation.js',
   './sprite-validation.js',
+  './roster-cleanup.js',
   './github-pages-paths.js',
   './data-integrity.js',
 ];

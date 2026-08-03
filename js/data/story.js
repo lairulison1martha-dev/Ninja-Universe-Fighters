@@ -58,7 +58,7 @@ chapter('chapter_1', 'The Severed Accord', {
       { speaker: 'Iruka', text: 'Nobody crossed the border. Nobody touched it. And it still broke.' },
       { speaker: 'Naruto', text: 'Then something was already here.' },
     ], { stage: 'leaf_village' }),
-    fight('c1_b1', { player: 'naruto', opponent: 'mizuki', stage: 'forest_training', difficulty: 'easy', title: 'Sparring: fundamentals' }),
+    fight('c1_b1', { player: 'naruto', opponent: 'iruka', stage: 'forest_training', difficulty: 'easy', title: 'Sparring: fundamentals' }),
     talk('c1_mid', [
       { speaker: 'Sakura', text: 'The crack runs downward. Whatever did it was under the stone.' },
       { speaker: 'Kakashi', text: 'Then we are not looking for an invader. We are looking for something that was sealed.' },
@@ -100,7 +100,7 @@ chapter('chapter_3', 'The Sand Runs First', {
     fight('c3_b1', { player: 'gaara', opponent: 'temari', stage: 'desert_arena', difficulty: 'normal', title: 'Sand duel: proving the claim' }),
     fight('c3_b2', { player: 'naruto', opponent: 'itachi', stage: 'rain_rooftops', variant: 'night', difficulty: 'hard', rounds: 2, title: 'The watcher in the rain', conditions: [{ id: 'no_regen', label: 'Chakra does not regenerate' }] }),
   ],
-  rewards: { coins: 700, xp: 600, unlockFighters: ['itachi', 'gaara_kazekage'] },
+  rewards: { coins: 700, xp: 600, unlockFighters: ['itachi', 'gaara'] },
 });
 
 chapter('chapter_4', 'Six Bodies, One Voice', {
@@ -148,7 +148,7 @@ chapter('chapter_6', 'The War of the Second Accord', {
     fight('c6_b1', { player: 'guy', opponent: 'madara', stage: 'war_battlefield', difficulty: 'veryhard', rounds: 2, title: 'The first line' }),
     fight('c6_b2', { player: 'naruto', opponent: 'madara', stage: 'war_battlefield', difficulty: 'veryhard', rounds: 3, title: 'The second line', conditions: [{ id: 'boss_health', label: 'Opponent has +40% health' }] }),
   ],
-  rewards: { coins: 1400, xp: 1200, unlockFighters: ['madara', 'madara_edo'], unlockStages: ['war_battlefield'] },
+  rewards: { coins: 1400, xp: 1200, unlockFighters: ['madara', 'madara'], unlockStages: ['war_battlefield'] },
 });
 
 chapter('chapter_7', 'What Was Sealed', {
@@ -161,9 +161,9 @@ chapter('chapter_7', 'What Was Sealed', {
       { speaker: 'Kawaki', text: 'So the Accord was never a treaty.' },
       { speaker: 'Hashirama', text: 'It was a feeding schedule. Signed by people who did not read it.' },
     ], { stage: 'stone_canyon' }),
-    fight('c7_b1', { player: 'kawaki', opponent: 'kurama', stage: 'stone_canyon', difficulty: 'veryhard', rounds: 2, title: 'The ancient beast stirs', conditions: [{ id: 'boss_health', label: 'Opponent has +40% health' }] }),
+    fight('c7_b1', { player: 'kawaki', opponent: 'naruto', stage: 'stone_canyon', difficulty: 'veryhard', rounds: 2, title: 'The ancient beast stirs', conditions: [{ id: 'boss_health', label: 'Opponent has +40% health' }] }),
   ],
-  rewards: { coins: 1500, xp: 1300, unlockFighters: ['kawaki', 'kakashi_hokage'] },
+  rewards: { coins: 1500, xp: 1300, unlockFighters: ['kawaki', 'kakashi'] },
 });
 
 chapter('chapter_8', 'The Ones Who Wrote It', {
@@ -192,9 +192,9 @@ chapter('chapter_9', 'The Third Accord', {
       { speaker: 'Gaara', text: 'Especially the boring parts.' },
       { speaker: 'Sasuke', text: 'And someone stays awake at the border. Permanently.' },
     ], { stage: 'exam_arena' }),
-    fight('c9_b1', { player: 'sasuke', opponent: 'naruto_adult', stage: 'final_valley', difficulty: 'legendary', rounds: 3, title: 'The last disagreement' }),
+    fight('c9_b1', { player: 'sasuke', opponent: 'naruto', stage: 'final_valley', difficulty: 'legendary', rounds: 3, title: 'The last disagreement' }),
   ],
-  rewards: { coins: 2000, xp: 1800, unlockFighters: ['naruto_adult', 'sasuke_adult', 'kakashi_hokage'] },
+  rewards: { coins: 2000, xp: 1800, unlockFighters: ['naruto', 'sasuke', 'kakashi'] },
 });
 
 chapter('chapter_10', 'The Harvest Refused', {
@@ -214,7 +214,7 @@ chapter('chapter_10', 'The Harvest Refused', {
       { speaker: 'Narrator', text: 'The border stone was left cracked, on purpose, where everyone could see it.' },
     ], { stage: 'leaf_village' }),
   ],
-  rewards: { coins: 3000, xp: 2500, unlockFighters: ['kaguya', 'isshiki', 'naruto_hokage', 'jigen'] },
+  rewards: { coins: 3000, xp: 2500, unlockFighters: ['kaguya', 'isshiki', 'naruto', 'jigen'] },
 });
 
 export function getChapter(id) {
