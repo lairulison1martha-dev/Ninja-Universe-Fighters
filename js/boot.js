@@ -309,6 +309,14 @@ const STAGES = [
     },
   },
   {
+    label: 'Loading fighter sprites',
+    run: async (report) => {
+      const { loaded, failed } = await assets.loadSpriteSets(report);
+      if (failed.length) return `${loaded.length} loaded, ${failed.length} unavailable`;
+      return `${loaded.length} sprite set${loaded.length === 1 ? '' : 's'}`;
+    },
+  },
+  {
     label: 'Preparing combat engine',
     run: async () => {
       // Import (and therefore parse) the combat modules now, so the first match

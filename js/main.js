@@ -38,7 +38,7 @@ import {
   showResults, hideResults, showCutIn, announce,
 } from './ui/overlays.js';
 
-import { FIGHTERS } from './data/fighters.js';
+import { FIGHTERS, ROSTER_SIZE } from './data/fighters.js';
 import { STAGES } from './data/stages.js';
 import { getChapter } from './data/story.js';
 import { APP_VERSION, DIFFICULTY_LABELS } from './constants.js';
@@ -472,9 +472,20 @@ export class Game {
         <h3>Original assets</h3>
         <ul>
           <li>The app icon is generated procedurally by <code>tools/generate-icons.py</code>. The editable master is <code>assets/icons/icon-source.svg</code>.</li>
-          <li>Fighters, stages and every visual effect are drawn at runtime from data — there are no sprite files.</li>
+          <li>Stages and every visual effect are drawn at runtime from data — no downloaded art.</li>
           <li>All music and sound effects are synthesised with the Web Audio API at runtime.</li>
+          <li>Roster portraits are still drawn procedurally from each fighter's colour and silhouette data, so all ${ROSTER_SIZE} look different on the select screen.</li>
         </ul>
+
+        <h3>Fighter sprites — prototype</h3>
+        <p>In combat every fighter is drawn from a single temporary sprite set,
+        <code>assets/fighters/base-ninja/</code>, recoloured to their palette. It is
+        16 animations totalling 80 frames, extracted from a supplied reference
+        sheet by <code>tools/build-fighter-sprites.py</code>; <code>fighter.json</code>
+        records how many frames each animation really has rather than the counts
+        printed on the source. This is placeholder art: it is one body for the
+        whole roster, and per-fighter sets can be added under
+        <code>assets/fighters/</code> without touching code.</p>
 
         <h3>Names and likenesses</h3>
         <p>Character and technique names reference well-known series characters for a private prototype. No copyrighted artwork, sprites, logos, screenshots, music or voice lines are used or downloaded anywhere in this project, and every asset path is structured so names and art can be replaced later.</p>
@@ -736,6 +747,10 @@ export class Game {
     canvas.height = Math.max(1, Math.round(h * dpr));
     this.dpr = dpr;
     this.ctx = canvas.getContext('2d', { alpha: false });
+    // Fighter art is pixel art drawn at ~3x. Bilinear smoothing would blur it,
+    // so it is off for the whole combat canvas; the stage renderer draws
+    // gradients and paths, which do not go through the image sampler.
+    this.ctx.imageSmoothingEnabled = false;
     this.stageRenderer.resize(w, h);
     if (this.engine) this.engine.camera.resize(w, h);
     this.touch.layout();

@@ -1,19 +1,27 @@
 /**
  * Asset loader.
  *
- * This project deliberately ships almost no binary assets — fighters, stages
- * and effects are all drawn procedurally, and audio is synthesised. What is
- * left is the icon set, which we warm so the loading screen and menu do not
- * pop, plus a small cache of pre-rendered roster portraits.
+ * Stages, effects and roster portraits are still drawn procedurally and audio
+ * is synthesised, so the binary payload is small: the icon set, and the fighter
+ * sprite atlases under assets/fighters/.
  *
  * Everything here uses RELATIVE paths so the game works from a GitHub Pages
  * project subdirectory.
  */
 
+import { SpriteSheet, spriteRegistry } from './combat/sprite-animator.js';
+
 const ICONS = [
   './assets/icons/icon-96.png',
   './assets/icons/icon-192.png',
 ];
+
+/**
+ * Sprite sets to load at boot. Adding a new one is a data change: drop the
+ * folder in, add its id here, and any fighter with a matching `spriteId` picks
+ * it up — everyone else falls back to `base-ninja`.
+ */
+const SPRITE_SETS = ['base-ninja'];
 
 class AssetLoader {
   constructor() {
@@ -50,6 +58,41 @@ class AssetLoader {
       onProgress?.(this.loaded / this.total);
     }
     return true;
+  }
+
+  /**
+   * Load the fighter sprite atlases and register them.
+   *
+   * A missing or broken set is never fatal: the fighter renderer falls back to
+   * the procedural silhouette, so the game still runs (just without sprites)
+   * if the assets fail to fetch.
+   *
+   * @returns {Promise<{ loaded: string[], failed: string[] }>}
+   */
+  async loadSpriteSets(onProgress) {
+    const loaded = [];
+    const failed = [];
+    for (let i = 0; i < SPRITE_SETS.length; i++) {
+      const id = SPRITE_SETS[i];
+      try {
+        const res = await fetch(this.url(`./assets/fighters/${id}/fighter.json`), {
+          cache: 'force-cache',
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const meta = await res.json();
+        // The path in the metadata is repo-relative; resolve it the same way as
+        // every other asset so a Pages subdirectory still works.
+        const image = await this.loadImage(`./${meta.spriteSheet.replace(/^\.?\//, '')}`);
+        if (!image) throw new Error('sprite sheet image failed to load');
+        spriteRegistry.add(id, new SpriteSheet(meta, image));
+        loaded.push(id);
+      } catch (err) {
+        console.warn(`[assets] sprite set "${id}" unavailable — using procedural fighters`, err);
+        failed.push(id);
+      }
+      onProgress?.((i + 1) / SPRITE_SETS.length);
+    }
+    return { loaded, failed };
   }
 
   /**

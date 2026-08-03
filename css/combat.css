@@ -9,6 +9,11 @@
   height: 100%;
   z-index: 0;
   touch-action: none;
+  /* The canvas backing store is smaller than its CSS box on most phones, and
+     the fighters on it are pixel art. Keep the browser's own upscale crisp —
+     Canvas smoothing is disabled separately, in resizeCanvas(). */
+  image-rendering: crisp-edges;   /* older Firefox / Safari spelling, first … */
+  image-rendering: pixelated;     /* … so the modern keyword wins where it exists */
 }
 
 .hud {

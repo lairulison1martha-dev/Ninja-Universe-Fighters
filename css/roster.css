@@ -192,6 +192,19 @@
 }
 .form[data-locked="true"] { opacity: .55; }
 
+.sheet__sprite { display: flex; gap: .7rem; align-items: flex-start; }
+.sheet__sprite img {
+  flex: 0 0 auto;
+  width: 72px;
+  height: 96px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, .35);
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+.sheet__sprite p { margin: 0; }
+
 .filter-group { margin-bottom: .9rem; }
 .filter-group h4 { margin-top: 0; }
 .filter-group .row { flex-wrap: wrap; gap: .3rem; }

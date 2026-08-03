@@ -1,0 +1,161 @@
+{
+  "id": "base-ninja",
+  "name": "Base Ninja",
+  "displayName": "Base Ninja (temporary)",
+  "spriteSheet": "assets/fighters/base-ninja/sprite-sheet.png",
+  "portrait": "assets/fighters/base-ninja/portrait.png",
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "anchor": {
+    "x": 32,
+    "y": 52
+  },
+  "bodyHeight": 52,
+  "pixelArt": true,
+  "source": {
+    "kind": "reference-mockup",
+    "note": "Extracted from a presentation mockup of a sprite sheet, not a production atlas. The source had no alpha channel and its printed frame counts did not match the drawn content; the counts below are what was actually recovered.",
+    "claimedFrames": {
+      "idle": 8,
+      "walk": 8,
+      "run": 8,
+      "lightAttack": 6,
+      "heavyAttack": 6,
+      "jutsu1": 7,
+      "jutsu2": 7,
+      "jump": 4,
+      "fall": 4,
+      "dash": 6,
+      "hurt": 4,
+      "knockdown": 4,
+      "getUp": 4,
+      "guard": 3,
+      "victory": 4,
+      "defeat": 4
+    },
+    "extractedFrames": {
+      "idle": 7,
+      "walk": 7,
+      "run": 7,
+      "lightAttack": 5,
+      "heavyAttack": 6,
+      "jutsu1": 6,
+      "jutsu2": 6,
+      "jump": 4,
+      "fall": 4,
+      "dash": 5,
+      "hurt": 4,
+      "knockdown": 4,
+      "getUp": 4,
+      "guard": 3,
+      "victory": 4,
+      "defeat": 4
+    }
+  },
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 7,
+      "fps": 8,
+      "loop": true
+    },
+    "walk": {
+      "row": 1,
+      "frames": 7,
+      "fps": 10,
+      "loop": true
+    },
+    "run": {
+      "row": 2,
+      "frames": 7,
+      "fps": 14,
+      "loop": true
+    },
+    "lightAttack": {
+      "row": 3,
+      "frames": 5,
+      "fps": 16,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "hit"
+    },
+    "heavyAttack": {
+      "row": 4,
+      "frames": 6,
+      "fps": 14,
+      "loop": false,
+      "hitFrame": 3,
+      "event": "hit"
+    },
+    "jutsu1": {
+      "row": 5,
+      "frames": 6,
+      "fps": 14,
+      "loop": false,
+      "hitFrame": 3,
+      "event": "cast"
+    },
+    "jutsu2": {
+      "row": 6,
+      "frames": 6,
+      "fps": 14,
+      "loop": false,
+      "hitFrame": 3,
+      "event": "cast"
+    },
+    "jump": {
+      "row": 7,
+      "frames": 4,
+      "fps": 10,
+      "loop": false
+    },
+    "fall": {
+      "row": 8,
+      "frames": 4,
+      "fps": 10,
+      "loop": true
+    },
+    "dash": {
+      "row": 9,
+      "frames": 5,
+      "fps": 18,
+      "loop": false
+    },
+    "hurt": {
+      "row": 10,
+      "frames": 4,
+      "fps": 12,
+      "loop": false
+    },
+    "knockdown": {
+      "row": 11,
+      "frames": 4,
+      "fps": 9,
+      "loop": false
+    },
+    "getUp": {
+      "row": 12,
+      "frames": 4,
+      "fps": 10,
+      "loop": false
+    },
+    "guard": {
+      "row": 13,
+      "frames": 3,
+      "fps": 8,
+      "loop": true
+    },
+    "victory": {
+      "row": 14,
+      "frames": 4,
+      "fps": 8,
+      "loop": true
+    },
+    "defeat": {
+      "row": 15,
+      "frames": 4,
+      "fps": 8,
+      "loop": false
+    }
+  }
+}

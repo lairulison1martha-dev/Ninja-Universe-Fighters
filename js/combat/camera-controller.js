@@ -61,6 +61,16 @@ export class CameraController {
     const halfW = (this.viewW / 2) / this.targetZoom;
     tx = Math.max(halfW - 120, Math.min(ARENA.width - halfW + 120, tx));
 
+    // …and keep the floor inside the frame. `ty` is a screen-space offset, so
+    // the bottom edge of the view sits at `ty + halfH` and the floor is 0.
+    // Without this clamp the camera rides above the ground at close range and
+    // crops the fighters off at the knees — which is where a fight spends most
+    // of its time. FLOOR_MARGIN is how much ground stays visible under a
+    // standing fighter's feet.
+    const FLOOR_MARGIN = 26;
+    const halfH = (this.viewH / 2) / this.targetZoom;
+    ty = Math.max(ty, FLOOR_MARGIN - halfH);
+
     const k = instant ? 1 : Math.min(1, dt * 7.5);
     const kz = instant ? 1 : Math.min(1, dt * 5.5);
     this.x += (tx - this.x) * k;

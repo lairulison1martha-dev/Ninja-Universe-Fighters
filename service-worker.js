@@ -11,7 +11,7 @@
  * such as /Ninja-Universe-Fighters/.
  */
 
-const CACHE_VERSION = 'v0.6.0';
+const CACHE_VERSION = 'v0.7.0';
 const CACHE_NAME = `nuf-${CACHE_VERSION}`;
 
 /** Resolve relative to the worker's own scope, never to the domain root. */
@@ -78,6 +78,7 @@ const PRECACHE = [
   './js/combat/stage-renderer.js',
   './js/combat/fighter-renderer.js',
   './js/combat/status-effects.js',
+  './js/combat/sprite-animator.js',
 
   './js/data/ability-schema.js',
   './js/data/abilities.js',
@@ -106,6 +107,10 @@ const PRECACHE = [
   './assets/icons/favicon-16.png',
   './assets/icons/favicon-32.png',
   './assets/icons/icon-source.svg',
+
+  './assets/fighters/base-ninja/fighter.json',
+  './assets/fighters/base-ninja/sprite-sheet.png',
+  './assets/fighters/base-ninja/portrait.png',
 ];
 
 self.addEventListener('install', (event) => {

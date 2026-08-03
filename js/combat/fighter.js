@@ -11,7 +11,10 @@ import {
 import { getAbility } from '../data/abilities.js';
 import { getFighter } from '../data/fighters.js';
 import { TRANSFORMATIONS } from '../data/transformations.js';
-import { STATE, LOCKED_STATES, canAct, isAirborne } from './fighter-state.js';
+import { STATE, LOCKED_STATES, HIT_STATES, canAct, isAirborne } from './fighter-state.js';
+import {
+  SpriteAnimator, spriteRegistry, animationForAbility, animationForState,
+} from './sprite-animator.js';
 import { setCentred } from './hitbox.js';
 import { ComboTracker } from './combo-system.js';
 import { tickGuard } from './guard-system.js';
@@ -121,10 +124,26 @@ export class Fighter {
     this.abilities = { slots: [], ultimate: null };
     this.refreshAbilities();
 
-    /** Visual-only animation clock, driven by the renderer. */
+    /** Visual-only clock, used by the procedural fallback renderer. */
     this.animTime = 0;
     this.flash = 0;
     this.lastHitBy = null;
+
+    /* ---- sprite animation ------------------------------------------------
+     * The sheet (image + atlas geometry) is shared; the animator (playhead) is
+     * per fighter and advances inside the fixed-timestep simulation, so what is
+     * drawn and what the engine thinks is happening can never drift apart.
+     * `sheet` is null when the assets did not load — the renderer then falls
+     * back to the procedural silhouette and nothing else changes.
+     */
+    this.sheet = spriteRegistry.forFighter(this.data);
+    this.anim = new SpriteAnimator(this.sheet?.meta || null);
+    this.anim.onEvent = (name) => this._onAnimationEvent(name);
+    this._animForce = true;
+    this._ctx = null;
+    // Build the recoloured atlas now, at match setup, rather than during the
+    // first frame of the first round.
+    this.sheet?.tinted?.(this.data.colors.primary);
   }
 
   get name() { return this.data.displayName; }
@@ -219,13 +238,27 @@ export class Fighter {
     this.roundNumber = roundNumber;
     this.survivedLethal = false;
     this.flash = 0;
+    this.anim.reset();
+    this._animForce = true;
     applyFormStats(this);
   }
 
+  /**
+   * @param {string} state
+   * @param {number} [duration] 0 = until something else changes it
+   *
+   * Entering a state restarts its animation. Re-entering the same state does
+   * not — `walk()` re-states WALK every frame, and restarting there would peg
+   * the walk cycle to frame 0 forever. Attacks and hits are the exceptions:
+   * a chained attack or a fresh hit must replay from the first frame even
+   * though the state name has not changed.
+   */
   setState(state, duration = 0) {
+    const changed = state !== this.state;
     this.state = state;
     this.stateTime = 0;
     this.stateDuration = duration;
+    if (changed || state === STATE.ATTACK || HIT_STATES.has(state)) this._animForce = true;
   }
 
   /* -------------------------------------------------------------- helpers */
@@ -308,6 +341,8 @@ export class Fighter {
     if (!this.infiniteChakra) this.chakra = Math.max(0, this.chakra - ability.chakraCost);
     if (ability.cooldown > 0) this.cooldowns.set(ability.id, ability.cooldown);
 
+    const slot = this.abilities.slots.indexOf(ability);
+    const animName = animationForAbility(ability, slot);
     this.act = {
       ability,
       t: 0,
@@ -317,6 +352,12 @@ export class Fighter {
       chained: !!opts.chained,
       connected: false,
       projectilesFired: false,
+      slot,
+      animName,
+      // The clip's contact frame releases the effects only when the animator
+      // can actually retime it onto this ability's start-up window; otherwise
+      // the drawn frame and the hitbox would disagree and the timer wins.
+      animEvent: this._clipDrivesEvents(animName, ability),
     };
     this.setState(STATE.ATTACK, ability.totalTime);
     this.armorLeft = ability.armor + this.mods.armor;
@@ -332,6 +373,21 @@ export class Fighter {
       if (dir) this.facing = dir;
     }
     return true;
+  }
+
+  /**
+   * True when `animName`'s authored contact frame can be pinned to this
+   * ability's start-up. Mirrors the retiming condition in
+   * SpriteAnimator._buildTimeline — if that retiming cannot happen, the drawn
+   * contact frame would not coincide with the hitbox, so the animation must
+   * not be the thing that fires the effects.
+   */
+  _clipDrivesEvents(animName, ability) {
+    const clip = this.anim.animations[animName];
+    if (!clip) return false;
+    const hit = Number.isInteger(clip.hitFrame) ? clip.hitFrame : -1;
+    return hit > 0 && hit < clip.frames
+      && ability.startup > 0 && ability.totalTime > ability.startup;
   }
 
   /** Chain the current move into a follow-up if the input allows it. */
@@ -398,6 +454,7 @@ export class Fighter {
    * @param {Object} ctx { opponent, effects, arena }
    */
   step(dt, ctx) {
+    this._ctx = ctx;
     this.time += dt;
     this.stateTime += dt;
     this.animTime += dt;
@@ -440,7 +497,61 @@ export class Fighter {
 
     this._stepAction(dt, ctx);
     this._stepPhysics(dt, ctx);
+    this._stepAnimation(dt);
     this.combo.update(dt);
+  }
+
+  /* ---------------------------------------------------------- animation -- */
+
+  /**
+   * Pick the clip for the current state and advance the playhead.
+   *
+   * Runs after physics so the airborne/landing state is already settled for
+   * this step, and inside the fixed timestep so animation events land on the
+   * same simulation step every time, at any frame rate.
+   */
+  _stepAnimation(dt) {
+    const force = this._animForce;
+    this._animForce = false;
+    if (!this.anim.available) return;
+
+    if (this.state === STATE.ATTACK && this.act) {
+      const a = this.act.ability;
+      this.anim.play(this.act.animName, {
+        force,
+        startup: a.startup,
+        total: a.totalTime,
+      });
+    } else {
+      let name = animationForState(this.state, this.airborne);
+      // The state machine has no separate falling state after a jump, but the
+      // sheet does, so switch clips at the apex.
+      if (name === 'jump' && this.vy < -30) name = 'fall';
+      this.anim.play(name, { force });
+    }
+    this.anim.update(dt);
+  }
+
+  /** Fired by the animator when the playhead reaches a clip's event frame. */
+  _onAnimationEvent(kind) {
+    if (kind === 'hit' || kind === 'cast') {
+      if (this.act && this.act.animEvent && !this.act.effectSpawned) {
+        this._spawnAbilityEffects(this._ctx);
+      }
+    }
+  }
+
+  /** Impact/cast visuals + sound for the running ability. */
+  _spawnAbilityEffects(ctx) {
+    if (!this.act || this.act.effectSpawned) return;
+    this.act.effectSpawned = true;
+    const a = this.act.ability;
+    if (a.effectId && a.category !== 'basic') {
+      ctx?.effects?.emit(a.effectId, this.x + this.facing * 70, this.y + 80, {
+        facing: this.facing, scale: a.area > 0 ? 1.6 : 1,
+      });
+    }
+    ctx?.playSound?.(a.soundId, this);
   }
 
   _stepAction(dt, ctx) {
@@ -470,15 +581,13 @@ export class Fighter {
       ctx.fireProjectile?.(this, a);
     }
 
-    // Effects on activation
-    if (!this.act.effectSpawned && this.act.t >= activeStart) {
-      this.act.effectSpawned = true;
-      if (a.effectId && a.category !== 'basic') {
-        ctx.effects?.emit(a.effectId, this.x + this.facing * 70, this.y + 80, {
-          facing: this.facing, scale: a.area > 0 ? 1.6 : 1,
-        });
-      }
-      ctx.playSound?.(a.soundId, this);
+    // Effects on activation. With a sprite clip the animation's contact frame
+    // owns this moment (see _onAnimationEvent); the timer below is the fallback
+    // for fighters drawn procedurally, so behaviour never depends on assets.
+    // Both resolve to the same instant, because the clip is retimed so its hit
+    // frame lands exactly on `startup`.
+    if (!this.act.effectSpawned && !this.act.animEvent && this.act.t >= activeStart) {
+      this._spawnAbilityEffects(ctx);
     }
 
     // Cancel window opens after the active frames.
@@ -579,10 +688,18 @@ export class Fighter {
     }
     const speed = (run ? this.data.movement.runSpeed : this.data.movement.walkSpeed) * this.speedFactor;
     this.vx = dirX * speed;
-    if (this.state === STATE.IDLE || this.state === STATE.WALK || this.state === STATE.RUN
-      || this.state === STATE.GUARD || this.state === STATE.CROUCH) {
-      this.setState(run ? STATE.RUN : STATE.WALK);
+    const groundedFree = this.state === STATE.IDLE || this.state === STATE.WALK
+      || this.state === STATE.RUN || this.state === STATE.GUARD || this.state === STATE.CROUCH;
+    if (!groundedFree) return;
+    if (dirX === 0) {
+      // walk(0) is how the input layer says "stop". It has to actually return
+      // to idle: leaving the fighter in WALK with no velocity used to be
+      // invisible with the vector renderer, but a sprite would march on the
+      // spot. Guard and crouch own their own states, so leave those alone.
+      if (this.state === STATE.WALK || this.state === STATE.RUN) this.setState(STATE.IDLE);
+      return;
     }
+    this.setState(run ? STATE.RUN : STATE.WALK);
   }
 
   jump() {

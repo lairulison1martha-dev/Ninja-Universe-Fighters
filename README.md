@@ -164,6 +164,7 @@ Storage → **Clear site data**.
 | Arcade ladders / Boss Rushes | 4 / 4 |
 | Assists and summons | 24 |
 | Achievements | 31 |
+| Fighter sprite animations | **16** (80 frames), one shared prototype set |
 
 ### The twenty fighters with complete, unique kits
 
@@ -305,7 +306,7 @@ Gamepads are polled with the standard mapping.
 │   ├── save-manager.js         slots, migrations, export/import, recovery
 │   ├── settings-manager.js     settings + side effects
 │   ├── audio-manager.js        synthesised SFX and generative music
-│   ├── asset-loader.js         icon warm-up, portrait cache
+│   ├── asset-loader.js         icon warm-up, sprite sets, portrait cache
 │   ├── input-manager.js        abstract input + buffering + gamepad
 │   ├── mobile-controls.js      multi-touch on-screen controls
 │   ├── menu-background.js      animated parallax menu background
@@ -315,14 +316,18 @@ Gamepads are polled with the standard mapping.
 │   ├── combat/                 engine, loop, fighter, hitboxes, projectiles,
 │   │                           effects, camera, combo/guard/substitution/
 │   │                           transformation/assist systems, AI, training,
-│   │                           stage + fighter renderers
+│   │                           stage + fighter renderers, sprite animator
 │   ├── data/                   fighters, abilities, transformations, assists,
 │   │                           stages, story, arcade, achievements, unlocks,
 │   │                           ai-profiles
 │   └── ui/                     menu, select, stage, list, settings, layout
 │                               editor, HUD, overlays
 ├── assets/icons/               generated PNG icon set + editable SVG master
+├── assets/fighters/            fighter sprite sets (atlas + fighter.json +
+│                               portrait), one folder per set
 ├── tools/generate-icons.py     procedural icon generator
+├── tools/build-fighter-sprites.py  reference sheet → sprite atlas extractor
+├── tools/pngio.py              dependency-free PNG read/write
 └── tests/                      validation suite (plain Node, no dependencies)
 ```
 
@@ -346,14 +351,36 @@ python3 -m http.server 8000
 node tests/run-all.js
 ```
 
-93 checks across six suites: roster integrity, ability schema and the
+117 checks across seven suites: roster integrity, ability schema and the
 "complete fighters use no templates" rule, transformation chain integrity, save
-migrations and corruption recovery, a headless combat simulation, and GitHub
-Pages path compatibility (absolute paths, manifest fields, icon presence,
+migrations and corruption recovery, a headless combat simulation, sprite atlas
+and animation validation (the suite decodes `sprite-sheet.png` itself and checks
+transparency, frame occupancy and ground-line alignment pixel by pixel), and
+GitHub Pages path compatibility (absolute paths, manifest fields, icon presence,
 service-worker precache list, broken imports).
 
 `package.json` exists **only** so Node treats `tests/*.js` as ES modules. There
 are no dependencies and nothing to install to play or deploy the game.
+
+### Rebuilding the fighter sprite atlas
+
+```bash
+python3 tools/build-fighter-sprites.py [source.png]
+```
+
+Reads a reference sheet (default `tools/source-sheet.png`) and writes
+`assets/fighters/base-ninja/{sprite-sheet.png,fighter.json,portrait.png}`.
+
+The supplied source is a *presentation mockup* rather than a production atlas:
+it is an opaque RGB PNG whose "transparency" is a painted grey checker, its
+printed per-row frame counts are decorative, its frame pitch varies per row, and
+effects bleed across cell boundaries. So the tool does not slice a grid — it
+keys the backdrop to real alpha with a luminance/saturation test plus a border
+flood fill (dark pixels *inside* the silhouette survive), measures each strip's
+pitch by autocorrelation, snaps cuts to the emptiest columns, drops cells with
+no character in them, and re-anchors every surviving frame onto a 64x64 cell
+with the feet on one baseline. `fighter.json` records both the count printed on
+the mockup and the count actually recovered.
 
 ### Regenerating the app icon
 
@@ -392,10 +419,17 @@ game, anime or third party.**
   Original design: dark ninja universe, eclipse, blue/red chakra swirl, hooded
   masked shinobi silhouette. No official logo, village symbol or character
   likeness.
-- **Fighters** — drawn at runtime from each roster entry's `colors` and `visual`
-  fields (silhouette proportions, hairstyle, weapon, cape, markings, aura).
-  There are no sprite files. Every fighter is visually distinct without any
-  third-party art.
+- **Fighters (in combat)** — one temporary sprite set,
+  `assets/fighters/base-ninja/`, built by `tools/build-fighter-sprites.py` from
+  a reference sheet supplied for this project, recoloured per fighter at
+  runtime. It is placeholder art: **the whole roster shares one body**. Drop a
+  new folder into `assets/fighters/`, add its id to `SPRITE_SETS` in
+  `js/asset-loader.js`, and point a fighter's `spriteId` at it to override.
+- **Fighters (portraits)** — still drawn at runtime from each roster entry's
+  `colors` and `visual` fields (silhouette proportions, hairstyle, weapon, cape,
+  markings, aura), so all 192 stay visually distinct on the select screen. The
+  same renderer is the automatic fallback in combat if the sprite assets fail
+  to load.
 - **Stages** — generated procedurally from layer descriptions in
   `js/data/stages.js`. No background images.
 - **Effects** — a pooled particle system driven by named recipes.
@@ -426,8 +460,14 @@ any other project.
   to play yet — the slider currently controls an empty bus.
 - The language framework exists (setting, `lang` attribute, `LANGUAGES` table)
   but only English strings ship.
-- Fighter animation is procedural pose interpolation, not frame-by-frame sprite
-  animation.
+- **The fighter sprite set is a prototype, not production art.** Every fighter
+  in a match is the same `base-ninja` body under a different colour ramp. The
+  atlas is honest about itself — background keyed to real alpha, uniform 64x64
+  cells, one ground line, verified by tests — but it came from a reference
+  mockup, so several rows hold fewer frames than the mockup advertised (idle,
+  walk and run recovered 7 of a claimed 8; light attack 5 of 6; the jutsu rows
+  6 of 7), and the source art is very dark and low-contrast, which limits how
+  far the per-fighter recolour can go.
 - Local two-player versus on one device is not implemented; Versus is
   player-versus-AI. The input manager already carries a second player state for
   it.

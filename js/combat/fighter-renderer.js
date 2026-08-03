@@ -1,10 +1,18 @@
 /**
- * Procedural fighter renderer.
+ * Fighter renderer.
  *
- * Fighters are drawn from their `colors` + `visual` data: silhouette shape,
- * hairstyle, weapon, cape, markings and aura. That gives every roster entry a
- * visually distinct placeholder without a single downloaded sprite, and the
- * same code renders the roster portraits.
+ * Two body renderers behind one entry point:
+ *
+ *   SPRITE      blits the current frame of the fighter's sprite sheet. This is
+ *               the normal path once assets/fighters/ has loaded.
+ *   PROCEDURAL  draws a vector silhouette from the fighter's `colors` +
+ *               `visual` data. It is the fallback when no sheet is available
+ *               (assets failed to fetch, or a headless test), and it still
+ *               renders every roster portrait, where 190-odd fighters need to
+ *               stay visually distinct.
+ *
+ * Shadow, aura, guard shimmer, hit flash and the invulnerability outline are
+ * shared by both paths so the two look like the same game.
  */
 
 import settings from '../settings-manager.js';
@@ -32,6 +40,9 @@ export function withAlpha(color, alpha) {
   if (a <= 0.001) return 'rgba(0,0,0,0)';
   return color;
 }
+
+/** Scratch source rect, reused so drawing a fighter allocates nothing. */
+const RECT = { sx: 0, sy: 0, sw: 0, sh: 0 };
 
 /** Simple limb pose per state. Angles in radians. */
 function pose(f, t) {
@@ -160,23 +171,56 @@ export class FighterRenderer {
    * @param {import('./fighter.js').Fighter} f
    */
   static draw(ctx, f, dt) {
-    const c = f.data.colors;
     const v = f.data.visual;
     const t = f.animTime;
-    const p = pose(f, t);
-    const scaleY = v.height || 1;
     const bulk = v.bulk || 1;
-
-    const H = 158 * scaleY;
-    const torsoH = H * 0.34;
-    const legH = H * 0.40;
-    const headR = H * 0.115 * bulk;
+    const H = 158 * (v.height || 1);
 
     ctx.save();
     ctx.translate(f.x, -f.y);
+    // Sprites are authored facing right; this is the horizontal flip for a
+    // left-facing fighter, and it flips the procedural body too.
     ctx.scale(f.facing, 1);
 
-    // ---- shadow ---------------------------------------------------------
+    FighterRenderer._ground(ctx, f, H, bulk, t);
+
+    const sheet = f.sheet;
+    if (sheet && sheet.image && f.anim?.available) {
+      FighterRenderer._sprite(ctx, f, sheet, H);
+    } else {
+      FighterRenderer._procedural(ctx, f, H, bulk, t);
+    }
+
+    FighterRenderer._overlays(ctx, f, H, bulk, t);
+    ctx.restore();
+  }
+
+  /**
+   * Draw the current sprite frame.
+   *
+   * The atlas anchor (feet, body centre) is placed on the fighter's world
+   * origin, so a 5%-taller roster entry stands 5% taller on screen and every
+   * animation shares one ground line. Smoothing is off: this is pixel art and
+   * a 3x bilinear upscale would turn it to soup.
+   */
+  static _sprite(ctx, f, sheet, worldHeight) {
+    const r = sheet.rect(f.anim.name, f.anim.index, RECT);
+    if (!r) return;
+    const image = sheet.tinted(f.data.colors.primary) || sheet.image;
+    const scale = worldHeight / (sheet.bodyHeight || sheet.frameHeight);
+    const smoothing = ctx.imageSmoothingEnabled;
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(
+      image,
+      r.sx, r.sy, r.sw, r.sh,
+      -sheet.anchor.x * scale, -sheet.anchor.y * scale,
+      sheet.frameWidth * scale, sheet.frameHeight * scale,
+    );
+    ctx.imageSmoothingEnabled = smoothing;
+  }
+
+  /** Shadow, transformation aura and guard shimmer — common to both bodies. */
+  static _ground(ctx, f, H, bulk, t) {
     if (settings.tuning.shadows) {
       const sh = Math.max(0.25, 1 - f.y / 500);
       ctx.save();
@@ -211,7 +255,18 @@ export class FighterRenderer {
       ctx.ellipse(0, -H * 0.5, 46 * bulk, H * 0.58, 0, -Math.PI * 0.6, Math.PI * 0.6);
       ctx.stroke();
     }
+  }
 
+  /** Vector-silhouette body: the fallback when no sprite sheet is loaded. */
+  static _procedural(ctx, f, H, bulk, t) {
+    const c = f.data.colors;
+    const v = f.data.visual;
+    const p = pose(f, t);
+    const torsoH = H * 0.34;
+    const legH = H * 0.40;
+    const headR = H * 0.115 * bulk;
+
+    ctx.save();
     ctx.translate(0, -p.crouch * H * 0.22);
     ctx.rotate(-p.lean * 0.5);
 
@@ -289,30 +344,32 @@ export class FighterRenderer {
     ctx.fill();
     ctx.restore();
 
-    // ---- hit flash --------------------------------------------------------
+    ctx.restore();
+  }
+
+  /** Hit flash and invulnerability outline, drawn over whichever body ran. */
+  static _overlays(ctx, f, H, bulk, t) {
+    const top = -H * 1.02;
     if (f.flash > 0 && settings.values.hitFlash) {
       ctx.globalAlpha = f.flash * 0.65;
       ctx.globalCompositeOperation = 'lighter';
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.roundRect(-24 * bulk, shoulderY - headR * 2, 48 * bulk, H, 14);
+      ctx.roundRect(-24 * bulk, top, 48 * bulk, H, 14);
       ctx.fill();
       ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = 1;
     }
 
-    // ---- invulnerability shimmer ------------------------------------------
     if (f.invulnerable) {
       ctx.globalAlpha = 0.35 + Math.sin(t * 30) * 0.2;
       ctx.strokeStyle = '#a8dcff';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.roundRect(-24 * bulk, shoulderY - headR * 2, 48 * bulk, H, 14);
+      ctx.roundRect(-24 * bulk, top, 48 * bulk, H, 14);
       ctx.stroke();
       ctx.globalAlpha = 1;
     }
-
-    ctx.restore();
   }
 
   static _hair(ctx, style, r) {

@@ -436,6 +436,18 @@ export class SelectScreen {
 
       <h4>AI personality</h4>
       <p class="small muted">${d.aiProfile} — the CPU plays this fighter accordingly.</p>
+
+      <h4>In-match sprite</h4>
+      <div class="sheet__sprite">
+        <img src="./assets/fighters/base-ninja/portrait.png" alt="Base ninja placeholder sprite" width="96" height="128">
+        <p class="small muted">
+          Placeholder art. Every fighter currently shares one temporary sprite
+          set (<code>base-ninja</code>), recoloured to their palette in combat.
+          The portrait above the stats is the procedural silhouette, which is
+          still unique per fighter. Per-fighter sprite sets drop into
+          <code>assets/fighters/</code> without a code change.
+        </p>
+      </div>
     `;
 
     FighterRenderer.drawPortrait(el.querySelector('.sheet__hero-art canvas'), d, {});
