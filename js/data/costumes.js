@@ -15,158 +15,251 @@
  * save migration uses to convert an old unlock into a costume unlock.
  */
 
-/** @typedef {{ id: string, name: string, legacyId?: string, unlock?: Object,
- *              palette?: Object, loadout?: string }} Costume */
+/**
+ * @typedef {Object} Costume
+ * @property {string} id
+ * @property {string} name
+ * @property {Object} unlockRule       what has to happen to earn it
+ * @property {string} [legacyId]       the roster card this replaced
+ * @property {string} [spriteSetId]    its own sprite set, when art exists
+ * @property {string} [portrait]       its own portrait, when art exists
+ * @property {string} [preview]        select-screen preview image
+ * @property {boolean} [paletteFallback] true = safe to render with base art
+ * @property {'complete'|'placeholder'|'fallback'} assetStatus
+ */
 
-const DEFAULT = { id: 'default', name: 'Default', unlock: { type: 'default' } };
+/** Asset status values, in order of how finished they are. */
+export const ASSET_STATUS = Object.freeze({
+  /** Its own sprite set exists and has every required animation. */
+  COMPLETE: 'complete',
+  /** Its own sprite set exists but is knowingly stand-in art. */
+  PLACEHOLDER: 'placeholder',
+  /** No art of its own — renders with the fighter's base set. */
+  FALLBACK: 'fallback',
+});
+
+const DEFAULT_OUTFIT = {
+  id: 'default',
+  name: 'Default Outfit',
+  unlockRule: { type: 'default' },
+  assetStatus: ASSET_STATUS.FALLBACK,
+  paletteFallback: true,
+  spriteSetId: null,
+  portrait: null,
+  preview: null,
+};
 
 /** Costume lists per fighter. Everyone implicitly has `default` first. */
 export const COSTUMES = Object.freeze({
   naruto: [
-    { id: 'kid', name: 'Academy Days', legacyId: null, unlock: { type: 'default' } },
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'the_last', name: 'The Last', legacyId: 'rtn_naruto', unlock: { type: 'mastery', value: 3 } },
-    { id: 'hokage', name: 'Seventh Hokage', legacyId: 'naruto_hokage', unlock: { type: 'mastery', value: 5 } },
-    { id: 'adult', name: 'Adult', legacyId: 'naruto_adult', unlock: { type: 'mastery', value: 5 } },
+    { id: 'kid', name: 'Academy Days', legacyId: null, unlockRule: { type: 'default' } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'the_last', name: 'The Last', legacyId: 'rtn_naruto', unlockRule: { type: 'mastery', value: 3 } },
+    { id: 'hokage', name: 'Seventh Hokage', legacyId: 'naruto_hokage', unlockRule: { type: 'mastery', value: 5 } },
+    { id: 'adult', name: 'Adult', legacyId: 'naruto_adult', unlockRule: { type: 'mastery', value: 5 } },
   ],
   sasuke: [
-    { id: 'kid', name: 'Academy Days', unlock: { type: 'default' } },
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'the_last', name: 'The Last', legacyId: 'rtn_sasuke', unlock: { type: 'mastery', value: 3 } },
-    { id: 'adult', name: 'Adult', legacyId: 'sasuke_adult', unlock: { type: 'mastery', value: 5 } },
+    { id: 'kid', name: 'Academy Days', unlockRule: { type: 'default' } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'the_last', name: 'The Last', legacyId: 'rtn_sasuke', unlockRule: { type: 'mastery', value: 3 } },
+    { id: 'adult', name: 'Adult', legacyId: 'sasuke_adult', unlockRule: { type: 'mastery', value: 5 } },
   ],
   sakura: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'sakura_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'genin', name: 'Genin', unlockRule: { type: 'default' } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'sakura_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   kakashi: [
-    { id: 'young', name: 'Young Kakashi', legacyId: 'kakashi_young', unlock: { type: 'mastery', value: 2 } },
-    { id: 'anbu', name: 'ANBU', legacyId: 'sakumo', unlock: { type: 'mastery', value: 3 } },
-    { id: 'jonin', name: 'Jonin', unlock: { type: 'default' } },
-    { id: 'hokage', name: 'Sixth Hokage', legacyId: 'kakashi_hokage', unlock: { type: 'mastery', value: 5 } },
+    { id: 'young', name: 'Young Kakashi', legacyId: 'kakashi_young', unlockRule: { type: 'mastery', value: 2 } },
+    { id: 'anbu', name: 'ANBU', legacyId: 'sakumo', unlockRule: { type: 'mastery', value: 3 } },
+    { id: 'jonin', name: 'Jonin', unlockRule: { type: 'default' } },
+    { id: 'hokage', name: 'Sixth Hokage', legacyId: 'kakashi_hokage', unlockRule: { type: 'mastery', value: 5 } },
   ],
   obito: [
-    { id: 'young', name: 'Young Obito', legacyId: 'obito_young', unlock: { type: 'mastery', value: 2 } },
-    { id: 'tobi', name: 'Tobi', unlock: { type: 'mastery', value: 3 } },
-    { id: 'masked', name: 'Masked', unlock: { type: 'default' } },
-    { id: 'white_mask', name: 'White Mask', unlock: { type: 'mastery', value: 4 } },
-    { id: 'war', name: 'War Arc', legacyId: 'rin', unlock: { type: 'mastery', value: 5 } },
+    { id: 'young', name: 'Young Obito', legacyId: 'obito_young', unlockRule: { type: 'mastery', value: 2 } },
+    { id: 'tobi', name: 'Tobi', unlockRule: { type: 'mastery', value: 3 } },
+    { id: 'masked', name: 'Masked', unlockRule: { type: 'default' } },
+    { id: 'white_mask', name: 'White Mask', unlockRule: { type: 'mastery', value: 4 } },
+    { id: 'war', name: 'War Arc', legacyId: 'rin', unlockRule: { type: 'mastery', value: 5 } },
   ],
   madara: [
-    { id: 'young', name: 'Young Madara', legacyId: 'madara_young', unlock: { type: 'mastery', value: 2 } },
-    { id: 'valley', name: 'Valley of the End', unlock: { type: 'default' } },
-    { id: 'edo', name: 'Edo Tensei', legacyId: 'madara_edo', unlock: { type: 'mastery', value: 4 } },
+    { id: 'young', name: 'Young Madara', legacyId: 'madara_young', unlockRule: { type: 'mastery', value: 2 } },
+    { id: 'valley', name: 'Valley of the End', unlockRule: { type: 'default' } },
+    { id: 'war', name: 'War Arc', unlockRule: { type: 'mastery', value: 3 } },
+    { id: 'edo', name: 'Edo Tensei', legacyId: 'madara_edo', unlockRule: { type: 'mastery', value: 4 } },
   ],
   gaara: [
-    { id: 'genin', name: 'Chunin Exams', unlock: { type: 'default' } },
-    { id: 'kazekage', name: 'Fifth Kazekage', legacyId: 'gaara_kazekage', unlock: { type: 'mastery', value: 4 } },
-    { id: 'adult', name: 'Adult', legacyId: 'gaara_adult', unlock: { type: 'mastery', value: 5 } },
+    { id: 'genin', name: 'Chunin Exams', unlockRule: { type: 'default' } },
+    { id: 'kazekage', name: 'Fifth Kazekage', legacyId: 'gaara_kazekage', unlockRule: { type: 'mastery', value: 4 } },
+    { id: 'adult', name: 'Adult', legacyId: 'gaara_adult', unlockRule: { type: 'mastery', value: 5 } },
   ],
   minato: [
-    { id: 'young', name: 'Young Minato', legacyId: 'minato_young', unlock: { type: 'mastery', value: 2 } },
-    { id: 'hokage', name: 'Fourth Hokage', unlock: { type: 'default' } },
+    { id: 'young', name: 'Young Minato', legacyId: 'minato_young', unlockRule: { type: 'mastery', value: 2 } },
+    { id: 'hokage', name: 'Fourth Hokage', unlockRule: { type: 'default' } },
   ],
   hashirama: [
-    { id: 'young', name: 'Warring States', legacyId: 'hashirama_young', unlock: { type: 'mastery', value: 3 } },
-    { id: 'hokage', name: 'First Hokage', unlock: { type: 'default' } },
+    { id: 'young', name: 'Warring States', legacyId: 'hashirama_young', unlockRule: { type: 'mastery', value: 3 } },
+    { id: 'hokage', name: 'First Hokage', unlockRule: { type: 'default' } },
   ],
   tobirama: [
-    { id: 'young', name: 'Warring States', legacyId: 'tobirama_young', unlock: { type: 'mastery', value: 3 } },
-    { id: 'hokage', name: 'Second Hokage', unlock: { type: 'default' } },
+    { id: 'young', name: 'Warring States', legacyId: 'tobirama_young', unlockRule: { type: 'mastery', value: 3 } },
+    { id: 'hokage', name: 'Second Hokage', unlockRule: { type: 'default' } },
   ],
   hiruzen: [
-    { id: 'young', name: 'The Professor', legacyId: 'hiruzen_young', unlock: { type: 'mastery', value: 3 } },
-    { id: 'elder', name: 'Third Hokage', unlock: { type: 'default' } },
+    { id: 'young', name: 'The Professor', legacyId: 'hiruzen_young', unlockRule: { type: 'mastery', value: 3 } },
+    { id: 'elder', name: 'Third Hokage', unlockRule: { type: 'default' } },
   ],
   jiraiya: [
-    { id: 'young', name: 'Young Jiraiya', legacyId: 'jiraiya_young', unlock: { type: 'mastery', value: 2 } },
-    { id: 'sannin', name: 'Toad Sage', unlock: { type: 'default' } },
+    { id: 'young', name: 'Young Jiraiya', legacyId: 'jiraiya_young', unlockRule: { type: 'mastery', value: 2 } },
+    { id: 'sannin', name: 'Toad Sage', unlockRule: { type: 'default' } },
   ],
   orochimaru: [
-    { id: 'young', name: 'Young Orochimaru', legacyId: 'orochimaru_young', unlock: { type: 'mastery', value: 2 } },
-    { id: 'sannin', name: 'Sannin', unlock: { type: 'default' } },
+    { id: 'young', name: 'Young Orochimaru', legacyId: 'orochimaru_young', unlockRule: { type: 'mastery', value: 2 } },
+    { id: 'sannin', name: 'Sannin', unlockRule: { type: 'default' } },
   ],
   tsunade: [
-    { id: 'young', name: 'Young Tsunade', legacyId: 'tsunade_young', unlock: { type: 'mastery', value: 2 } },
-    { id: 'hokage', name: 'Fifth Hokage', unlock: { type: 'default' } },
+    { id: 'young', name: 'Young Tsunade', legacyId: 'tsunade_young', unlockRule: { type: 'mastery', value: 2 } },
+    { id: 'hokage', name: 'Fifth Hokage', unlockRule: { type: 'default' } },
   ],
   guy: [
-    { id: 'young', name: 'Young Guy', legacyId: 'guy_young', unlock: { type: 'mastery', value: 2 } },
-    { id: 'jonin', name: 'Jonin', unlock: { type: 'default' } },
+    { id: 'young', name: 'Young Guy', legacyId: 'guy_young', unlockRule: { type: 'mastery', value: 2 } },
+    { id: 'jonin', name: 'Jonin', unlockRule: { type: 'default' } },
   ],
   lee: [
-    { id: 'genin', name: 'Chunin Exams', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'lee_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'genin', name: 'Chunin Exams', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'lee_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   boruto: [
-    { id: 'genin', name: 'Genin', unlock: { type: 'default' } },
-    { id: 'timeskip', name: 'Time Skip', legacyId: 'houki', unlock: { type: 'mastery', value: 4 } },
+    { id: 'genin', name: 'Genin', unlockRule: { type: 'default' } },
+    { id: 'timeskip', name: 'Time Skip', legacyId: 'houki', unlockRule: { type: 'mastery', value: 4 } },
   ],
   hinata: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'hinata_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'genin', name: 'Genin', unlockRule: { type: 'default' } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'hinata_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   shikamaru: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'shikamaru_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'shikamaru_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   choji: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'choji_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'choji_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   ino: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'ino_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'ino_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   kiba: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'kiba_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'kiba_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   shino: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'shino_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'shino_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   tenten: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'tenten_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'tenten_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   sai: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'sai_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'sai_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   temari: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'temari_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'temari_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   kankuro: [
-    { id: 'shippuden', name: 'Shippuden', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'kankuro_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'shippuden', name: 'Shippuden', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'kankuro_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   konohamaru: [
-    { id: 'genin', name: 'Genin', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Jonin', legacyId: 'konohamaru_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'genin', name: 'Genin', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Jonin', legacyId: 'konohamaru_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   hanabi: [
-    { id: 'genin', name: 'Genin', unlock: { type: 'default' } },
-    { id: 'adult', name: 'Adult', legacyId: 'hanabi_adult', unlock: { type: 'mastery', value: 4 } },
+    { id: 'genin', name: 'Genin', unlockRule: { type: 'default' } },
+    { id: 'adult', name: 'Adult', legacyId: 'hanabi_adult', unlockRule: { type: 'mastery', value: 4 } },
   ],
   momoshiki: [
-    { id: 'base', name: 'Base', unlock: { type: 'default' } },
+    { id: 'base', name: 'Base', unlockRule: { type: 'default' } },
   ],
   white_zetsu: [
-    { id: 'base', name: 'White Zetsu', legacyId: 'zetsu', unlock: { type: 'default' } },
+    { id: 'base', name: 'White Zetsu', legacyId: 'zetsu', unlockRule: { type: 'default' } },
   ],
 });
 
-/** Every costume a fighter has, `default` included. */
-export function costumesFor(fighterId) {
-  const extra = COSTUMES[fighterId] || [];
-  return [DEFAULT, ...extra];
+/**
+ * Costume ids that have their own generated sprite set.
+ *
+ * This list is what separates "we drew it" from "it borrows the base body".
+ * It is checked against the asset manifest by a test, so a costume cannot
+ * claim finished art it does not have.
+ */
+export const COSTUMES_WITH_ART = Object.freeze([
+  'naruto:kid', 'naruto:shippuden', 'naruto:hokage',
+  'sasuke:kid', 'sasuke:shippuden', 'sasuke:adult',
+  'sakura:genin', 'sakura:shippuden',
+  'kakashi:jonin', 'kakashi:hokage',
+  'gaara:genin', 'gaara:kazekage',
+  'hinata:genin', 'hinata:shippuden',
+  'obito:young', 'obito:masked',
+  'madara:valley', 'madara:war',
+]);
+
+const WITH_ART = new Set(COSTUMES_WITH_ART);
+
+/**
+ * Fill in the derived fields once, at module load.
+ *
+ * A costume with its own sprite set points at it and is `complete`; everything
+ * else is explicitly `fallback` and renders with the fighter's base art. There
+ * is deliberately no middle state where a costume silently looks finished.
+ */
+function decorate(fighterId, c) {
+  const key = `${fighterId}:${c.id}`;
+  const hasArt = WITH_ART.has(key);
+  return Object.freeze({
+    ...c,
+    fighterId,
+    unlockRule: c.unlockRule || c.unlock || { type: 'default' },
+    spriteSetId: hasArt ? `${fighterId}__${c.id}` : null,
+    portrait: hasArt ? `assets/fighters/${fighterId}/costumes/${c.id}/portrait.png` : null,
+    preview: hasArt ? `assets/fighters/${fighterId}/costumes/${c.id}/portrait.png` : null,
+    paletteFallback: !hasArt,
+    assetStatus: hasArt ? ASSET_STATUS.COMPLETE : ASSET_STATUS.FALLBACK,
+  });
 }
 
-/** Look up one costume; falls back to `default`. */
+const RESOLVED = new Map();
+for (const [fighterId, list] of Object.entries(COSTUMES)) {
+  RESOLVED.set(fighterId, list.map((c) => decorate(fighterId, c)));
+}
+
+/** Every costume a fighter has, the default outfit first. */
+export function costumesFor(fighterId) {
+  const base = Object.freeze({ ...DEFAULT_OUTFIT, fighterId });
+  return [base, ...(RESOLVED.get(fighterId) || [])];
+}
+
+/** True when the fighter has anything to choose between. */
+export function hasCostumeChoice(fighterId) {
+  return costumesFor(fighterId).length > 1;
+}
+
+/** Look up one costume; falls back to the default outfit. */
 export function getCostume(fighterId, costumeId) {
-  return costumesFor(fighterId).find((c) => c.id === costumeId) || DEFAULT;
+  const list = costumesFor(fighterId);
+  return list.find((c) => c.id === costumeId) || list[0];
+}
+
+/**
+ * The sprite set a costume should render with, or null for the base set.
+ * Callers treat null as "use the fighter's own art" — never as an error.
+ */
+export function costumeSpriteSetId(fighterId, costumeId) {
+  return getCostume(fighterId, costumeId).spriteSetId;
 }
 
 /**

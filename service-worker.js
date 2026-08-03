@@ -11,7 +11,7 @@
  * such as /Ninja-Universe-Fighters/.
  */
 
-const CACHE_VERSION = 'v0.8.0';
+const CACHE_VERSION = 'v0.9.0';
 const CACHE_NAME = `nuf-${CACHE_VERSION}`;
 
 /** Resolve relative to the worker's own scope, never to the domain root. */
@@ -79,6 +79,10 @@ const PRECACHE = [
   './js/combat/fighter-renderer.js',
   './js/combat/status-effects.js',
   './js/combat/sprite-animator.js',
+  './js/asset-report.js',
+  './js/data/roster-migration.js',
+  './js/data/costumes.js',
+  './js/ui/costume-preview.js',
 
   './js/data/ability-schema.js',
   './js/data/abilities.js',
@@ -109,6 +113,7 @@ const PRECACHE = [
   './assets/icons/icon-source.svg',
 
   './assets/fighters/manifest.json',
+  './assets/asset-manifest.json',
 ];
 
 /**
@@ -130,6 +135,30 @@ for (const id of PRECACHE_FIGHTERS) {
   PRECACHE.push(`./assets/fighters/${id}/fighter.json`);
   PRECACHE.push(`./assets/fighters/${id}/sprite-sheet.png`);
   PRECACHE.push(`./assets/fighters/${id}/portrait.png`);
+}
+
+/**
+ * Costume sets installed up front.
+ *
+ * Only the starters' costumes: a costume set is the same size as a fighter, so
+ * precaching all of them would double the install. Everything else is cached by
+ * the runtime handler the first time a match fetches it.
+ */
+const PRECACHE_COSTUMES = [
+  'naruto/kid', 'naruto/shippuden', 'naruto/hokage',
+  'sasuke/kid', 'sasuke/shippuden', 'sasuke/adult',
+  'sakura/genin', 'sakura/shippuden',
+  'kakashi/jonin', 'kakashi/hokage',
+  'gaara/genin', 'gaara/kazekage',
+  'hinata/genin', 'hinata/shippuden',
+  'obito/young', 'obito/masked',
+  'madara/valley', 'madara/war',
+];
+
+for (const pair of PRECACHE_COSTUMES) {
+  PRECACHE.push(`./assets/fighters/${pair.split('/')[0]}/costumes/${pair.split('/')[1]}/fighter.json`);
+  PRECACHE.push(`./assets/fighters/${pair.split('/')[0]}/costumes/${pair.split('/')[1]}/sprite-sheet.png`);
+  PRECACHE.push(`./assets/fighters/${pair.split('/')[0]}/costumes/${pair.split('/')[1]}/portrait.png`);
 }
 
 self.addEventListener('install', (event) => {

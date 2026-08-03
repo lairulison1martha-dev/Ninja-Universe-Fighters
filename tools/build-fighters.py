@@ -37,8 +37,9 @@ OUT_ROOT = os.path.join(ROOT, "assets", "fighters")
 ROSTER_JSON = os.path.join(HERE, "roster.json")
 
 ORDER = [
-    "idle", "walk", "run", "jump", "fall", "dash", "guard",
-    "lightAttack", "heavyAttack", "jutsu1", "jutsu2", "jutsu3", "ultimate",
+    "idle", "combatIdle", "walk", "run", "jump", "fall", "landing", "dash",
+    "guard", "guardBreak", "lightAttack", "heavyAttack",
+    "jutsu1", "jutsu2", "jutsu3", "ultimate",
     "hurt", "knockdown", "getUp", "victory", "defeat", "transformation",
 ]
 
@@ -143,6 +144,105 @@ def build_one(entry, out_root=OUT_ROOT):
             "hand": design.get("hand", False)}
 
 
+def build_variant(entry, kind, variant_id, override, out_root=OUT_ROOT):
+    """
+    Render a costume or transformation sprite set.
+
+    Same rig, same 22 animations — the override changes the design record, so
+    the whole body is redrawn rather than recoloured. Output goes beside the
+    fighter it belongs to:
+
+        assets/fighters/<fighter>/costumes/<costume>/
+        assets/fighters/<fighter>/forms/<form>/
+    """
+    base = dz.for_fighter(entry)
+    design = dz.variant(base, override)
+    fid = entry["id"]
+    folder = "costumes" if kind == "costume" else "forms"
+    # Costume sets are namespaced under their fighter; transformation ids are
+    # already unique and globally addressable (`naruto_sage`), and the runtime
+    # looks them up by exactly that id, so they are not namespaced again.
+    set_id = f"{fid}__{variant_id}" if kind == "costume" else variant_id
+
+    cols = max(art.FRAMES[a] for a in ORDER)
+    atlas = Image(cols * art.FRAME, len(ORDER) * art.FRAME)
+    animations = {}
+    body_tops = []
+    idle0 = None
+    total = 0
+
+    for r, name in enumerate(ORDER):
+        n = art.FRAMES[name]
+        fps, loop, hit, event = art.PLAYBACK[name]
+        for i in range(n):
+            canvas = art.frame(design, name, i)
+            canvas.paste_into(atlas, i * art.FRAME, r * art.FRAME)
+            if name == "idle":
+                b = canvas.bounds()
+                if b:
+                    body_tops.append(art.ANCHOR_Y - b[1])
+                if i == 0:
+                    idle0 = canvas
+            total += 1
+        meta_row = {"row": r, "frames": n, "fps": fps, "loop": loop}
+        if hit is not None:
+            meta_row["hitFrame"] = min(hit, n - 1)
+            meta_row["event"] = event
+        animations[name] = meta_row
+
+    rel = f"assets/fighters/{fid}/{folder}/{variant_id}"
+    out_dir = os.path.join(out_root, fid, folder, variant_id)
+    os.makedirs(out_dir, exist_ok=True)
+    write_png(os.path.join(out_dir, "sprite-sheet.png"), atlas)
+
+    portrait = Image(96, 128)
+    if idle0 is not None:
+        b = idle0.bounds()
+        if b:
+            x0, y0, x1, _y1 = b
+            cx = (x0 + x1) // 2
+            for y in range(y0, min(b[3] + 1, y0 + 60)):
+                for x in range(x0, x1 + 1):
+                    r_, g_, b_, a_ = idle0.get(x, y)
+                    if not a_:
+                        continue
+                    px = (x - cx) * 2 + 48
+                    py = (y - y0) * 2 + 6
+                    for dy in range(2):
+                        for dx in range(2):
+                            if 0 <= px + dx < 96 and 0 <= py + dy < 128:
+                                portrait.set(px + dx, py + dy, r_, g_, b_, 255)
+    write_png(os.path.join(out_dir, "portrait.png"), portrait)
+
+    meta = {
+        "id": set_id,
+        "fighter": fid,
+        "kind": kind,
+        "variant": variant_id,
+        "name": entry["displayName"],
+        "spriteSheet": f"{rel}/sprite-sheet.png",
+        "portrait": f"{rel}/portrait.png",
+        "frameWidth": art.FRAME,
+        "frameHeight": art.FRAME,
+        "anchor": {"x": art.ANCHOR_X, "y": art.ANCHOR_Y},
+        "bodyHeight": sorted(body_tops)[len(body_tops) // 2] if body_tops else 46,
+        "pixelArt": True,
+        "assetStatus": "complete",
+        "source": {
+            "kind": "generated",
+            "tool": "tools/build-fighters.py",
+            "note": ("Original pixel art drawn procedurally from this "
+                     f"{kind}'s design record. No source image is read."),
+        },
+        "animations": animations,
+    }
+    with open(os.path.join(out_dir, "fighter.json"), "w") as fh:
+        json.dump(meta, fh, indent=2)
+        fh.write("\n")
+    return {"setId": set_id, "fighter": fid, "kind": kind, "variant": variant_id,
+            "frames": total, "path": rel}
+
+
 def contact_sheet(entries, path, anim="idle", frame_index=0, scale=3):
     """A zoomed grid of one frame per fighter — the visual check while iterating."""
     per_row = 10
@@ -207,6 +307,27 @@ def main(argv):
         i = args.index("--contact")
         contact = args[i + 1]
         del args[i:i + 2]
+
+    if "--variants" in args:
+        args.remove("--variants")
+        built = []
+        for (fid, cid), override in sorted(dz.COSTUME_DESIGNS.items()):
+            if fid not in by_id:
+                print(f"  !! costume for unknown fighter {fid}")
+                continue
+            info = build_variant(by_id[fid], "costume", cid, override)
+            built.append(info)
+            print(f"  costume  {fid:12s} {cid:12s} {info['frames']:3d} frames")
+        for form_id, override in sorted(dz.FORM_DESIGNS.items()):
+            fid = form_id.split("_")[0]
+            if fid not in by_id:
+                print(f"  !! form for unknown fighter {fid} ({form_id})")
+                continue
+            info = build_variant(by_id[fid], "form", form_id, override)
+            built.append(info)
+            print(f"  form     {fid:12s} {form_id:24s} {info['frames']:3d} frames")
+        print(f"\n{len(built)} variant sprite sets")
+        return 0
 
     if "--pass1" in args:
         args.remove("--pass1")

@@ -17,6 +17,7 @@
 
 import settings from '../settings-manager.js';
 import assets from '../asset-loader.js';
+import { getCostume } from '../data/costumes.js';
 import { STATE } from './fighter-state.js';
 
 /**
@@ -504,8 +505,15 @@ export class FighterRenderer {
    * silhouette stands in, so the roster never renders empty.
    */
   static paintPortrait(canvas, fighterData, opts = {}) {
-    const img = assets.portraitImage(fighterData.id,
-      () => FighterRenderer.paintPortrait(canvas, fighterData, opts));
+    // A costume with its own art shows that art; anything else shows the
+    // fighter's own portrait. Both are real pictures — neither is an error.
+    const costume = opts.costumeId && opts.costumeId !== 'default'
+      ? getCostume(fighterData.id, opts.costumeId)
+      : null;
+    const img = costume?.portrait
+      ? assets.imageAt(costume.portrait, () => FighterRenderer.paintPortrait(canvas, fighterData, opts))
+      : assets.portraitImage(fighterData.id,
+        () => FighterRenderer.paintPortrait(canvas, fighterData, opts));
     if (!img) {
       FighterRenderer.drawPortrait(canvas, fighterData, opts);
       return;

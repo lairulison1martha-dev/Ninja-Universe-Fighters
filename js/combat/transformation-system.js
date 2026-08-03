@@ -113,6 +113,14 @@ export function applyFormStats(fighter) {
   };
   fighter.auraColor = form?.auraColor || fighter.data.colors.aura;
   fighter.auraEffect = form?.auraEffect || null;
+
+  // Artwork follows the form. Every path that changes `fighter.form` — activate,
+  // revert, end of round — funnels through here, so this one line is what keeps
+  // the drawn body and the active transformation in step. Position, facing,
+  // health, chakra, target and combat state are all untouched: only the sheet
+  // the animator reads from changes.
+  fighter.setFormSprite?.(form?.spriteSetId || null);
+
   fighter.refreshAbilities();
 }
 
@@ -145,19 +153,26 @@ export function tickTransformation(fighter, dt) {
 
   fighter.formTime += dt;
   if (fighter.formTime >= fighter.formDuration) {
-    revert(fighter, form);
+    revert(fighter, form, fighter._ctx?.effects || null);
     return true;
   }
   return false;
 }
 
-export function revert(fighter, form = null) {
+export function revert(fighter, form = null, effects = null) {
   const f = form || (fighter.form ? TRANSFORMATIONS[fighter.form] : null);
   const rule = f?.deactivationRules || { revertTo: 'previous' };
   fighter.form = rule.revertTo === 'base' ? null : (f?.previousForm || null);
   fighter.formTime = 0;
   fighter.formDuration = fighter.form ? (TRANSFORMATIONS[fighter.form]?.duration ?? 0) : 0;
+  // applyFormStats puts the sprite back to whichever costume the fighter chose,
+  // because that is what `form.spriteSetId` resolves to once the form is gone.
   applyFormStats(fighter);
+  if (f && effects) {
+    effects.emit(f.revertEffect || 'transform_revert', fighter.x, fighter.y + 80, {
+      scale: 1.1, color: f.auraColor,
+    });
+  }
 }
 
 export function endOfRoundReset(fighter) {

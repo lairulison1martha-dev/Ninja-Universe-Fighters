@@ -11,11 +11,27 @@ import unlocks from '../unlock-manager.js';
 import audio from '../audio-manager.js';
 import settings from '../settings-manager.js';
 import { FIGHTERS } from '../data/fighters.js';
+import { costumesFor, hasCostumeChoice, getCostume } from '../data/costumes.js';
 import { FighterRenderer } from '../combat/fighter-renderer.js';
+import { CostumePreview } from './costume-preview.js';
+import assets from '../asset-loader.js';
 import { DIFFICULTIES, DIFFICULTY_LABELS, ROUND_COUNT_OPTIONS, TIMER_OPTIONS, PLAYABLE_STATUS } from '../constants.js';
 import { toast } from './overlays.js';
 
 const $ = (id) => document.getElementById(id);
+
+/** Human-readable "Unlock Requirement" text for a costume. */
+function unlockText(rule) {
+  if (!rule || rule.type === 'default') return 'available';
+  switch (rule.type) {
+    case 'mastery': return `mastery level ${rule.value}`;
+    case 'level': return `player level ${rule.value}`;
+    case 'wins': return `${rule.value} wins`;
+    case 'coins': return `${rule.value} ryo`;
+    case 'story': return 'story progress';
+    default: return 'locked';
+  }
+}
 
 export class SelectScreen {
   constructor(onConfirm) {
@@ -33,6 +49,10 @@ export class SelectScreen {
     };
     this.cards = new Map();
     this.observer = null;
+    /** Costume ids currently chosen for each side. */
+    this.p1Costume = 'default';
+    this.p2Costume = 'default';
+    this.preview = new CostumePreview($('portrait-p1'));
     this._bind();
   }
 
@@ -55,6 +75,8 @@ export class SelectScreen {
       this.onConfirm?.({
         playerId: this.p1,
         opponentId: this.p2,
+        playerCostume: this.p1Costume,
+        opponentCostume: this.p2Costume,
         ...this.options,
       });
     });
@@ -91,6 +113,17 @@ export class SelectScreen {
       $('fighter-sheet').hidden = true;
     });
 
+    $('btn-costume').addEventListener('click', () => this.openCostumes());
+    document.querySelectorAll('[data-action="close-costumes"]').forEach((el) => {
+      el.addEventListener('click', () => { $('costume-sheet').hidden = true; });
+    });
+    $('btn-costume-prev').addEventListener('click', () => this.stepCostume(-1));
+    $('btn-costume-next').addEventListener('click', () => this.stepCostume(1));
+    $('btn-preview-flip').addEventListener('click', () => {
+      audio.play('sfx_ui_move');
+      this.preview.flip();
+    });
+
     // Lazy portrait painting.
     this.observer = new IntersectionObserver((entries) => {
       for (const e of entries) {
@@ -115,6 +148,8 @@ export class SelectScreen {
     this.p1 = cfg.lockedPlayer || this.p1 || saveManager.data.recent[0] || 'naruto';
     if (!saveManager.isFighterUnlocked(this.p1)) this.p1 = 'naruto';
     this.p2 = cfg.fixedOpponent || (this.allowOpponent ? (this.p2 || roster.randomAny(this.p1)) : null);
+    this._resolveP1Costume();
+    this._rollOpponentCostume();
 
     this.renderChips();
     this.renderGrid();
@@ -263,6 +298,100 @@ export class SelectScreen {
 
   /* ------------------------------------------------------------ panels --- */
 
+  /* ----------------------------------------------------------- costumes -- */
+
+  /**
+   * The costume the player has on. Falls back to the default outfit whenever
+   * the saved choice is locked or no longer exists, so the preview and the
+   * match can never be asked to render something the player cannot wear.
+   */
+  _resolveP1Costume() {
+    this.p1Costume = saveManager.equippedCostume(this.p1);
+    return this.p1Costume;
+  }
+
+  /**
+   * Pick a costume for the AI.
+   *
+   * The opponent may wear anything unlocked or default — including a different
+   * costume from the player in a mirror match, which is why this is chosen
+   * independently rather than copied across.
+   */
+  _rollOpponentCostume() {
+    if (!this.p2) { this.p2Costume = 'default'; return 'default'; }
+    const options = costumesFor(this.p2)
+      .filter((c) => saveManager.isCostumeUnlocked(this.p2, c.id));
+    const pick = options[Math.floor(Math.random() * options.length)] || { id: 'default' };
+    this.p2Costume = pick.id;
+    return this.p2Costume;
+  }
+
+  /** Move to the previous/next costume the player can wear. */
+  stepCostume(delta) {
+    if (!this.p1) return;
+    const wearable = costumesFor(this.p1)
+      .filter((c) => saveManager.isCostumeUnlocked(this.p1, c.id));
+    if (wearable.length < 2) return;
+    const at = Math.max(0, wearable.findIndex((c) => c.id === this.p1Costume));
+    const next = wearable[(at + delta + wearable.length) % wearable.length];
+    audio.play('sfx_ui_move');
+    this.equipCostume(next.id);
+  }
+
+  /** Equip a costume for the player and refresh everything that shows it. */
+  equipCostume(costumeId) {
+    if (!this.p1) return;
+    const equipped = saveManager.equipCostume(this.p1, costumeId);
+    if (equipped !== costumeId) {
+      toast('That costume is still locked.');
+      return;
+    }
+    this.p1Costume = equipped;
+    assets.loadFighterArt(this.p1, equipped);
+    this.renderPanels();
+    if (!$('costume-sheet').hidden) this.renderCostumes();
+  }
+
+  /** The "Choose Costume" sheet. */
+  openCostumes() {
+    if (!this.p1) return;
+    audio.play('sfx_ui_select');
+    $('costume-title').textContent = `Choose Costume — ${FIGHTERS[this.p1].displayName}`;
+    this.renderCostumes();
+    $('costume-sheet').hidden = false;
+  }
+
+  renderCostumes() {
+    const wrap = $('costume-list');
+    wrap.innerHTML = '';
+    for (const c of costumesFor(this.p1)) {
+      const unlocked = saveManager.isCostumeUnlocked(this.p1, c.id);
+      const equipped = c.id === this.p1Costume;
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = `costume${equipped ? ' is-equipped' : ''}`;
+      el.dataset.costume = c.id;
+      el.dataset.locked = String(!unlocked);
+      el.disabled = !unlocked;
+      const art = c.preview
+        ? `<img class="costume__art" src="./${c.preview}" alt="" loading="lazy">`
+        : `<canvas class="costume__art" width="54" height="72"></canvas>`;
+      el.innerHTML = `
+        ${art}
+        <span class="costume__name">${c.name}</span>
+        <span class="costume__state ${equipped ? 'is-equipped' : ''}${unlocked ? '' : ' is-locked'}">
+          ${equipped ? 'Equipped' : (unlocked ? 'Available' : `Locked — ${unlockText(c.unlockRule)}`)}
+        </span>`;
+      if (!c.preview) {
+        FighterRenderer.drawPortrait(el.querySelector('canvas'), FIGHTERS[this.p1], {
+          locked: !unlocked,
+        });
+      }
+      if (unlocked) el.addEventListener('click', () => this.equipCostume(c.id));
+      wrap.appendChild(el);
+    }
+  }
+
   setP1(id) {
     if (!saveManager.isFighterUnlocked(id)) {
       const st = unlocks.fighterStatus(id);
@@ -281,6 +410,7 @@ export class SelectScreen {
   setP2(id) {
     if (!this.allowOpponent) return;
     this.p2 = id;
+    this._rollOpponentCostume();
     for (const [cid, card] of this.cards) this._markCard(card, cid);
     this.renderPanels();
   }
@@ -288,6 +418,20 @@ export class SelectScreen {
   renderPanels() {
     this._panel(1, this.p1);
     if (this.allowOpponent) this._panel(2, this.p2);
+
+    // Costume controls appear only when there is a choice to make.
+    const choice = !!this.p1 && hasCostumeChoice(this.p1);
+    const wearable = this.p1
+      ? costumesFor(this.p1).filter((c) => saveManager.isCostumeUnlocked(this.p1, c.id)).length
+      : 0;
+    $('btn-costume').hidden = !choice;
+    $('btn-costume-prev').hidden = wearable < 2;
+    $('btn-costume-next').hidden = wearable < 2;
+    $('btn-preview-flip').hidden = !this.p1;
+    if (this.allowOpponent && this.p2) {
+      const c = getCostume(this.p2, this.p2Costume);
+      $('costume-p2').textContent = c.id === 'default' ? '' : c.name;
+    }
     const btn = $('btn-select-confirm');
     const ok = !!this.p1 && (!this.allowOpponent || !!this.p2);
     btn.disabled = !ok;
@@ -302,12 +446,27 @@ export class SelectScreen {
     const nameEl = $(`name-p${n}`);
     const metaEl = $(`meta-p${n}`);
     const portrait = $(`portrait-p${n}`);
-    if (!id) { nameEl.textContent = '—'; metaEl.textContent = ''; portrait.innerHTML = ''; return; }
+    if (!id) {
+      nameEl.textContent = '—';
+      metaEl.textContent = '';
+      if (n === 2) portrait.innerHTML = '';
+      else this.preview.clear();
+      return;
+    }
     const d = FIGHTERS[id];
     nameEl.textContent = d.displayName;
     metaEl.textContent = `${labelize(d.archetype)} · ${'★'.repeat(d.difficulty)}`;
+
+    if (n === 1) {
+      // The player's panel is a live preview: idle animation, costume art and
+      // a facing toggle, so what you see is what you take into the match.
+      this.preview.show(id, this.p1Costume);
+      return;
+    }
     portrait.innerHTML = '<canvas width="150" height="200"></canvas>';
-    FighterRenderer.paintPortrait(portrait.querySelector('canvas'), d, {});
+    FighterRenderer.paintPortrait(portrait.querySelector('canvas'), d, {
+      costumeId: this.p2Costume,
+    });
   }
 
   /* ----------------------------------------------------------- options --- */

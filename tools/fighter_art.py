@@ -42,8 +42,9 @@ HEAD_R = 8.4
 # Frame counts. Kept modest on purpose: more frames means a wider atlas for
 # every one of the 192 fighters, and these read cleanly at 6.
 FRAMES = {
-    "idle": 6, "walk": 6, "run": 6, "jump": 3, "fall": 3, "dash": 4,
-    "guard": 2, "lightAttack": 4, "heavyAttack": 5,
+    "idle": 6, "combatIdle": 4, "walk": 6, "run": 6, "jump": 3, "fall": 3,
+    "landing": 3, "dash": 4, "guard": 2, "guardBreak": 3,
+    "lightAttack": 4, "heavyAttack": 5,
     "jutsu1": 5, "jutsu2": 5, "jutsu3": 5, "ultimate": 6,
     "hurt": 3, "knockdown": 3, "getUp": 3,
     "victory": 5, "defeat": 4, "transformation": 6,
@@ -52,6 +53,9 @@ FRAMES = {
 # fps / looping / the frame an attack connects on.
 PLAYBACK = {
     "idle":        (7, True, None, None),
+    "combatIdle":  (8, True, None, None),
+    "landing":     (12, False, None, None),
+    "guardBreak":  (9, False, None, None),
     "walk":        (9, True, None, None),
     "run":         (12, True, None, None),
     "jump":        (10, False, None, None),
@@ -108,6 +112,38 @@ def pose(anim, i, n):
         s = math.sin(t * two_pi)
         return _p(bob=-abs(s) * 0.9, armF=0.30 + s * 0.06, armB=-0.26 - s * 0.06,
                   head=s * 0.03)
+
+    if anim == "combatIdle":
+        # A tighter, weight-forward stance: what a fighter stands in once the
+        # opponent is in range, as opposed to the relaxed `idle` loop.
+        s = math.sin(t * two_pi)
+        return _p(lean=0.10, bob=-abs(s) * 0.7, crouch=1.2,
+                  armF=-0.75 + s * 0.07, armB=-0.55 - s * 0.07,
+                  elbowF=0.95, elbowB=0.85,
+                  legF=0.26, legB=-0.26, kneeF=0.42, kneeB=0.38)
+
+    if anim == "landing":
+        return [
+            _p(airborne=True, bob=-2.0, legF=0.30, legB=-0.20, kneeF=0.35,
+               kneeB=0.30, armF=-0.9, armB=-0.7),
+            _p(crouch=4.5, lean=0.16, legF=0.55, legB=-0.55, kneeF=1.05,
+               kneeB=1.0, armF=0.55, elbowF=1.25, armB=0.35,
+               fx="dust", fxT=1.0),
+            _p(crouch=1.8, lean=0.06, legF=0.30, legB=-0.30, kneeF=0.55,
+               kneeB=0.5, armF=0.1, armB=-0.1, fx="dust", fxT=0.35),
+        ][i]
+
+    if anim == "guardBreak":
+        # Guard shattered: arms thrown wide, head back, fully open.
+        return [
+            _p(lean=-0.30, head=-0.22, armF=1.15, armB=1.30,
+               elbowF=0.35, elbowB=0.3, legF=-0.15, legB=0.22,
+               fx="shatter", fxT=1.0),
+            _p(lean=-0.48, head=-0.34, armF=1.45, armB=1.60, bob=-1.0,
+               legF=-0.28, legB=0.34, fx="shatter", fxT=0.6),
+            _p(lean=-0.38, head=-0.28, armF=1.30, armB=1.45,
+               legF=-0.20, legB=0.26, fx="shatter", fxT=0.25),
+        ][i]
 
     if anim == "walk":
         s = math.sin(t * two_pi)
@@ -872,6 +908,18 @@ def _effect_front(c, pal, kind, t, hx, hy, cx, cy, head_y, d):
     elif kind == "guard":
         for k in range(-4, 5):
             c.put(int(cx + 7), int(cy + k * 1.6), hot if k % 2 else col)
+    elif kind == "dust":
+        for k in range(6):
+            a = k * math.pi / 3
+            rr = 4 + t * 6
+            c.ellipse(cx + math.sin(a) * rr * 1.6, ANCHOR_Y - 2 - abs(math.cos(a)) * 2,
+                      1.4 * t + 0.6, 1.0 * t + 0.5, shade(col, 0.85))
+    elif kind == "shatter":
+        for k in range(7):
+            a = -0.4 + k * 0.42
+            rr = 7 + t * 6
+            c.capsule(cx + math.cos(a) * rr * 0.55, cy + math.sin(a) * rr * 0.55,
+                      cx + math.cos(a) * rr, cy + math.sin(a) * rr, 0.6, hot)
     elif kind == "burst":
         rr = 4 + t * 7
         c.ellipse(cx, cy, rr, rr * 1.3, None) if False else None

@@ -15,6 +15,8 @@ import { STATE, LOCKED_STATES, HIT_STATES, canAct, isAirborne } from './fighter-
 import {
   SpriteAnimator, spriteRegistry, animationForAbility, animationForState,
 } from './sprite-animator.js';
+import { costumeSpriteSetId } from '../data/costumes.js';
+import { reportSpriteFallback } from '../asset-report.js';
 import { setCentred } from './hitbox.js';
 import { ComboTracker } from './combo-system.js';
 import { tickGuard } from './guard-system.js';
@@ -136,11 +138,70 @@ export class Fighter {
      * `sheet` is null when the assets did not load — the renderer then falls
      * back to the procedural silhouette and nothing else changes.
      */
-    this.sheet = spriteRegistry.forFighter(this.data);
-    this.anim = new SpriteAnimator(this.sheet?.meta || null);
+    /**
+     * Which artwork this fighter is wearing. `costumeId` is chosen on the
+     * select screen and never changes mid-match; `formSetId` is set by the
+     * transformation system while a form with its own art is active.
+     */
+    this.costumeId = opts.costumeId || 'default';
+    this.costumeSetId = costumeSpriteSetId(this.data.id, this.costumeId);
+    this.formSetId = null;
+
+    this.sheet = null;
+    this.anim = new SpriteAnimator(null);
     this.anim.onEvent = (name) => this._onAnimationEvent(name);
     this._animForce = true;
     this._ctx = null;
+    this.refreshSprite();
+  }
+
+  /**
+   * Re-resolve which sprite set to draw with.
+   *
+   * Priority is transformation -> costume -> base fighter -> procedural, and
+   * anything that falls through is reported once so a missing costume or form
+   * sheet is visible in development instead of passing for finished art.
+   *
+   * The animator is rebuilt around the new metadata but the *playhead is
+   * preserved*: transforming mid-attack must not restart the swing, reset the
+   * frame or drop a pending hit event.
+   */
+  refreshSprite() {
+    const next = spriteRegistry.resolve(
+      {
+        fighterId: this.data.spriteId || this.data.id,
+        costumeSetId: this.costumeSetId,
+        formSetId: this.formSetId,
+      },
+      (info) => reportSpriteFallback(this.data.id, info),
+    );
+    if (next === this.sheet) return this.sheet;
+
+    this.sheet = next;
+    const meta = next?.meta || null;
+    const { name, index, elapsed, finished, eventFired } = this.anim;
+    this.anim = new SpriteAnimator(meta);
+    this.anim.onEvent = (evt) => this._onAnimationEvent(evt);
+    // Carry the playhead across so the swap is a costume change, not a reset.
+    if (this.anim.has(name)) {
+      this.anim.play(name, { force: true });
+      this.anim.elapsed = Math.min(elapsed, this.anim.duration);
+      this.anim.index = Math.min(index, this.anim.frameCount(name) - 1);
+      this.anim.finished = finished;
+      this.anim.eventFired = eventFired;
+    }
+    return this.sheet;
+  }
+
+  /**
+   * Point at a transformation's sprite set (or null to go back to the costume).
+   * Position, facing, health, chakra, target and combat state are untouched —
+   * only the artwork changes.
+   */
+  setFormSprite(setId) {
+    if (this.formSetId === setId) return;
+    this.formSetId = setId || null;
+    this.refreshSprite();
   }
 
   get name() { return this.data.displayName; }
@@ -235,6 +296,8 @@ export class Fighter {
     this.roundNumber = roundNumber;
     this.survivedLethal = false;
     this.flash = 0;
+    this.formSetId = null;
+    this.refreshSprite();
     this.anim.reset();
     this._animForce = true;
     applyFormStats(this);

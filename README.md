@@ -165,7 +165,9 @@ Storage → **Clear site data**.
 | Arcade ladders / Boss Rushes | 4 / 4 |
 | Assists and summons | 24 |
 | Achievements | 31 |
-| Fighter sprite sets | **110** — one per fighter, 19 animations / 84 frames each |
+| Fighter sprite sets | **110** — one per fighter, 22 animations / 94 frames each |
+| Costume sprite sets | **18** with their own art; 75 costumes in total |
+| Transformation sprite sets | **37** with their own art; 157 forms in total |
 
 ### Roster
 
@@ -379,7 +381,8 @@ are no dependencies and nothing to install to play or deploy the game.
 ### Rebuilding the fighter sprites
 
 ```bash
-python3 tools/build-fighters.py                # every fighter (~6 minutes)
+python3 tools/build-fighters.py                # every fighter (~8 minutes)
+python3 tools/build-fighters.py --variants     # costume + transformation sets
 python3 tools/build-fighters.py naruto sasuke  # just these
 python3 tools/build-fighters.py --pass1        # the twenty starters
 python3 tools/build-fighters.py --contact out.png --pass1   # visual check grid
@@ -405,6 +408,29 @@ frame is a posed skeleton rasterised into a 64×64 grid:
 
 The roster is read through `tools/dump-roster.mjs`, so colours and proportions
 can never drift from what the game uses.
+
+### Costumes, transformations and the asset report
+
+A costume or a transformation can carry a sprite set of its own. The renderer
+resolves, most specific first:
+
+```
+active transformation -> selected costume -> base fighter -> procedural silhouette
+```
+
+Every step that falls through is recorded by `js/asset-report.js` and shown as a
+console warning **in development only** (localhost, `file://`, or
+`?devassets=1`). A fallback is a designed state, not an error — but it is never
+allowed to pass for finished art: `assetStatus` is `complete` only when the set
+exists *and* has all 18 required animations.
+
+```bash
+node tools/asset-report.mjs           # the developer report
+node tools/asset-report.mjs --write   # also write assets/asset-manifest.json
+```
+
+The report groups every fighter/costume/transformation into fully complete,
+functional with fallback, missing artwork and missing animations.
 
 ### Regenerating the app icon
 
@@ -491,12 +517,12 @@ any other project.
   timing and posing; this gives each fighter unique *design*. Design records are
   plain data in `tools/designs.py`, so refining one fighter is a small edit and
   a rebuild.
-- **Transformations reuse the base fighter's sprite set.** A transformed
-  fighter plays the same sheet with the engine's aura and colour effects over
-  it; there are no separate atlases for Sage Mode, the Gates, Susanoo and the
-  rest yet. The generator is already parameterised for it (a form is just
-  another design record), so this is the next batch of work rather than a
-  redesign.
+- **Most costumes and transformations still render with the base fighter's
+  art.** 18 costumes and 37 transformations have their own sprite sets; the
+  other 57 costumes and 120 forms fall back to the fighter's base body. That is
+  a tracked, reported state — `node tools/asset-report.mjs` lists every one of
+  them — not a claim of completion. Adding art is a design record in
+  `tools/designs.py` plus an id in the relevant `*_WITH_ART` list.
 - **The 172 derived fighters are drawn from roster data.** They are distinct
   from one another, but their designs were not individually art-directed the
   way the twenty starters were.

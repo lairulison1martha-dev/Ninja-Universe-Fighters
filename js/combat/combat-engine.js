@@ -104,10 +104,14 @@ export class CombatEngine extends EventTarget {
 
     const player = new Fighter(cfg.playerId, {
       side: 1, isPlayer: true, ignoreUnlocks: !!cfg.training,
+      costumeId: cfg.playerCostume || 'default',
     });
     const enemy = new Fighter(cfg.opponentId, {
       side: -1, isPlayer: false, healthBonus: rules.opponentHealthBonus,
       ignoreUnlocks: true,
+      // A mirror match is two separate Fighter instances, so the AI can wear a
+      // different costume from the player even when they picked the same person.
+      costumeId: cfg.opponentCostume || 'default',
     });
 
     for (const [f, frac] of [[player, rules.startHealth], [enemy, rules.startHealthOpponent]]) {

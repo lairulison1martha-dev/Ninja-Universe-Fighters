@@ -24,44 +24,62 @@
       "fps": 7,
       "loop": true
     },
-    "walk": {
+    "combatIdle": {
       "row": 1,
+      "frames": 4,
+      "fps": 8,
+      "loop": true
+    },
+    "walk": {
+      "row": 2,
       "frames": 6,
       "fps": 9,
       "loop": true
     },
     "run": {
-      "row": 2,
+      "row": 3,
       "frames": 6,
       "fps": 12,
       "loop": true
     },
     "jump": {
-      "row": 3,
+      "row": 4,
       "frames": 3,
       "fps": 10,
       "loop": false
     },
     "fall": {
-      "row": 4,
+      "row": 5,
       "frames": 3,
       "fps": 8,
       "loop": true
     },
+    "landing": {
+      "row": 6,
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
     "dash": {
-      "row": 5,
+      "row": 7,
       "frames": 4,
       "fps": 16,
       "loop": false
     },
     "guard": {
-      "row": 6,
+      "row": 8,
       "frames": 2,
       "fps": 6,
       "loop": true
     },
+    "guardBreak": {
+      "row": 9,
+      "frames": 3,
+      "fps": 9,
+      "loop": false
+    },
     "lightAttack": {
-      "row": 7,
+      "row": 10,
       "frames": 4,
       "fps": 15,
       "loop": false,
@@ -69,7 +87,7 @@
       "event": "hit"
     },
     "heavyAttack": {
-      "row": 8,
+      "row": 11,
       "frames": 5,
       "fps": 13,
       "loop": false,
@@ -77,7 +95,7 @@
       "event": "hit"
     },
     "jutsu1": {
-      "row": 9,
+      "row": 12,
       "frames": 5,
       "fps": 13,
       "loop": false,
@@ -85,7 +103,7 @@
       "event": "cast"
     },
     "jutsu2": {
-      "row": 10,
+      "row": 13,
       "frames": 5,
       "fps": 13,
       "loop": false,
@@ -93,7 +111,7 @@
       "event": "cast"
     },
     "jutsu3": {
-      "row": 11,
+      "row": 14,
       "frames": 5,
       "fps": 13,
       "loop": false,
@@ -101,7 +119,7 @@
       "event": "cast"
     },
     "ultimate": {
-      "row": 12,
+      "row": 15,
       "frames": 6,
       "fps": 11,
       "loop": false,
@@ -109,37 +127,37 @@
       "event": "cast"
     },
     "hurt": {
-      "row": 13,
+      "row": 16,
       "frames": 3,
       "fps": 11,
       "loop": false
     },
     "knockdown": {
-      "row": 14,
+      "row": 17,
       "frames": 3,
       "fps": 8,
       "loop": false
     },
     "getUp": {
-      "row": 15,
+      "row": 18,
       "frames": 3,
       "fps": 9,
       "loop": false
     },
     "victory": {
-      "row": 16,
+      "row": 19,
       "frames": 5,
       "fps": 7,
       "loop": true
     },
     "defeat": {
-      "row": 17,
+      "row": 20,
       "frames": 4,
       "fps": 7,
       "loop": false
     },
     "transformation": {
-      "row": 18,
+      "row": 21,
       "frames": 6,
       "fps": 10,
       "loop": false,

@@ -41,9 +41,58 @@ const DEFAULTS = {
   auraColor: '#7fd4ff',
   spriteOverride: null,
   activationEffect: 'transform_flash',
+  revertEffect: 'transform_revert',
   deactivationRules: { onRoundEnd: true, onKO: true, revertTo: 'previous' },
   description: '',
+
+  /* ---- artwork ---------------------------------------------------------
+   * `spriteSetId` names a sprite set of this form's own. When it is null the
+   * fighter keeps whatever they were already wearing (their costume, or their
+   * base art), which is a deliberate, reported fallback rather than a bug —
+   * see FORMS_WITH_ART below and the asset manifest.
+   */
+  spriteSetId: null,
+  portrait: null,
+  assetStatus: 'fallback',
 };
+
+/**
+ * Transformations that have their own generated sprite set.
+ *
+ * Keeping this as an explicit list (rather than probing the filesystem at
+ * runtime) means a form cannot quietly claim finished art: adding art means
+ * adding the id here, and a test checks every id against the asset manifest.
+ */
+export const FORMS_WITH_ART = Object.freeze([
+  // Naruto's chakra modes
+  'naruto_onetail', 'naruto_fourtail', 'naruto_sage', 'naruto_kcm1',
+  'naruto_kcm2', 'naruto_sixpaths', 'naruto_baryon',
+  // Sasuke's eye stages and curse mark
+  'sasuke_sharingan', 'sasuke_cm1', 'sasuke_cm2', 'sasuke_mangekyo',
+  'sasuke_ems', 'sasuke_rinnegan',
+  // Sakura
+  'sakura_byakugo', 'sakura_hundred',
+  // Kakashi's eyes and Susanoo
+  'kakashi_sharingan', 'kakashi_mangekyo', 'kakashi_double_mangekyo',
+  'kakashi_susanoo',
+  // Eight Gates
+  'guy_gate1', 'guy_gate4', 'guy_gate6', 'guy_gate8',
+  'lee_gate1', 'lee_gate4', 'lee_gate6',
+  // Gaara's sand
+  'gaara_sand_armor', 'gaara_partial_shukaku',
+  // Jinchuriki cloaks
+  'bee_v1', 'bee_v2', 'minato_kcm',
+  // Susanoo
+  'itachi_susanoo',
+  // Sage modes
+  'jiraiya_sage', 'kabuto_sage',
+  // Curse mark line
+  'orochimaru_serpent',
+  // Karma
+  'boruto_karma', 'kawaki_karma',
+]);
+
+const FORM_ART = new Set(FORMS_WITH_ART);
 
 function deepMerge(base, extra) {
   const out = { ...base };
@@ -80,6 +129,19 @@ export function chain(fighterId, forms) {
       previousForm: merged.previousForm,
     };
     if (merged.permanent) merged.duration = Infinity;
+
+    // Wire the artwork fields from the one list above, so a form's declared
+    // status and its actual assets cannot drift apart.
+    if (FORM_ART.has(id)) {
+      merged.spriteSetId = id;
+      merged.portrait = `assets/fighters/${fighterId}/forms/${id}/portrait.png`;
+      merged.assetStatus = 'complete';
+    } else {
+      merged.spriteSetId = null;
+      merged.portrait = null;
+      merged.assetStatus = 'fallback';
+    }
+
     TRANSFORMATIONS[id] = merged;
   });
   return ids;

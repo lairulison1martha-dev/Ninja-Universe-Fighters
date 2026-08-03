@@ -285,3 +285,219 @@ def for_fighter(entry):
     d["name"] = entry["displayName"]
     d["hand"] = entry["id"] in HAND
     return d
+
+
+# ---------------------------------------------------------------------------
+# Costume and transformation variants
+# ---------------------------------------------------------------------------
+#
+# A variant is a partial design record layered over the fighter's base design.
+# That is what makes a costume real artwork rather than a colour filter: it can
+# change clothing cut, gear, hair, proportions and palette all at once, and the
+# rig redraws every animation from the merged record.
+#
+# Only variants listed here get their own sprite set. Anything else falls back
+# to the fighter's base art and is reported as a fallback in the asset manifest
+# — never as finished work.
+
+COSTUME_DESIGNS = {
+    # -- Naruto ------------------------------------------------------------
+    ("naruto", "kid"): dict(
+        outfit="#e86a1e", outfit2="#2b4a86", trim="#2b4a86", pants="#e86a1e",
+        torso="zip", sleeves="long", height=0.86, bulk=0.88,
+    ),
+    ("naruto", "shippuden"): dict(
+        outfit="#e8722a", outfit2="#1f2740", trim="#1f2740", pants="#1f2740",
+        torso="open", sleeves="long", height=1.0, bulk=1.0,
+    ),
+    ("naruto", "hokage"): dict(
+        outfit="#e8722a", outfit2="#2b3550", trim="#c8402a",
+        coat="cloak", coatColor="#ece8de", coatTrim="#c8402a",
+        torso="vest", sleeves="long", height=1.04, bulk=1.04,
+    ),
+    # -- Sasuke ------------------------------------------------------------
+    ("sasuke", "kid"): dict(
+        outfit="#2f5f9a", outfit2="#e4e0d6", trim="#e4e0d6", pants="#e4e0d6",
+        torso="zip", sleeves="short", accessory=None,
+        height=0.86, bulk=0.86,
+    ),
+    ("sasuke", "shippuden"): dict(
+        outfit="#e8e4dc", outfit2="#2b3247", trim="#5a4a9a", pants="#2b3247",
+        torso="open", sleeves="short", accessory="sword-back", sash="#5a4a9a",
+        height=1.02, bulk=0.98,
+    ),
+    ("sasuke", "adult"): dict(
+        outfit="#2a2f42", outfit2="#161a28", trim="#6a5a3a",
+        coat="cloak", coatColor="#3a3020", torso="wrap", sleeves="long",
+        accessory="sword-back", height=1.06, bulk=1.02,
+    ),
+    # -- Sakura ------------------------------------------------------------
+    ("sakura", "genin"): dict(
+        outfit="#c8394f", outfit2="#8e2a3c", trim="#e8dcc8", pants="#2f3a52",
+        torso="wrap", sleeves="short", height=0.88, bulk=0.86,
+    ),
+    ("sakura", "shippuden"): dict(
+        outfit="#d0455c", outfit2="#a8354a", trim="#f2e2d0", pants="#3a4460",
+        torso="zip", sleeves="short", height=0.96, bulk=0.92,
+    ),
+    # -- Kakashi -----------------------------------------------------------
+    ("kakashi", "jonin"): dict(
+        outfit="#2c3448", outfit2="#1c2233", trim="#4a6b3e",
+        coat="flak", torso="vest", height=1.06, bulk=1.0,
+    ),
+    ("kakashi", "hokage"): dict(
+        outfit="#2c3448", outfit2="#1c2233", trim="#c8402a",
+        coat="cloak", coatColor="#ece8de", coatTrim="#c8402a",
+        torso="vest", height=1.06, bulk=1.02,
+    ),
+    # -- Gaara -------------------------------------------------------------
+    ("gaara", "genin"): dict(
+        outfit="#4e2630", outfit2="#2f1a22", trim="#c8b28a", pants="#332028",
+        torso="wrap", sleeves="long", accessory="gourd", accColor="#b08a52",
+        height=0.9, bulk=0.9,
+    ),
+    ("gaara", "kazekage"): dict(
+        outfit="#e4e0d2", outfit2="#5a7a9a", trim="#3f5f86", pants="#4a6a8a",
+        coat="cloak", coatColor="#e8e4d8", coatTrim="#3f5f86",
+        torso="wrap", accessory="gourd", accColor="#b08a52",
+        height=1.02, bulk=1.02,
+    ),
+    # -- Hinata ------------------------------------------------------------
+    ("hinata", "genin"): dict(
+        outfit="#e6dfc8", outfit2="#3a4258", trim="#8fa0b8", pants="#2f3648",
+        coat="hoodie", torso="zip", sleeves="long", height=0.88, bulk=0.88,
+    ),
+    ("hinata", "shippuden"): dict(
+        outfit="#8e7fc0", outfit2="#3a4258", trim="#e6dfc8", pants="#2f3648",
+        coat="hoodie", torso="zip", sleeves="long", height=0.98, bulk=0.94,
+    ),
+    # -- Obito -------------------------------------------------------------
+    ("obito", "young"): dict(
+        outfit="#2f5f9a", outfit2="#1c2c48", trim="#c8a44c", pants="#e4e0d6",
+        coat=None, torso="zip", sleeves="short", mask=None,
+        height=0.9, bulk=0.9,
+    ),
+    ("obito", "masked"): dict(
+        outfit="#1c2233", outfit2="#12162a", trim="#d0603a",
+        coat="cloak", coatColor="#141a2c", mask="full", torso="zip",
+        height=1.04, bulk=1.0,
+    ),
+    # -- Madara ------------------------------------------------------------
+    ("madara", "valley"): dict(
+        outfit="#8a2b34", outfit2="#1b2030", trim="#c4a45c",
+        coat="cloak", coatColor="#7a232c", accessory="shoulder-pads",
+        torso="wrap", height=1.08, bulk=1.10,
+    ),
+    ("madara", "war"): dict(
+        outfit="#3a2f4a", outfit2="#1b1826", trim="#9a8ab0",
+        coat="cloak", coatColor="#2a2438", accessory="fan-back", accColor="#8e6a3c",
+        torso="wrap", height=1.10, bulk=1.06,
+    ),
+}
+
+# Transformation variants. An awakening changes the fighter visibly — a cloak
+# of chakra, a curse mark spreading, an armour of sand — so each of these gets
+# its own sheet rather than reusing the base body under a coloured overlay.
+FORM_DESIGNS = {
+    # Naruto chakra modes
+    "naruto_sage": dict(markings="sage", markColor="#c9603c", eyes="#e8a23c",
+                        aura="#e8a23c", trim="#c9603c"),
+    "naruto_kcm1": dict(outfit="#f5c542", outfit2="#e08a20", trim="#2b3550",
+                        pants="#f5c542", aura="#ffd45e", eyes="#f5e08a",
+                        markings="stripes"),
+    "naruto_kcm2": dict(outfit="#ffd45e", outfit2="#e8952a", trim="#1f2740",
+                        pants="#ffd45e", aura="#ffe08a", eyes="#fff0b0",
+                        markings="stripes", bulk=1.08),
+    "naruto_sixpaths": dict(outfit="#ffd45e", outfit2="#2b2f42", trim="#e8952a",
+                            pants="#ffd45e", aura="#fff0b0", eyes="#fff6d0",
+                            coat="cloak", coatColor="#f5c542",
+                            markings="sage", markColor="#c9603c", bulk=1.10),
+    "naruto_baryon": dict(outfit="#e85a2a", outfit2="#8a2318", trim="#ffb84a",
+                          pants="#e85a2a", aura="#ff6a2a", eyes="#ffd45e",
+                          coat="cloak", coatColor="#c03a1a", bulk=1.06),
+    "naruto_onetail": dict(outfit="#c8502a", outfit2="#7a2a18", trim="#e87a3a",
+                           pants="#c8502a", aura="#e8602a", eyes="#f5e08a",
+                           markings="whiskers"),
+    "naruto_fourtail": dict(outfit="#9a2f1a", outfit2="#5a1a10", trim="#d0502a",
+                            pants="#9a2f1a", aura="#d8401a", eyes="#ffffff",
+                            coat="cloak", coatColor="#8a2418", bulk=1.08),
+    # Sasuke eye stages and curse mark
+    "sasuke_sharingan": dict(eyes="#c8303a", markings="sharingan"),
+    "sasuke_mangekyo": dict(eyes="#d0303a", markings="sharingan", aura="#c8303a"),
+    "sasuke_ems": dict(eyes="#e03a44", markings="sharingan", aura="#d0303a",
+                       trim="#8a2a32"),
+    "sasuke_rinnegan": dict(eyes="#8a6ad0", markings="rinnegan", aura="#7a5cff",
+                            coat="cloak", coatColor="#241c3a"),
+    "sasuke_cm1": dict(skin="#c8b8a0", markings="tearlines", eyes="#c8b03a",
+                       aura="#8a6ad0"),
+    "sasuke_cm2": dict(skin="#8a7a96", hair="#b0a0c0", markings="tearlines",
+                       eyes="#c8b03a", aura="#6a4a86", bulk=1.10),
+    # Sakura
+    "sakura_byakugo": dict(markings="seal", markColor="#7a5ad0", aura="#c86ad0"),
+    "sakura_hundred": dict(markings="seal", markColor="#7a5ad0", aura="#e86ad0",
+                           trim="#c86ad0", bulk=1.04),
+    # Kakashi eye stages and Susanoo
+    "kakashi_sharingan": dict(eyes="#c8303a", markings="sharingan"),
+    "kakashi_mangekyo": dict(eyes="#d0303a", markings="sharingan", aura="#c8303a"),
+    "kakashi_double_mangekyo": dict(eyes="#d0303a", markings="sharingan",
+                                    aura="#8fd0ff", trim="#8fd0ff"),
+    "kakashi_susanoo": dict(outfit="#5a7ad0", outfit2="#2f4a8a", trim="#8fb8ff",
+                            coat="cloak", coatColor="#4a6ac0", aura="#8fd0ff",
+                            bulk=1.16, height=1.10),
+    # Eight Gates
+    "guy_gate1": dict(skin="#f0a898", aura="#e8503a"),
+    "guy_gate4": dict(skin="#e88a72", aura="#e8402a", coat="cloak",
+                      coatColor="#c8341f", bulk=1.12),
+    "guy_gate6": dict(skin="#e07a62", aura="#f05a2a", coat="cloak",
+                      coatColor="#d8401a", bulk=1.14),
+    "guy_gate8": dict(skin="#f0d0a0", hair="#f5e0a0", aura="#ff8a2a",
+                      coat="cloak", coatColor="#e8602a", trim="#ffd45e",
+                      bulk=1.18, height=1.06),
+    "lee_gate1": dict(skin="#f0a898", aura="#e8503a"),
+    "lee_gate4": dict(skin="#e88a72", aura="#e8402a", coat="cloak",
+                      coatColor="#c8341f", bulk=1.10),
+    "lee_gate6": dict(skin="#e07a62", aura="#f05a2a", coat="cloak",
+                      coatColor="#d8401a", bulk=1.12),
+    # Gaara sand
+    "gaara_sand_armor": dict(skin="#c8a878", outfit="#b09060", outfit2="#7a6038",
+                             trim="#d8c090", bulk=1.10, aura="#d8b06a"),
+    "gaara_partial_shukaku": dict(skin="#d8bc86", outfit="#c0a068",
+                                  outfit2="#8a6a40", trim="#e8d0a0",
+                                  markings="stripes", bulk=1.20, height=1.06,
+                                  aura="#e8c878"),
+    # Jinchuriki cloaks
+    "bee_v1": dict(outfit="#c8502a", outfit2="#7a2a18", trim="#e87a3a",
+                   pants="#c8502a", aura="#e8602a"),
+    "bee_v2": dict(outfit="#9a2f1a", outfit2="#5a1a10", trim="#d0502a",
+                   pants="#9a2f1a", aura="#d8401a", coat="cloak",
+                   coatColor="#8a2418", bulk=1.10),
+    "minato_kcm": dict(outfit="#f5c542", outfit2="#e08a20", trim="#2b3550",
+                       pants="#f5c542", aura="#ffd45e", eyes="#f5e08a"),
+    # Susanoo
+    "itachi_susanoo": dict(outfit="#c8402a", outfit2="#8a2418", trim="#e8703a",
+                           coat="cloak", coatColor="#b8341f", aura="#e8503a",
+                           bulk=1.16, height=1.10),
+    "madara_susanoo": dict(outfit="#3a6ad0", outfit2="#1f3a7a", trim="#6a9aff",
+                           coat="cloak", coatColor="#2f5ac0", aura="#5a8aff",
+                           bulk=1.18, height=1.12),
+    # Sage modes
+    "jiraiya_sage": dict(markings="sage", markColor="#c9603c", eyes="#e8a23c",
+                         aura="#e8a23c", skin="#e8b884"),
+    "kabuto_sage": dict(skin="#d8d0c0", markings="sage", markColor="#8ad06a",
+                        eyes="#c8b03a", aura="#8ad06a"),
+    # Curse mark (Orochimaru's line)
+    "orochimaru_serpent": dict(skin="#e8e8dc", hair="#e8e8dc", outfit="#c8c8b8",
+                               outfit2="#8a8a78", aura="#8ad06a", bulk=1.12),
+    # Karma
+    "boruto_karma": dict(markings="seal", markColor="#3a3f55", eyes="#5ac8f0",
+                         aura="#5ac8f0"),
+    "kawaki_karma": dict(markings="seal", markColor="#3a3f55", eyes="#c8404a",
+                         aura="#c8404a"),
+}
+
+
+def variant(base_design, override):
+    """Layer a costume or transformation override over a base design."""
+    d = dict(base_design)
+    d.update({k: v for k, v in override.items()})
+    return d

@@ -100,6 +100,9 @@ export const EFFECT_RECIPES = {
   ultimate_burst:  { count: 32, speed: 520, life: 0.6,  size: 9, color: '#ffe9a8', spread: 3.14, kind: 'ring' },
   ultimate_sixpaths: { count: 40, speed: 560, life: 0.7, size: 10, color: '#ffe9a8', spread: 3.14, kind: 'ring' },
   transform_flash: { count: 30, speed: 460, life: 0.6,  size: 8, color: '#ffffff', spread: 3.14, kind: 'ring' },
+  // Reverting is the quieter mirror of transforming: it pulls inward rather
+  // than bursting out, so the two read as opposite events at a glance.
+  transform_revert: { count: 18, speed: 200, life: 0.45, size: 6, color: '#cfe8ff', spread: 3.14, kind: 'ring' },
   aura_charge:     { count: 8,  speed: -160, life: 0.5, size: 5, color: '#7fd4ff', spread: 3.14, kind: 'orbit' },
   guard_spark:     { count: 8,  speed: 240, life: 0.24, size: 4, color: '#8fefc0', spread: 2.0, kind: 'spark' },
   dust_land:       { count: 8,  speed: 180, life: 0.3,  size: 6, color: '#b8b0a0', spread: 1.0, kind: 'puff' },

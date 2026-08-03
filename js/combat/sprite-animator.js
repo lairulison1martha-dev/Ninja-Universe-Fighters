@@ -16,10 +16,46 @@
 
 /** Animation names the combat state machine can ask for. */
 export const ANIMATIONS = [
-  'idle', 'walk', 'run', 'jump', 'fall', 'dash', 'guard',
-  'lightAttack', 'heavyAttack', 'jutsu1', 'jutsu2', 'jutsu3', 'ultimate',
+  'idle', 'combatIdle', 'walk', 'run', 'jump', 'fall', 'landing', 'dash',
+  'guard', 'guardBreak', 'lightAttack', 'heavyAttack',
+  'jutsu1', 'jutsu2', 'jutsu3', 'ultimate',
   'hurt', 'knockdown', 'getUp', 'victory', 'defeat', 'transformation',
 ];
+
+/**
+ * The animations a sprite set must have before it can be called complete.
+ *
+ * Named as the design brief names them, mapped onto the rows the rig draws, so
+ * the asset report can say "missing landing" rather than "missing row 6".
+ */
+export const REQUIRED_ANIMATIONS = Object.freeze({
+  idle: 'idle',
+  walk: 'walk',
+  run: 'run',
+  'combat idle': 'combatIdle',
+  'light attack': 'lightAttack',
+  'heavy attack': 'heavyAttack',
+  'special attack': 'ultimate',
+  jutsu: 'jutsu1',
+  hurt: 'hurt',
+  knockback: 'knockdown',
+  jump: 'jump',
+  fall: 'fall',
+  landing: 'landing',
+  guard: 'guard',
+  'guard break': 'guardBreak',
+  'transformation activation': 'transformation',
+  victory: 'victory',
+  defeat: 'defeat',
+});
+
+/** Required animation names a set is missing, by their brief names. */
+export function missingAnimations(meta) {
+  const have = meta?.animations || {};
+  return Object.entries(REQUIRED_ANIMATIONS)
+    .filter(([, row]) => !have[row])
+    .map(([name]) => name);
+}
 
 /* -------------------------------------------------------------------------- */
 /* Sheet                                                                      */
@@ -228,6 +264,41 @@ class SpriteRegistry {
     return this.sets.get(fighterData.spriteId || fighterData.id) || null;
   }
 
+  /**
+   * Resolve the sheet for a fighter in a given visual state, most specific
+   * first:
+   *
+   *     active transformation -> selected costume -> base fighter -> null
+   *
+   * `null` means the renderer falls back to the procedural silhouette, which
+   * is the last safe rung of the same ladder. Each step that falls through is
+   * reported through `onFallback` so a missing costume or form sheet shows up
+   * as a development warning instead of looking finished.
+   *
+   * @param {{ fighterId: string, costumeSetId?: string|null,
+   *           formSetId?: string|null }} req
+   * @param {(info: { want: string, level: string, used: string|null }) => void} [onFallback]
+   */
+  resolve(req, onFallback) {
+    const tried = [];
+    if (req.formSetId) {
+      const sheet = this.sets.get(req.formSetId);
+      if (sheet) return sheet;
+      tried.push({ level: 'transformation', want: req.formSetId });
+    }
+    if (req.costumeSetId) {
+      const sheet = this.sets.get(req.costumeSetId);
+      if (sheet) {
+        for (const t of tried) onFallback?.({ ...t, used: req.costumeSetId });
+        return sheet;
+      }
+      tried.push({ level: 'costume', want: req.costumeSetId });
+    }
+    const base = this.sets.get(req.fighterId) || null;
+    for (const t of tried) onFallback?.({ ...t, used: base ? req.fighterId : null });
+    return base;
+  }
+
   /** Metadata only — safe outside a browser, so tests can use it. */
   metaFor(fighterData) {
     return this.forFighter(fighterData)?.meta || null;
@@ -296,8 +367,9 @@ export function animationForState(state, airborne) {
     case 'substitute': return 'dash';
     case 'guard':
     case 'blockstun': return 'guard';
-    case 'hitstun':
-    case 'guardbreak': return 'hurt';
+    case 'guardbreak': return 'guardBreak';
+    case 'land': return 'landing';
+    case 'hitstun': return 'hurt';
     case 'launched': return airborne ? 'hurt' : 'knockdown';
     case 'knockdown': return 'knockdown';
     case 'wakeup': return 'getUp';
@@ -306,7 +378,6 @@ export function animationForState(state, airborne) {
     case 'transform': return 'transformation';
     case 'crouch':
     case 'charge':
-    case 'land':
     case 'intro':
     case 'idle':
     default: return 'idle';

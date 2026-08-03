@@ -115,9 +115,15 @@
     <div class="select__body">
       <div class="select__panel select__panel--p1 safe-left" id="panel-p1">
         <span class="select__panel-label">Your Fighter</span>
-        <div class="select__portrait" id="portrait-p1"></div>
+        <div class="select__portrait" id="portrait-p1">
+          <button type="button" class="preview__arrow preview__arrow--prev" id="btn-costume-prev" aria-label="Previous costume" hidden>‹</button>
+          <button type="button" class="preview__arrow preview__arrow--next" id="btn-costume-next" aria-label="Next costume" hidden>›</button>
+          <button type="button" class="preview__flip" id="btn-preview-flip" aria-label="Face the other way" hidden>⇄</button>
+          <span class="preview__badge" id="preview-badge" hidden></span>
+        </div>
         <strong id="name-p1">—</strong>
         <span class="select__meta" id="meta-p1"></span>
+        <button type="button" class="btn btn--ghost btn--tiny" id="btn-costume" hidden>Costume</button>
       </div>
 
       <div class="select__gridwrap">
@@ -130,6 +136,7 @@
         <div class="select__portrait" id="portrait-p2"></div>
         <strong id="name-p2">—</strong>
         <span class="select__meta" id="meta-p2"></span>
+        <span class="select__meta" id="costume-p2"></span>
       </div>
     </div>
 
@@ -148,6 +155,18 @@
           <button type="button" class="btn btn--ghost" id="btn-fav">☆</button>
           <button type="button" class="btn btn--primary" id="btn-pick-p1">Choose Fighter</button>
           <button type="button" class="btn" id="btn-pick-p2">Choose Opponent</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Costume sheet -->
+    <div class="sheet" id="costume-sheet" hidden>
+      <div class="sheet__scrim" data-action="close-costumes"></div>
+      <div class="sheet__panel sheet__panel--wide" role="dialog" aria-modal="true" aria-labelledby="costume-title">
+        <button type="button" class="btn btn--icon sheet__close" data-action="close-costumes" aria-label="Close">×</button>
+        <div class="sheet__content">
+          <h3 id="costume-title">Choose Costume</h3>
+          <div class="costumes" id="costume-list"></div>
         </div>
       </div>
     </div>

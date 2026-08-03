@@ -10,7 +10,7 @@ export const APP_NAME = 'Ninja Universe Fighters';
 export const APP_SHORT_NAME = 'Ninja Fighters';
 
 /** Bump on every deploy. Also drives the service-worker cache name. */
-export const APP_VERSION = '0.8.0';
+export const APP_VERSION = '0.9.0';
 
 /** Storage keys (namespaced so we never collide with other projects). */
 export const STORAGE_PREFIX = 'nuf';

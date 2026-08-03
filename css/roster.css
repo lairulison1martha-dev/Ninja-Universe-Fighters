@@ -213,3 +213,85 @@
 .filter-group { margin-bottom: .9rem; }
 .filter-group h4 { margin-top: 0; }
 .filter-group .row { flex-wrap: wrap; gap: .3rem; }
+
+/* ------------------------------------------------------- costume picker -- */
+
+.btn--tiny { padding: .18rem .5rem; font-size: .64rem; }
+
+/* The preview lives inside the portrait frame, so its controls are absolutely
+   positioned over it. Hit areas are 34px+ so they stay thumb-friendly in
+   landscape on a phone, where this panel is only ~120px wide. */
+.preview__arrow,
+.preview__flip {
+  position: absolute;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(6, 10, 20, .72);
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+.preview__arrow:active,
+.preview__flip:active { transform: scale(.92); }
+.preview__arrow--prev { left: -6px; top: 50%; margin-top: -17px; }
+.preview__arrow--next { right: -6px; top: 50%; margin-top: -17px; }
+.preview__flip { right: -6px; bottom: -4px; width: 30px; height: 30px; font-size: .8rem; }
+
+.preview__badge {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  z-index: 2;
+  padding: .08rem .3rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 190, 60, .9);
+  color: #1b1400;
+  font-size: .52rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.costumes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: .45rem;
+  margin-top: .5rem;
+}
+.costume {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .2rem;
+  padding: .35rem .3rem .4rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, .035);
+  text-align: center;
+  cursor: pointer;
+  min-height: 44px;
+}
+.costume:active { transform: scale(.96); }
+.costume.is-equipped { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(61, 139, 255, .4); }
+.costume[data-locked="true"] { opacity: .78; cursor: not-allowed; }
+.costume[data-locked="true"] .costume__art { filter: grayscale(1) brightness(.35); }
+.costume__art {
+  width: 54px;
+  height: 72px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, .35);
+  object-fit: contain;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+.costume__name { font-size: .66rem; font-weight: 700; line-height: 1.15; }
+.costume__state { font-size: .56rem; color: var(--ink-faint); }
+.costume__state.is-locked { color: var(--gold); }
+.costume__state.is-equipped { color: var(--blue); }

@@ -176,13 +176,16 @@ export class Game {
     this.pendingMatch = {
       playerId: cfg.playerId,
       opponentId: cfg.opponentId || roster.randomAny(cfg.playerId),
+      playerCostume: cfg.playerCostume || 'default',
+      opponentCostume: cfg.opponentCostume || 'default',
       difficulty: cfg.difficulty,
       rounds: cfg.rounds,
       timer: cfg.timer,
     };
     // Start fetching both fighters' art now, while the player picks a stage,
     // so startMatch usually finds it already registered.
-    assets.loadSpriteSets([this.pendingMatch.playerId, this.pendingMatch.opponentId]);
+    assets.loadFighterArt(this.pendingMatch.playerId, this.pendingMatch.playerCostume);
+    assets.loadFighterArt(this.pendingMatch.opponentId, this.pendingMatch.opponentCostume);
     this.stageScreen.render();
     screens.show('stage');
   }
@@ -532,7 +535,10 @@ export class Game {
     // to be registered before the engine constructs them, because a Fighter
     // picks up its sheet in its constructor. A set that fails to load simply
     // leaves that fighter on the procedural renderer.
-    await assets.loadSpriteSets([cfg.playerId, cfg.opponentId]);
+    await Promise.all([
+      assets.loadFighterArt(cfg.playerId, cfg.playerCostume),
+      assets.loadFighterArt(cfg.opponentId, cfg.opponentCostume),
+    ]);
 
     const engine = new CombatEngine();
     engine.setup({
@@ -543,6 +549,8 @@ export class Game {
       difficulty: cfg.difficulty,
       rounds: cfg.rounds,
       timer: cfg.timer,
+      playerCostume: cfg.playerCostume,
+      opponentCostume: cfg.opponentCostume,
       conditions: cfg.conditions,
       opponentHealthBonus: cfg.opponentHealthBonus,
       startHealth: cfg.startHealth,

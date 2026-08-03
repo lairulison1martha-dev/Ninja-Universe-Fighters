@@ -15,7 +15,7 @@
 
 import { FIGHTERS } from './data/fighters.js';
 import { resolveFighterId, LEGACY_FIGHTER_IDS } from './data/roster-migration.js';
-import { COSTUME_BY_LEGACY_ID } from './data/costumes.js';
+import { COSTUME_BY_LEGACY_ID, getCostume, costumesFor } from './data/costumes.js';
 import {
   SAVE_KEY, SAVE_BACKUP_KEY, SAVE_SLOT_KEY, SAVE_SLOT_COUNT, SAVE_VERSION,
   STORAGE_PREFIX, APP_VERSION,
@@ -70,6 +70,8 @@ export function defaultSave() {
 
     /** { [fighterId]: string[] } — costume ids the player has unlocked. */
     costumes: {},
+    /** { [fighterId]: costumeId } — what each fighter is currently wearing. */
+    equippedCostumes: {},
 
     story: { completedChapters: [], completedNodes: {}, current: null },
     arcade: { cleared: {}, bestScore: {} },
@@ -128,6 +130,7 @@ const MIGRATIONS = {
     return s;
   },
   4: (s) => {
+    s.equippedCostumes = s.equippedCostumes || {};
     // v4 → v5: the roster collapsed from 192 cards to 110 unique people.
     //
     // Alternate ages, Edo versions, masked versions, tailed beasts and the
@@ -455,6 +458,64 @@ class SaveManager extends EventTarget {
     return masteryForXp(this.data.mastery?.[fighterId]?.xp || 0);
   }
   isFighterUnlocked(id) { return this.data.unlockedFighters.includes(id); }
+
+  /* ------------------------------------------------------------ costumes -- */
+
+  /**
+   * Is this costume available to wear?
+   *
+   * The default outfit and anything with a `default` unlock rule are always
+   * available — a fighter can never be left with nothing to wear. Everything
+   * else has to be either explicitly unlocked in the save or satisfied by the
+   * player's mastery of that fighter.
+   */
+  isCostumeUnlocked(fighterId, costumeId) {
+    if (!costumeId || costumeId === 'default') return true;
+    const costume = getCostume(fighterId, costumeId);
+    if (!costume || costume.id !== costumeId) return false;
+    const rule = costume.unlockRule || { type: 'default' };
+    if (rule.type === 'default') return true;
+    if ((this.data.costumes?.[fighterId] || []).includes(costumeId)) return true;
+    if (rule.type === 'mastery') {
+      return (this.data.mastery?.[fighterId]?.level || 0) >= (rule.value || 0);
+    }
+    return false;
+  }
+
+  /** Mark a costume unlocked. Returns true when this call changed anything. */
+  unlockCostume(fighterId, costumeId) {
+    if (this.isCostumeUnlocked(fighterId, costumeId)) return false;
+    this.update((d) => {
+      const list = d.costumes[fighterId] || (d.costumes[fighterId] = []);
+      if (!list.includes(costumeId)) list.push(costumeId);
+    });
+    return true;
+  }
+
+  /** The costume a fighter is wearing, falling back to the default outfit. */
+  equippedCostume(fighterId) {
+    const id = this.data.equippedCostumes?.[fighterId] || 'default';
+    // A costume that was equipped and later became invalid (data changed, or a
+    // save edited by hand) must not leave the fighter unrenderable.
+    return this.isCostumeUnlocked(fighterId, id) ? id : 'default';
+  }
+
+  /**
+   * Equip a costume. Refuses locked ones and returns what is now equipped, so
+   * the caller always knows the real state rather than assuming success.
+   */
+  equipCostume(fighterId, costumeId) {
+    if (!this.isCostumeUnlocked(fighterId, costumeId)) return this.equippedCostume(fighterId);
+    this.update((d) => { d.equippedCostumes[fighterId] = costumeId; });
+    return costumeId;
+  }
+
+  /** Costume ids this fighter can currently wear. */
+  unlockedCostumes(fighterId) {
+    return costumesFor(fighterId)
+      .filter((c) => this.isCostumeUnlocked(fighterId, c.id))
+      .map((c) => c.id);
+  }
   isStageUnlocked(id) { return this.data.unlockedStages.includes(id); }
   isFavorite(id) { return this.data.favorites.includes(id); }
 
