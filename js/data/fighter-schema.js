@@ -52,7 +52,11 @@ function hslToHex(h, s, l) {
   const a = sat * Math.min(lig, 1 - lig);
   const f = (n) => {
     const v = lig - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-    return Math.round(255 * v).toString(16).padStart(2, '0');
+    // Clamp before converting: a dark, saturated colour can push a channel
+    // slightly below zero, and a negative byte formats as "-3c", producing
+    // colours like "#-3c-29-20" that every renderer silently ignores.
+    const byte = Math.max(0, Math.min(255, Math.round(255 * v)));
+    return byte.toString(16).padStart(2, '0');
   };
   return `#${f(0)}${f(8)}${f(4)}`;
 }

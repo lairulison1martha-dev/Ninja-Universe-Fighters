@@ -1,0 +1,150 @@
+{
+  "id": "kaguya",
+  "name": "Kaguya Otsutsuki",
+  "spriteSheet": "assets/fighters/kaguya/sprite-sheet.png",
+  "portrait": "assets/fighters/kaguya/portrait.png",
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "anchor": {
+    "x": 32,
+    "y": 58
+  },
+  "bodyHeight": 49,
+  "pixelArt": true,
+  "source": {
+    "kind": "generated",
+    "tool": "tools/build-fighters.py",
+    "note": "Original pixel art drawn procedurally from this fighter's design record. No source image is read, traced or sampled.",
+    "design": "derived-from-roster"
+  },
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 6,
+      "fps": 7,
+      "loop": true
+    },
+    "walk": {
+      "row": 1,
+      "frames": 6,
+      "fps": 9,
+      "loop": true
+    },
+    "run": {
+      "row": 2,
+      "frames": 6,
+      "fps": 12,
+      "loop": true
+    },
+    "jump": {
+      "row": 3,
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "fall": {
+      "row": 4,
+      "frames": 3,
+      "fps": 8,
+      "loop": true
+    },
+    "dash": {
+      "row": 5,
+      "frames": 4,
+      "fps": 16,
+      "loop": false
+    },
+    "guard": {
+      "row": 6,
+      "frames": 2,
+      "fps": 6,
+      "loop": true
+    },
+    "lightAttack": {
+      "row": 7,
+      "frames": 4,
+      "fps": 15,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "hit"
+    },
+    "heavyAttack": {
+      "row": 8,
+      "frames": 5,
+      "fps": 13,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "hit"
+    },
+    "jutsu1": {
+      "row": 9,
+      "frames": 5,
+      "fps": 13,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "cast"
+    },
+    "jutsu2": {
+      "row": 10,
+      "frames": 5,
+      "fps": 13,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "cast"
+    },
+    "jutsu3": {
+      "row": 11,
+      "frames": 5,
+      "fps": 13,
+      "loop": false,
+      "hitFrame": 2,
+      "event": "cast"
+    },
+    "ultimate": {
+      "row": 12,
+      "frames": 6,
+      "fps": 11,
+      "loop": false,
+      "hitFrame": 3,
+      "event": "cast"
+    },
+    "hurt": {
+      "row": 13,
+      "frames": 3,
+      "fps": 11,
+      "loop": false
+    },
+    "knockdown": {
+      "row": 14,
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "getUp": {
+      "row": 15,
+      "frames": 3,
+      "fps": 9,
+      "loop": false
+    },
+    "victory": {
+      "row": 16,
+      "frames": 5,
+      "fps": 7,
+      "loop": true
+    },
+    "defeat": {
+      "row": 17,
+      "frames": 4,
+      "fps": 7,
+      "loop": false
+    },
+    "transformation": {
+      "row": 18,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "hitFrame": 3,
+      "event": "transform"
+    }
+  }
+}

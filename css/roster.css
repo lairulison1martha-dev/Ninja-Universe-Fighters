@@ -71,7 +71,12 @@
   gap: .34rem;
   padding: .1rem .3rem .5rem;
   align-content: start;
-  content-visibility: auto;
+  /* Row height comes from the cards' own aspect-ratio. Do NOT put
+     `content-visibility: auto` on this container: it makes the browser skip
+     layout for the off-screen part of the subtree, the auto rows collapse to a
+     few pixels, and every card ends up stacked on top of the next. Lazy work is
+     already handled by the IntersectionObserver that paints the portraits. */
+  grid-auto-rows: max-content;
 }
 
 .fcard {

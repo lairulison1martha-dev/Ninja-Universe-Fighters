@@ -230,7 +230,7 @@ export class SelectScreen {
     const id = card.dataset.id;
     const canvas = card.querySelector('canvas');
     if (!canvas) return;
-    FighterRenderer.drawPortrait(canvas, FIGHTERS[id], {
+    FighterRenderer.paintPortrait(canvas, FIGHTERS[id], {
       locked: !saveManager.isFighterUnlocked(id),
     });
   }
@@ -299,7 +299,7 @@ export class SelectScreen {
     nameEl.textContent = d.displayName;
     metaEl.textContent = `${labelize(d.archetype)} · ${'★'.repeat(d.difficulty)}`;
     portrait.innerHTML = '<canvas width="150" height="200"></canvas>';
-    FighterRenderer.drawPortrait(portrait.querySelector('canvas'), d, {});
+    FighterRenderer.paintPortrait(portrait.querySelector('canvas'), d, {});
   }
 
   /* ----------------------------------------------------------- options --- */
@@ -437,20 +437,19 @@ export class SelectScreen {
       <h4>AI personality</h4>
       <p class="small muted">${d.aiProfile} — the CPU plays this fighter accordingly.</p>
 
-      <h4>In-match sprite</h4>
+      <h4>Sprite set</h4>
       <div class="sheet__sprite">
-        <img src="./assets/fighters/base-ninja/portrait.png" alt="Base ninja placeholder sprite" width="96" height="128">
+        <img src="./assets/fighters/${d.id}/portrait.png" alt="${d.displayName} sprite" width="96" height="128" loading="lazy">
         <p class="small muted">
-          Placeholder art. Every fighter currently shares one temporary sprite
-          set (<code>base-ninja</code>), recoloured to their palette in combat.
-          The portrait above the stats is the procedural silhouette, which is
-          still unique per fighter. Per-fighter sprite sets drop into
-          <code>assets/fighters/</code> without a code change.
+          ${d.displayName} has their own 19-animation sprite set in
+          <code>assets/fighters/${d.id}/</code> — original pixel art generated
+          from this fighter's design record, not shared with anyone else on the
+          roster.
         </p>
       </div>
     `;
 
-    FighterRenderer.drawPortrait(el.querySelector('.sheet__hero-art canvas'), d, {});
+    FighterRenderer.paintPortrait(el.querySelector('.sheet__hero-art canvas'), d, {});
     $('btn-fav').textContent = saveManager.isFavorite(id) ? '★' : '☆';
 
     const pick1 = $('btn-pick-p1');

@@ -126,6 +126,36 @@ export function run() {
     assertEmpty(missing, 'Service worker precaches files that do not exist');
   });
 
+  test('every precached fighter sprite set exists on disk', () => {
+    // The fighter half of the precache list is built by a loop over ids, so it
+    // is not in the literal array the check above scans.
+    const sw = readFileSync(join(ROOT, 'service-worker.js'), 'utf8');
+    const block = sw.slice(sw.indexOf('const PRECACHE_FIGHTERS'),
+      sw.indexOf('];', sw.indexOf('const PRECACHE_FIGHTERS')));
+    const ids = [...block.matchAll(/'([a-z0-9_]+)'/g)].map((m) => m[1]);
+    assert(ids.length >= 20, `Expected the starter roster, found ${ids.length} ids`);
+    const missing = [];
+    for (const id of ids) {
+      for (const file of ['fighter.json', 'sprite-sheet.png', 'portrait.png']) {
+        const p = join(ROOT, 'assets', 'fighters', id, file);
+        if (!existsSync(p)) missing.push(`${id}/${file}`);
+      }
+    }
+    assertEmpty(missing, 'Precached fighter sprite files are missing');
+  });
+
+  test('the sprite manifest only lists fighters that exist', () => {
+    const manifest = JSON.parse(readFileSync(join(ROOT, 'assets', 'fighters', 'manifest.json'), 'utf8'));
+    assert(Array.isArray(manifest.fighters) && manifest.fighters.length > 0,
+      'The manifest lists no fighters');
+    const missing = manifest.fighters.filter(
+      (id) => !existsSync(join(ROOT, 'assets', 'fighters', id, 'sprite-sheet.png')),
+    );
+    assertEmpty(missing, 'The manifest names sprite sets that are not on disk');
+    const notInManifest = (manifest.precached || []).filter((id) => !manifest.fighters.includes(id));
+    assertEmpty(notInManifest, 'Precached ids missing from the manifest');
+  });
+
   test('every ES module import in js/ resolves to a real file', () => {
     const missing = [];
     for (const file of ALL_FILES) {

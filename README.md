@@ -164,7 +164,7 @@ Storage → **Clear site data**.
 | Arcade ladders / Boss Rushes | 4 / 4 |
 | Assists and summons | 24 |
 | Achievements | 31 |
-| Fighter sprite animations | **16** (80 frames), one shared prototype set |
+| Fighter sprite sets | **192** — one per fighter, 19 animations / 84 frames each |
 
 ### The twenty fighters with complete, unique kits
 
@@ -323,10 +323,13 @@ Gamepads are polled with the standard mapping.
 │   └── ui/                     menu, select, stage, list, settings, layout
 │                               editor, HUD, overlays
 ├── assets/icons/               generated PNG icon set + editable SVG master
-├── assets/fighters/            fighter sprite sets (atlas + fighter.json +
-│                               portrait), one folder per set
+├── assets/fighters/            one folder per fighter: sprite-sheet.png,
+│                               portrait.png, fighter.json, plus manifest.json
 ├── tools/generate-icons.py     procedural icon generator
-├── tools/build-fighter-sprites.py  reference sheet → sprite atlas extractor
+├── tools/build-fighters.py     sprite-set builder (CLI)
+├── tools/fighter_art.py        the pixel-art rig: poses, body, hair, gear
+├── tools/designs.py            per-fighter design records
+├── tools/pixel.py              integer-only pixel canvas
 ├── tools/pngio.py              dependency-free PNG read/write
 └── tests/                      validation suite (plain Node, no dependencies)
 ```
@@ -362,25 +365,35 @@ service-worker precache list, broken imports).
 `package.json` exists **only** so Node treats `tests/*.js` as ES modules. There
 are no dependencies and nothing to install to play or deploy the game.
 
-### Rebuilding the fighter sprite atlas
+### Rebuilding the fighter sprites
 
 ```bash
-python3 tools/build-fighter-sprites.py [source.png]
+python3 tools/build-fighters.py                # every fighter (~6 minutes)
+python3 tools/build-fighters.py naruto sasuke  # just these
+python3 tools/build-fighters.py --pass1        # the twenty starters
+python3 tools/build-fighters.py --contact out.png --pass1   # visual check grid
 ```
 
-Reads a reference sheet (default `tools/source-sheet.png`) and writes
-`assets/fighters/base-ninja/{sprite-sheet.png,fighter.json,portrait.png}`.
+**Nothing is read as input.** There is no source image to trace or slice. Each
+frame is a posed skeleton rasterised into a 64×64 grid:
 
-The supplied source is a *presentation mockup* rather than a production atlas:
-it is an opaque RGB PNG whose "transparency" is a painted grey checker, its
-printed per-row frame counts are decorative, its frame pitch varies per row, and
-effects bleed across cell boundaries. So the tool does not slice a grid — it
-keys the backdrop to real alpha with a luminance/saturation test plus a border
-flood fill (dark pixels *inside* the silhouette survive), measures each strip's
-pitch by autocorrelation, snaps cuts to the emptiest columns, drops cells with
-no character in them, and re-anchors every surviving frame onto a 64x64 cell
-with the feet on one baseline. `fighter.json` records both the count printed on
-the mockup and the count actually recovered.
+- `tools/pixel.py` — an integer-only canvas: capsules, ellipses, polygons, an
+  outline pass and a two-tone shading pass. No antialiasing anywhere, because
+  the game upscales with nearest-neighbour sampling.
+- `tools/fighter_art.py` — the rig. Skeleton proportions (~2.5 heads tall, feet
+  on y=58), a pose table for all 19 animations, and the parts: torso and
+  clothing styles, twelve hair shapes, headbands, coats and cloaks, back gear
+  (gourd, swords, scroll), held weapons, face markings, and per-animation
+  effects.
+- `tools/designs.py` — the design record per fighter. Twenty are authored by
+  hand; the rest are derived from each fighter's own `colors`/`visual` block in
+  `js/data/fighters.js`, with the remaining choices hashed off the fighter id so
+  they stay distinct from one another and identical between builds.
+- `tools/build-fighters.py` — drives it, writes the atlas, the portrait,
+  `fighter.json` and `assets/fighters/manifest.json`.
+
+The roster is read through `tools/dump-roster.mjs`, so colours and proportions
+can never drift from what the game uses.
 
 ### Regenerating the app icon
 
@@ -419,17 +432,17 @@ game, anime or third party.**
   Original design: dark ninja universe, eclipse, blue/red chakra swirl, hooded
   masked shinobi silhouette. No official logo, village symbol or character
   likeness.
-- **Fighters (in combat)** — one temporary sprite set,
-  `assets/fighters/base-ninja/`, built by `tools/build-fighter-sprites.py` from
-  a reference sheet supplied for this project, recoloured per fighter at
-  runtime. It is placeholder art: **the whole roster shares one body**. Drop a
-  new folder into `assets/fighters/`, add its id to `SPRITE_SETS` in
-  `js/asset-loader.js`, and point a fighter's `spriteId` at it to override.
-- **Fighters (portraits)** — still drawn at runtime from each roster entry's
-  `colors` and `visual` fields (silhouette proportions, hairstyle, weapon, cape,
-  markings, aura), so all 192 stay visually distinct on the select screen. The
-  same renderer is the automatic fallback in combat if the sprite assets fail
-  to load.
+- **Fighter sprites** — generated by `tools/build-fighters.py` from the design
+  records in `tools/designs.py`. Every fighter has their own set: their own
+  hair, build, clothing, gear, palette and silhouette. No sprite is a recolour
+  of another, and a test fails the build if two sheets are identical or two
+  idle silhouettes match. Reference images were used only to decide the visual
+  direction — chibi proportions, 64×64 cells, transparent background, one
+  ground line — and none of their pixels is in this repository.
+- **Fighters (procedural fallback)** — the original vector silhouette renderer
+  is still there and still driven by each roster entry's `colors` and `visual`
+  fields. It draws any fighter whose sprite set fails to load, so combat never
+  depends on the network.
 - **Stages** — generated procedurally from layer descriptions in
   `js/data/stages.js`. No background images.
 - **Effects** — a pooled particle system driven by named recipes.
@@ -460,14 +473,22 @@ any other project.
   to play yet — the slider currently controls an empty bus.
 - The language framework exists (setting, `lang` attribute, `LANGUAGES` table)
   but only English strings ship.
-- **The fighter sprite set is a prototype, not production art.** Every fighter
-  in a match is the same `base-ninja` body under a different colour ramp. The
-  atlas is honest about itself — background keyed to real alpha, uniform 64x64
-  cells, one ground line, verified by tests — but it came from a reference
-  mockup, so several rows hold fewer frames than the mockup advertised (idle,
-  walk and run recovered 7 of a claimed 8; light attack 5 of 6; the jutsu rows
-  6 of 7), and the source art is very dark and low-contrast, which limits how
-  far the per-fighter recolour can go.
+- **Fighter sprites are generated, not hand-drawn.** All 192 sets are original
+  and genuinely distinct, but they come from one rig, so they share a drawing
+  language: the same skeleton proportions, the same capsule-and-outline style,
+  the same 19 pose tables. A character artist would give each fighter unique
+  timing and posing; this gives each fighter unique *design*. Design records are
+  plain data in `tools/designs.py`, so refining one fighter is a small edit and
+  a rebuild.
+- **Transformations reuse the base fighter's sprite set.** A transformed
+  fighter plays the same sheet with the engine's aura and colour effects over
+  it; there are no separate atlases for Sage Mode, the Gates, Susanoo and the
+  rest yet. The generator is already parameterised for it (a form is just
+  another design record), so this is the next batch of work rather than a
+  redesign.
+- **The 172 derived fighters are drawn from roster data.** They are distinct
+  from one another, but their designs were not individually art-directed the
+  way the twenty starters were.
 - Local two-player versus on one device is not implemented; Versus is
   player-versus-AI. The input manager already carries a second player state for
   it.

@@ -16,6 +16,7 @@ import story from './story-manager.js';
 import arcade from './arcade-manager.js';
 import survival from './survival-manager.js';
 import tower from './tower-manager.js';
+import assets from './asset-loader.js';
 
 import { MobileControls } from './mobile-controls.js';
 import { CombatEngine, PHASE } from './combat/combat-engine.js';
@@ -177,6 +178,9 @@ export class Game {
       rounds: cfg.rounds,
       timer: cfg.timer,
     };
+    // Start fetching both fighters' art now, while the player picks a stage,
+    // so startMatch usually finds it already registered.
+    assets.loadSpriteSets([this.pendingMatch.playerId, this.pendingMatch.opponentId]);
     this.stageScreen.render();
     screens.show('stage');
   }
@@ -473,19 +477,23 @@ export class Game {
         <ul>
           <li>The app icon is generated procedurally by <code>tools/generate-icons.py</code>. The editable master is <code>assets/icons/icon-source.svg</code>.</li>
           <li>Stages and every visual effect are drawn at runtime from data — no downloaded art.</li>
+          <li>Fighter sprites are generated pixel art — see below.</li>
           <li>All music and sound effects are synthesised with the Web Audio API at runtime.</li>
-          <li>Roster portraits are still drawn procedurally from each fighter's colour and silhouette data, so all ${ROSTER_SIZE} look different on the select screen.</li>
+          <li>All ${ROSTER_SIZE} fighters have their own sprite set and portrait; the procedural silhouette renderer remains as the fallback if art fails to load.</li>
         </ul>
 
-        <h3>Fighter sprites — prototype</h3>
-        <p>In combat every fighter is drawn from a single temporary sprite set,
-        <code>assets/fighters/base-ninja/</code>, recoloured to their palette. It is
-        16 animations totalling 80 frames, extracted from a supplied reference
-        sheet by <code>tools/build-fighter-sprites.py</code>; <code>fighter.json</code>
-        records how many frames each animation really has rather than the counts
-        printed on the source. This is placeholder art: it is one body for the
-        whole roster, and per-fighter sets can be added under
-        <code>assets/fighters/</code> without touching code.</p>
+        <h3>Fighter sprites</h3>
+        <p>Every fighter has their own sprite set under
+        <code>assets/fighters/&lt;id&gt;/</code> — 19 animations, 84 frames, 64×64
+        pixel art with a transparent background and a shared ground line. The art
+        is generated, not drawn over anything: <code>tools/fighter_art.py</code>
+        rasterises a posed skeleton from each fighter's design record, so hair,
+        build, clothing, gear and palette differ per character. No image is read
+        as input by the build, so there is nothing traced or sampled.</p>
+        <p>The twenty starters have hand-authored design records; the rest are
+        derived from their own roster data. Sets load per match rather than at
+        boot — the whole roster is several megabytes — and the twenty starters
+        are precached for offline play.</p>
 
         <h3>Names and likenesses</h3>
         <p>Character and technique names reference well-known series characters for a private prototype. No copyrighted artwork, sprites, logos, screenshots, music or voice lines are used or downloaded anywhere in this project, and every asset path is structured so names and art can be replaced later.</p>
@@ -506,7 +514,7 @@ export class Game {
 
   /* --------------------------------------------------------------- match -- */
 
-  startMatch(cfg) {
+  async startMatch(cfg) {
     // Tower runs resolve their configuration here so the stage screen is skipped.
     if (this.flow?.kind === 'tower' && this.pendingTowerFloor) {
       const run = tower.start(this.pendingTowerFloor, cfg.playerId);
@@ -516,6 +524,12 @@ export class Game {
     }
 
     this.stopMatch();
+
+    // Fighter art is fetched per match, not at boot. Both fighters' sets have
+    // to be registered before the engine constructs them, because a Fighter
+    // picks up its sheet in its constructor. A set that fails to load simply
+    // leaves that fighter on the procedural renderer.
+    await assets.loadSpriteSets([cfg.playerId, cfg.opponentId]);
 
     const engine = new CombatEngine();
     engine.setup({

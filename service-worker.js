@@ -11,7 +11,7 @@
  * such as /Ninja-Universe-Fighters/.
  */
 
-const CACHE_VERSION = 'v0.7.0';
+const CACHE_VERSION = 'v0.8.0';
 const CACHE_NAME = `nuf-${CACHE_VERSION}`;
 
 /** Resolve relative to the worker's own scope, never to the domain root. */
@@ -108,10 +108,29 @@ const PRECACHE = [
   './assets/icons/favicon-32.png',
   './assets/icons/icon-source.svg',
 
-  './assets/fighters/base-ninja/fighter.json',
-  './assets/fighters/base-ninja/sprite-sheet.png',
-  './assets/fighters/base-ninja/portrait.png',
+  './assets/fighters/manifest.json',
 ];
+
+/**
+ * Fighter sprite sets precached for offline play.
+ *
+ * The roster has 192 sets and they total several megabytes, so installing all
+ * of them would make a first visit enormous. These twenty are installed up
+ * front; every other set is cached by the runtime handler below the first time
+ * a match fetches it, so any fighter you have actually played stays available
+ * offline.
+ */
+const PRECACHE_FIGHTERS = [
+  'naruto', 'sasuke', 'sakura', 'kakashi', 'lee', 'gaara', 'itachi', 'pain',
+  'madara', 'boruto', 'kawaki', 'momoshiki', 'minato', 'hashirama', 'guy',
+  'bee', 'obito', 'jiraiya', 'orochimaru', 'tsunade',
+];
+
+for (const id of PRECACHE_FIGHTERS) {
+  PRECACHE.push(`./assets/fighters/${id}/fighter.json`);
+  PRECACHE.push(`./assets/fighters/${id}/sprite-sheet.png`);
+  PRECACHE.push(`./assets/fighters/${id}/portrait.png`);
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {

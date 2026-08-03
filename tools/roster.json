@@ -1,0 +1,5357 @@
+[
+ {
+  "id": "naruto",
+  "displayName": "Naruto Uzumaki",
+  "shortName": "Naruto",
+  "complete": true,
+  "archetype": "balanced",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#f5a623",
+   "secondary": "#2d4b8e",
+   "accent": "#ff7a1a",
+   "hair": "#ffd85e",
+   "aura": "#ffb020",
+   "skin": "#e8b98d"
+  },
+  "visual": {
+   "height": 1,
+   "bulk": 1,
+   "hairStyle": "spiky",
+   "weapon": "none",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "naruto_onetail",
+   "naruto_fourtail",
+   "naruto_sage",
+   "naruto_kcm1",
+   "naruto_kcm2",
+   "naruto_sixpaths",
+   "naruto_baryon"
+  ]
+ },
+ {
+  "id": "sasuke",
+  "displayName": "Sasuke Uchiha",
+  "shortName": "Sasuke",
+  "complete": true,
+  "archetype": "balanced",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#2b2f45",
+   "secondary": "#5a1a2a",
+   "accent": "#7fd4ff",
+   "hair": "#23283a",
+   "aura": "#8a5aff",
+   "skin": "#f0d6bc"
+  },
+  "visual": {
+   "height": 1.01,
+   "bulk": 0.96,
+   "hairStyle": "spiky",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "sasuke_sharingan",
+   "sasuke_cm1",
+   "sasuke_cm2",
+   "sasuke_mangekyo",
+   "sasuke_ems",
+   "sasuke_rinnegan"
+  ]
+ },
+ {
+  "id": "sakura",
+  "displayName": "Sakura Haruno",
+  "shortName": "Sakura",
+  "complete": true,
+  "archetype": "grappler",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#e04a7a",
+   "secondary": "#b8365e",
+   "accent": "#8affc9",
+   "hair": "#ff9ec4",
+   "aura": "#ff5a8a",
+   "skin": "#f4d8c0"
+  },
+  "visual": {
+   "height": 0.97,
+   "bulk": 0.94,
+   "hairStyle": "short",
+   "weapon": "none",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "sakura_byakugo",
+   "sakura_hundred"
+  ]
+ },
+ {
+  "id": "kakashi",
+  "displayName": "Kakashi Hatake",
+  "shortName": "Kakashi",
+  "complete": true,
+  "archetype": "counter",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33507a",
+   "secondary": "#1f2a3d",
+   "accent": "#7fd4ff",
+   "hair": "#c9cdd6",
+   "aura": "#b57bff",
+   "skin": "#e8c6a6"
+  },
+  "visual": {
+   "height": 1.05,
+   "bulk": 0.98,
+   "hairStyle": "spiky",
+   "weapon": "kunai",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kakashi_sharingan",
+   "kakashi_mangekyo",
+   "kakashi_double_mangekyo",
+   "kakashi_susanoo"
+  ]
+ },
+ {
+  "id": "lee",
+  "displayName": "Rock Lee",
+  "shortName": "Rock",
+  "complete": true,
+  "archetype": "rushdown",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#2fa85a",
+   "secondary": "#1c6b3a",
+   "accent": "#ff8a3c",
+   "hair": "#1a1a20",
+   "aura": "#ff5a2a",
+   "skin": "#e8c09a"
+  },
+  "visual": {
+   "height": 1,
+   "bulk": 1.04,
+   "hairStyle": "bowl",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "lee_gate1",
+   "lee_gate2",
+   "lee_gate3",
+   "lee_gate4",
+   "lee_gate5",
+   "lee_gate6"
+  ]
+ },
+ {
+  "id": "gaara",
+  "displayName": "Gaara",
+  "shortName": "Gaara",
+  "complete": true,
+  "archetype": "zoning",
+  "era": "shippuden",
+  "village": "sand",
+  "colors": {
+   "primary": "#8b1f2e",
+   "secondary": "#3a2a1a",
+   "accent": "#e8c07a",
+   "hair": "#c4362f",
+   "aura": "#e8c07a",
+   "skin": "#f2ddc4"
+  },
+  "visual": {
+   "height": 0.98,
+   "bulk": 1,
+   "hairStyle": "short",
+   "weapon": "none",
+   "cape": true,
+   "markings": "seal"
+  },
+  "transformations": [
+   "gaara_sand_armor",
+   "gaara_partial_shukaku",
+   "gaara_full_shukaku"
+  ]
+ },
+ {
+  "id": "itachi",
+  "displayName": "Itachi Uchiha",
+  "shortName": "Itachi",
+  "complete": true,
+  "archetype": "counter",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#1b1e2b",
+   "secondary": "#7a1a2a",
+   "accent": "#ff4a4a",
+   "hair": "#2a2a35",
+   "aura": "#ff5a3a",
+   "skin": "#e6cdb4"
+  },
+  "visual": {
+   "height": 1.03,
+   "bulk": 0.94,
+   "hairStyle": "ponytail",
+   "weapon": "kunai",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "itachi_mangekyo",
+   "itachi_susanoo"
+  ]
+ },
+ {
+  "id": "pain",
+  "displayName": "Pain",
+  "shortName": "Pain",
+  "complete": true,
+  "archetype": "ranged",
+  "era": "shippuden",
+  "village": "rain",
+  "colors": {
+   "primary": "#3a2a3f",
+   "secondary": "#1a1620",
+   "accent": "#c8a8ff",
+   "hair": "#d8683a",
+   "aura": "#a08adc",
+   "skin": "#e0d0c4"
+  },
+  "visual": {
+   "height": 1.04,
+   "bulk": 1.02,
+   "hairStyle": "spiky",
+   "weapon": "none",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "pain_six_paths",
+   "pain_nagato"
+  ]
+ },
+ {
+  "id": "madara",
+  "displayName": "Madara Uchiha",
+  "shortName": "Madara",
+  "complete": true,
+  "archetype": "transformation",
+  "era": "war",
+  "village": "leaf",
+  "colors": {
+   "primary": "#2a2230",
+   "secondary": "#6a1a2a",
+   "accent": "#ff2a5a",
+   "hair": "#171720",
+   "aura": "#9a5aff",
+   "skin": "#e6cdb4"
+  },
+  "visual": {
+   "height": 1.08,
+   "bulk": 1.08,
+   "hairStyle": "wild",
+   "weapon": "fan",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "madara_mangekyo",
+   "madara_ems",
+   "madara_rinnegan",
+   "madara_sixpaths",
+   "madara_tentails",
+   "madara_rinne_sharingan"
+  ]
+ },
+ {
+  "id": "boruto",
+  "displayName": "Boruto Uzumaki",
+  "shortName": "Boruto",
+  "complete": true,
+  "archetype": "rushdown",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#2f4f8f",
+   "secondary": "#1a2c50",
+   "accent": "#7fd4ff",
+   "hair": "#ffdf7a",
+   "aura": "#9a4aff",
+   "skin": "#f0cfae"
+  },
+  "visual": {
+   "height": 0.94,
+   "bulk": 0.9,
+   "hairStyle": "spiky",
+   "weapon": "kunai",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "boruto_karma",
+   "boruto_karma2",
+   "boruto_true_essence"
+  ]
+ },
+ {
+  "id": "kawaki",
+  "displayName": "Kawaki",
+  "shortName": "Kawaki",
+  "complete": true,
+  "archetype": "grappler",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#4a4a52",
+   "secondary": "#26262e",
+   "accent": "#c78cff",
+   "hair": "#1d1d24",
+   "aura": "#8a3add",
+   "skin": "#dcc4ae"
+  },
+  "visual": {
+   "height": 1.03,
+   "bulk": 1.06,
+   "hairStyle": "short",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "kawaki_karma",
+   "kawaki_karma2",
+   "kawaki_isshiki"
+  ]
+ },
+ {
+  "id": "momoshiki",
+  "displayName": "Momoshiki Otsutsuki",
+  "shortName": "Momoshiki",
+  "complete": true,
+  "archetype": "counter",
+  "era": "boruto",
+  "village": "none",
+  "colors": {
+   "primary": "#e8e2ee",
+   "secondary": "#7a2a5a",
+   "accent": "#ff5aa0",
+   "hair": "#f2eef8",
+   "aura": "#ff5aa0",
+   "skin": "#efe6f2"
+  },
+  "visual": {
+   "height": 1.06,
+   "bulk": 0.96,
+   "hairStyle": "long",
+   "weapon": "none",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "momoshiki_fused"
+  ]
+ },
+ {
+  "id": "minato",
+  "displayName": "Minato Namikaze",
+  "shortName": "Minato",
+  "complete": true,
+  "archetype": "counter",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#e8e0cc",
+   "secondary": "#2f4f8f",
+   "accent": "#ffe58a",
+   "hair": "#ffd85e",
+   "aura": "#ffd75a",
+   "skin": "#f0cfae"
+  },
+  "visual": {
+   "height": 1.04,
+   "bulk": 0.98,
+   "hairStyle": "spiky",
+   "weapon": "kunai",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "minato_kcm"
+  ]
+ },
+ {
+  "id": "hashirama",
+  "displayName": "Hashirama Senju",
+  "shortName": "Hashirama",
+  "complete": true,
+  "archetype": "summoner",
+  "era": "ancient",
+  "village": "leaf",
+  "colors": {
+   "primary": "#8a2f2f",
+   "secondary": "#3f2a1a",
+   "accent": "#a8e07a",
+   "hair": "#2a2018",
+   "aura": "#a8e07a",
+   "skin": "#e8c6a0"
+  },
+  "visual": {
+   "height": 1.07,
+   "bulk": 1.1,
+   "hairStyle": "long",
+   "weapon": "none",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "hashirama_sage",
+   "hashirama_thousand_hands"
+  ]
+ },
+ {
+  "id": "guy",
+  "displayName": "Might Guy",
+  "shortName": "Might",
+  "complete": true,
+  "archetype": "rushdown",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#2fa85a",
+   "secondary": "#1c6b3a",
+   "accent": "#7fe0ff",
+   "hair": "#1a1a20",
+   "aura": "#ff3a2a",
+   "skin": "#e0b890"
+  },
+  "visual": {
+   "height": 1.05,
+   "bulk": 1.12,
+   "hairStyle": "bowl",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "guy_gate1",
+   "guy_gate2",
+   "guy_gate3",
+   "guy_gate4",
+   "guy_gate5",
+   "guy_gate6",
+   "guy_gate7",
+   "guy_gate8"
+  ]
+ },
+ {
+  "id": "bee",
+  "displayName": "Killer Bee",
+  "shortName": "Killer",
+  "complete": true,
+  "archetype": "weapon",
+  "era": "shippuden",
+  "village": "cloud",
+  "colors": {
+   "primary": "#e8e4d8",
+   "secondary": "#3a3f4a",
+   "accent": "#c0a8ff",
+   "hair": "#f0f0f0",
+   "aura": "#8a6ad8",
+   "skin": "#7a5a42"
+  },
+  "visual": {
+   "height": 1.09,
+   "bulk": 1.14,
+   "hairStyle": "braided",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "bee_v1",
+   "bee_v2",
+   "bee_full_gyuki"
+  ]
+ },
+ {
+  "id": "obito",
+  "displayName": "Obito Uchiha",
+  "shortName": "Obito",
+  "complete": true,
+  "archetype": "counter",
+  "era": "war",
+  "village": "leaf",
+  "colors": {
+   "primary": "#2a2230",
+   "secondary": "#5a1a2a",
+   "accent": "#b57bff",
+   "hair": "#2a2a35",
+   "aura": "#c8b0ff",
+   "skin": "#dcc0a4"
+  },
+  "visual": {
+   "height": 1.04,
+   "bulk": 1.02,
+   "hairStyle": "spiky",
+   "weapon": "staff",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "obito_masked",
+   "obito_white_mask",
+   "obito_tentails"
+  ]
+ },
+ {
+  "id": "jiraiya",
+  "displayName": "Jiraiya",
+  "shortName": "Jiraiya",
+  "complete": true,
+  "archetype": "zoning",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#c8362f",
+   "secondary": "#3a5a2a",
+   "accent": "#f2c46a",
+   "hair": "#e8e4d8",
+   "aura": "#f2c46a",
+   "skin": "#e8c6a0"
+  },
+  "visual": {
+   "height": 1.08,
+   "bulk": 1.12,
+   "hairStyle": "wild",
+   "weapon": "none",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "jiraiya_sage"
+  ]
+ },
+ {
+  "id": "orochimaru",
+  "displayName": "Orochimaru",
+  "shortName": "Orochimaru",
+  "complete": true,
+  "archetype": "defensive",
+  "era": "shippuden",
+  "village": "sound",
+  "colors": {
+   "primary": "#c8c0a8",
+   "secondary": "#4a2a5a",
+   "accent": "#9ac070",
+   "hair": "#2a2a35",
+   "aura": "#c8e0a0",
+   "skin": "#eae4d0"
+  },
+  "visual": {
+   "height": 1.05,
+   "bulk": 0.94,
+   "hairStyle": "long",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "orochimaru_serpent",
+   "orochimaru_eight_headed"
+  ]
+ },
+ {
+  "id": "tsunade",
+  "displayName": "Tsunade",
+  "shortName": "Tsunade",
+  "complete": true,
+  "archetype": "grappler",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3a8a6a",
+   "secondary": "#e8e0cc",
+   "accent": "#ff9ab8",
+   "hair": "#f0e08a",
+   "aura": "#ff9ab8",
+   "skin": "#f4d8c0"
+  },
+  "visual": {
+   "height": 1.02,
+   "bulk": 1,
+   "hairStyle": "ponytail",
+   "weapon": "none",
+   "cape": true,
+   "markings": "seal"
+  },
+  "transformations": [
+   "tsunade_byakugo",
+   "tsunade_creation_rebirth"
+  ]
+ },
+ {
+  "id": "sai",
+  "displayName": "Sai",
+  "shortName": "Sai",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a33333",
+   "secondary": "#70293b",
+   "accent": "#4feeee",
+   "hair": "#000000",
+   "aura": "#f54772",
+   "skin": "#b96e55"
+  },
+  "visual": {
+   "height": 1.1300000000000001,
+   "bulk": 1.17,
+   "hairStyle": "long",
+   "weapon": "fan",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "sai_awakening"
+  ]
+ },
+ {
+  "id": "yamato",
+  "displayName": "Yamato",
+  "shortName": "Yamato",
+  "complete": false,
+  "archetype": "defensive",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#85a333",
+   "secondary": "#297051",
+   "accent": "#794fee",
+   "hair": "#608547",
+   "aura": "#47f5aa",
+   "skin": "#c8a179"
+  },
+  "visual": {
+   "height": 0.74,
+   "bulk": 0.6499999999999999,
+   "hairStyle": "short",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "yamato_awakening"
+  ]
+ },
+ {
+  "id": "shikamaru",
+  "displayName": "Shikamaru Nara",
+  "shortName": "Shikamaru",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a39833",
+   "secondary": "#297043",
+   "accent": "#4f5fee",
+   "hair": "#5f6a39",
+   "aura": "#47f587",
+   "skin": "#c2966b"
+  },
+  "visual": {
+   "height": 0.7,
+   "bulk": 0.71,
+   "hairStyle": "bald",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "shikamaru_awakening"
+  ]
+ },
+ {
+  "id": "choji",
+  "displayName": "Choji Akimichi",
+  "shortName": "Choji",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#90a333",
+   "secondary": "#296970",
+   "accent": "#694fee",
+   "hair": "#4d6336",
+   "aura": "#47e4f5",
+   "skin": "#c4a96e"
+  },
+  "visual": {
+   "height": 1.08,
+   "bulk": 1.12,
+   "hairStyle": "short",
+   "weapon": "scythe",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "choji_awakening"
+  ]
+ },
+ {
+  "id": "ino",
+  "displayName": "Ino Yamanaka",
+  "shortName": "Ino",
+  "complete": false,
+  "archetype": "support",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a3333d",
+   "secondary": "#702935",
+   "accent": "#4feee0",
+   "hair": "#241814",
+   "aura": "#f54764",
+   "skin": "#c18867"
+  },
+  "visual": {
+   "height": 1.08,
+   "bulk": 1.1,
+   "hairStyle": "long",
+   "weapon": "puppet",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "ino_awakening"
+  ]
+ },
+ {
+  "id": "kiba",
+  "displayName": "Kiba Inuzuka",
+  "shortName": "Kiba",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#51a333",
+   "secondary": "#4b7029",
+   "accent": "#c34fee",
+   "hair": "#000000",
+   "aura": "#9bf547",
+   "skin": "#b7714e"
+  },
+  "visual": {
+   "height": 0.91,
+   "bulk": 1.01,
+   "hairStyle": "hooded",
+   "weapon": "none",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "kiba_awakening"
+  ]
+ },
+ {
+  "id": "hinata",
+  "displayName": "Hinata Hyuga",
+  "shortName": "Hinata",
+  "complete": false,
+  "archetype": "counter",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#4233a3",
+   "secondary": "#472970",
+   "accent": "#d8ee4f",
+   "hair": "#2d203c",
+   "aura": "#9047f5",
+   "skin": "#b16348"
+  },
+  "visual": {
+   "height": 0.88,
+   "bulk": 0.64,
+   "hairStyle": "bald",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "hinata_awakening"
+  ]
+ },
+ {
+  "id": "neji",
+  "displayName": "Neji Hyuga",
+  "shortName": "Neji",
+  "complete": false,
+  "archetype": "counter",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#7ca333",
+   "secondary": "#29702a",
+   "accent": "#864fee",
+   "hair": "#3d5a30",
+   "aura": "#47f54a",
+   "skin": "#c5a872"
+  },
+  "visual": {
+   "height": 0.74,
+   "bulk": 0.6699999999999999,
+   "hairStyle": "bowl",
+   "weapon": "none",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "neji_awakening"
+  ]
+ },
+ {
+  "id": "tenten",
+  "displayName": "Tenten",
+  "shortName": "Tenten",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#69a333",
+   "secondary": "#295f70",
+   "accent": "#a14fee",
+   "hair": "#2a4625",
+   "aura": "#47cdf5",
+   "skin": "#ceb488"
+  },
+  "visual": {
+   "height": 1.08,
+   "bulk": 1.03,
+   "hairStyle": "braided",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "tenten_awakening"
+  ]
+ },
+ {
+  "id": "shino",
+  "displayName": "Shino Aburame",
+  "shortName": "Shino",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a373",
+   "secondary": "#292e70",
+   "accent": "#ee4f94",
+   "hair": "#67ada6",
+   "aura": "#4753f5",
+   "skin": "#ceb788"
+  },
+  "visual": {
+   "height": 1,
+   "bulk": 1.13,
+   "hairStyle": "long",
+   "weapon": "puppet",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "shino_awakening"
+  ]
+ },
+ {
+  "id": "iruka",
+  "displayName": "Iruka Umino",
+  "shortName": "Iruka",
+  "complete": false,
+  "archetype": "balanced",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#7ca333",
+   "secondary": "#297048",
+   "accent": "#864fee",
+   "hair": "#36502b",
+   "aura": "#47f592",
+   "skin": "#cdab84"
+  },
+  "visual": {
+   "height": 0.68,
+   "bulk": 0.77,
+   "hairStyle": "long",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "iruka_awakening"
+  ]
+ },
+ {
+  "id": "asuma",
+  "displayName": "Asuma Sarutobi",
+  "shortName": "Asuma",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a364",
+   "secondary": "#294570",
+   "accent": "#ee4fa9",
+   "hair": "#3d7165",
+   "aura": "#478df5",
+   "skin": "#caa77d"
+  },
+  "visual": {
+   "height": 0.86,
+   "bulk": 0.7,
+   "hairStyle": "bowl",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "asuma_awakening"
+  ]
+ },
+ {
+  "id": "kurenai",
+  "displayName": "Kurenai Yuhi",
+  "shortName": "Kurenai",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#337ea3",
+   "secondary": "#402970",
+   "accent": "#ee844f",
+   "hair": "#4b608b",
+   "aura": "#7e47f5",
+   "skin": "#d3bc92"
+  },
+  "visual": {
+   "height": 0.97,
+   "bulk": 1.12,
+   "hairStyle": "ponytail",
+   "weapon": "staff",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "kurenai_awakening"
+  ]
+ },
+ {
+  "id": "anko",
+  "displayName": "Anko Mitarashi",
+  "shortName": "Anko",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a35133",
+   "secondary": "#703a29",
+   "accent": "#4fc3ee",
+   "hair": "#070504",
+   "aura": "#f57047",
+   "skin": "#aa7146"
+  },
+  "visual": {
+   "height": 0.9,
+   "bulk": 0.85,
+   "hairStyle": "long",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "anko_awakening"
+  ]
+ },
+ {
+  "id": "konohamaru",
+  "displayName": "Konohamaru Sarutobi",
+  "shortName": "Konohamaru",
+  "complete": false,
+  "archetype": "balanced",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#6fa333",
+   "secondary": "#705929",
+   "accent": "#994fee",
+   "hair": "#000000",
+   "aura": "#f5be47",
+   "skin": "#945e3d"
+  },
+  "visual": {
+   "height": 0.89,
+   "bulk": 0.61,
+   "hairStyle": "hooded",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "konohamaru_awakening"
+  ]
+ },
+ {
+  "id": "shizune",
+  "displayName": "Shizune",
+  "shortName": "Shizune",
+  "complete": false,
+  "archetype": "healer",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3339a3",
+   "secondary": "#5b2970",
+   "accent": "#eee64f",
+   "hair": "#8370b2",
+   "aura": "#c147f5",
+   "skin": "#cea888"
+  },
+  "visual": {
+   "height": 0.86,
+   "bulk": 0.63,
+   "hairStyle": "short",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "shizune_awakening"
+  ]
+ },
+ {
+  "id": "ebisu",
+  "displayName": "Ebisu",
+  "shortName": "Ebisu",
+  "complete": false,
+  "archetype": "support",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3348a3",
+   "secondary": "#4e2970",
+   "accent": "#eed04f",
+   "hair": "#594f92",
+   "aura": "#a147f5",
+   "skin": "#dac1a4"
+  },
+  "visual": {
+   "height": 1.01,
+   "bulk": 1.03,
+   "hairStyle": "wild",
+   "weapon": "staff",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "ebisu_awakening"
+  ]
+ },
+ {
+  "id": "moegi",
+  "displayName": "Moegi Kazamatsuri",
+  "shortName": "Moegi",
+  "complete": false,
+  "archetype": "support",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a394",
+   "secondary": "#293b70",
+   "accent": "#ee4f64",
+   "hair": "#4f8492",
+   "aura": "#4772f5",
+   "skin": "#d3b192"
+  },
+  "visual": {
+   "height": 0.8400000000000001,
+   "bulk": 0.62,
+   "hairStyle": "hooded",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "moegi_awakening"
+  ]
+ },
+ {
+  "id": "udon",
+  "displayName": "Udon Ise",
+  "shortName": "Udon",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a33d",
+   "secondary": "#297051",
+   "accent": "#ee4fe0",
+   "hair": "#15281d",
+   "aura": "#47f5aa",
+   "skin": "#b97655"
+  },
+  "visual": {
+   "height": 0.7,
+   "bulk": 0.84,
+   "hairStyle": "long",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "udon_awakening"
+  ]
+ },
+ {
+  "id": "tobirama",
+  "displayName": "Tobirama Senju",
+  "shortName": "Tobirama",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "ancient",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a35533",
+   "secondary": "#706a29",
+   "accent": "#4fbeee",
+   "hair": "#282115",
+   "aura": "#f5e747",
+   "skin": "#b86d51"
+  },
+  "visual": {
+   "height": 1.04,
+   "bulk": 1.14,
+   "hairStyle": "bald",
+   "weapon": "claws",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "tobirama_awakening"
+  ]
+ },
+ {
+  "id": "hiruzen",
+  "displayName": "Hiruzen Sarutobi",
+  "shortName": "Hiruzen",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#4233a3",
+   "secondary": "#293770",
+   "accent": "#d8ee4f",
+   "hair": "#000000",
+   "aura": "#476af5",
+   "skin": "#9f6041"
+  },
+  "visual": {
+   "height": 0.7,
+   "bulk": 0.76,
+   "hairStyle": "short",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "hiruzen_awakening"
+  ]
+ },
+ {
+  "id": "kakashi_hokage",
+  "displayName": "Hokage Kakashi",
+  "shortName": "Hokage",
+  "complete": false,
+  "archetype": "counter",
+  "era": "blank-period",
+  "village": "leaf",
+  "colors": {
+   "primary": "#4033a3",
+   "secondary": "#2d2970",
+   "accent": "#dbee4f",
+   "hair": "#0c0911",
+   "aura": "#5047f5",
+   "skin": "#bf8063"
+  },
+  "visual": {
+   "height": 0.79,
+   "bulk": 0.82,
+   "hairStyle": "spiky",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "kakashi_hokage_awakening"
+  ]
+ },
+ {
+  "id": "naruto_hokage",
+  "displayName": "Hokage Naruto",
+  "shortName": "Hokage",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a3337e",
+   "secondary": "#703329",
+   "accent": "#4fee84",
+   "hair": "#a25770",
+   "aura": "#f55e47",
+   "skin": "#cbb280"
+  },
+  "visual": {
+   "height": 0.74,
+   "bulk": 0.83,
+   "hairStyle": "hooded",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "naruto_hokage_awakening"
+  ]
+ },
+ {
+  "id": "shisui",
+  "displayName": "Shisui Uchiha",
+  "shortName": "Shisui",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#9433a3",
+   "secondary": "#452970",
+   "accent": "#64ee4f",
+   "hair": "#000000",
+   "aura": "#8d47f5",
+   "skin": "#98593e"
+  },
+  "visual": {
+   "height": 0.7,
+   "bulk": 0.63,
+   "hairStyle": "braided",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "shisui_awakening"
+  ]
+ },
+ {
+  "id": "fugaku",
+  "displayName": "Fugaku Uchiha",
+  "shortName": "Fugaku",
+  "complete": false,
+  "archetype": "balanced",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3359a3",
+   "secondary": "#702962",
+   "accent": "#eeb94f",
+   "hair": "#3e3e74",
+   "aura": "#f547d2",
+   "skin": "#d3b792"
+  },
+  "visual": {
+   "height": 1.1,
+   "bulk": 0.98,
+   "hairStyle": "ponytail",
+   "weapon": "fan",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "fugaku_awakening"
+  ]
+ },
+ {
+  "id": "izuna",
+  "displayName": "Izuna Uchiha",
+  "shortName": "Izuna",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "ancient",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a39b",
+   "secondary": "#296c70",
+   "accent": "#ee4f59",
+   "hair": "#000000",
+   "aura": "#47edf5",
+   "skin": "#bf8a63"
+  },
+  "visual": {
+   "height": 0.8400000000000001,
+   "bulk": 0.52,
+   "hairStyle": "braided",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "izuna_awakening"
+  ]
+ },
+ {
+  "id": "sakumo",
+  "displayName": "Sakumo Hatake",
+  "shortName": "Sakumo",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#337ca3",
+   "secondary": "#662970",
+   "accent": "#ee864f",
+   "hair": "#566d9f",
+   "aura": "#de47f5",
+   "skin": "#ceb088"
+  },
+  "visual": {
+   "height": 0.67,
+   "bulk": 0.57,
+   "hairStyle": "wild",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "sakumo_awakening"
+  ]
+ },
+ {
+  "id": "danzo",
+  "displayName": "Danzo Shimura",
+  "shortName": "Danzo",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "shippuden",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3396a3",
+   "secondary": "#702969",
+   "accent": "#ee614f",
+   "hair": "#567e9f",
+   "aura": "#f547e4",
+   "skin": "#caa47d"
+  },
+  "visual": {
+   "height": 0.89,
+   "bulk": 0.75,
+   "hairStyle": "bald",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "danzo_awakening"
+  ]
+ },
+ {
+  "id": "kagami",
+  "displayName": "Kagami Uchiha",
+  "shortName": "Kagami",
+  "complete": false,
+  "archetype": "balanced",
+  "era": "ancient",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a38b",
+   "secondary": "#293b70",
+   "accent": "#ee4f71",
+   "hair": "#29484c",
+   "aura": "#4772f5",
+   "skin": "#d4bd96"
+  },
+  "visual": {
+   "height": 0.89,
+   "bulk": 0.76,
+   "hairStyle": "hooded",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kagami_awakening"
+  ]
+ },
+ {
+  "id": "nagato",
+  "displayName": "Nagato",
+  "shortName": "Nagato",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "shippuden",
+  "village": "rain",
+  "colors": {
+   "primary": "#3357a3",
+   "secondary": "#294170",
+   "accent": "#eebb4f",
+   "hair": "#141424",
+   "aura": "#4781f5",
+   "skin": "#bf8463"
+  },
+  "visual": {
+   "height": 1,
+   "bulk": 0.86,
+   "hairStyle": "spiky",
+   "weapon": "staff",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "nagato_awakening"
+  ]
+ },
+ {
+  "id": "konan",
+  "displayName": "Konan",
+  "shortName": "Konan",
+  "complete": false,
+  "archetype": "aerial",
+  "era": "shippuden",
+  "village": "rain",
+  "colors": {
+   "primary": "#51a333",
+   "secondary": "#294e70",
+   "accent": "#c34fee",
+   "hair": "#27492a",
+   "aura": "#47a1f5",
+   "skin": "#d6b99a"
+  },
+  "visual": {
+   "height": 0.8400000000000001,
+   "bulk": 0.54,
+   "hairStyle": "long",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "konan_awakening"
+  ]
+ },
+ {
+  "id": "kisame",
+  "displayName": "Kisame Hoshigaki",
+  "shortName": "Kisame",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "shippuden",
+  "village": "mist",
+  "colors": {
+   "primary": "#4f33a3",
+   "secondary": "#702947",
+   "accent": "#c6ee4f",
+   "hair": "#4e3460",
+   "aura": "#f54790",
+   "skin": "#ceb588"
+  },
+  "visual": {
+   "height": 0.87,
+   "bulk": 0.58,
+   "hairStyle": "bowl",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kisame_awakening"
+  ]
+ },
+ {
+  "id": "deidara",
+  "displayName": "Deidara",
+  "shortName": "Deidara",
+  "complete": false,
+  "archetype": "aerial",
+  "era": "shippuden",
+  "village": "stone",
+  "colors": {
+   "primary": "#a38333",
+   "secondary": "#704729",
+   "accent": "#4f7cee",
+   "hair": "#13140b",
+   "aura": "#f59047",
+   "skin": "#b88151"
+  },
+  "visual": {
+   "height": 0.71,
+   "bulk": 0.83,
+   "hairStyle": "bald",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "deidara_awakening"
+  ]
+ },
+ {
+  "id": "sasori",
+  "displayName": "Sasori",
+  "shortName": "Sasori",
+  "complete": false,
+  "archetype": "puppet",
+  "era": "shippuden",
+  "village": "sand",
+  "colors": {
+   "primary": "#46a333",
+   "secondary": "#597029",
+   "accent": "#d34fee",
+   "hair": "#000000",
+   "aura": "#bef547",
+   "skin": "#c18667"
+  },
+  "visual": {
+   "height": 0.79,
+   "bulk": 0.53,
+   "hairStyle": "spiky",
+   "weapon": "puppet",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "sasori_awakening"
+  ]
+ },
+ {
+  "id": "hidan",
+  "displayName": "Hidan",
+  "shortName": "Hidan",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "shippuden",
+  "village": "hotsprings",
+  "colors": {
+   "primary": "#a33374",
+   "secondary": "#557029",
+   "accent": "#4fee91",
+   "hair": "#713d4a",
+   "aura": "#b2f547",
+   "skin": "#d9c7a1"
+  },
+  "visual": {
+   "height": 0.79,
+   "bulk": 0.73,
+   "hairStyle": "braided",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "hidan_awakening"
+  ]
+ },
+ {
+  "id": "kakuzu",
+  "displayName": "Kakuzu",
+  "shortName": "Kakuzu",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "shippuden",
+  "village": "waterfall",
+  "colors": {
+   "primary": "#76a333",
+   "secondary": "#5f7029",
+   "accent": "#8e4fee",
+   "hair": "#000000",
+   "aura": "#cdf547",
+   "skin": "#ae6447"
+  },
+  "visual": {
+   "height": 0.79,
+   "bulk": 0.77,
+   "hairStyle": "long",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "kakuzu_awakening"
+  ]
+ },
+ {
+  "id": "zetsu",
+  "displayName": "Zetsu",
+  "shortName": "Zetsu",
+  "complete": false,
+  "archetype": "support",
+  "era": "war",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#4233a3",
+   "secondary": "#702954",
+   "accent": "#d8ee4f",
+   "hair": "#573e74",
+   "aura": "#f547b0",
+   "skin": "#c5a972"
+  },
+  "visual": {
+   "height": 0.75,
+   "bulk": 0.8099999999999999,
+   "hairStyle": "braided",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "zetsu_awakening"
+  ]
+ },
+ {
+  "id": "madara_edo",
+  "displayName": "Edo Madara",
+  "shortName": "Edo",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "war",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a376",
+   "secondary": "#29703b",
+   "accent": "#ee4f8e",
+   "hair": "#000000",
+   "aura": "#47f572",
+   "skin": "#bf8863"
+  },
+  "visual": {
+   "height": 0.86,
+   "bulk": 0.58,
+   "hairStyle": "bald",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "madara_edo_awakening"
+  ]
+ },
+ {
+  "id": "zabuza",
+  "displayName": "Zabuza Momochi",
+  "shortName": "Zabuza",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "classic",
+  "village": "mist",
+  "colors": {
+   "primary": "#a38533",
+   "secondary": "#29702c",
+   "accent": "#4f79ee",
+   "hair": "#a6ab63",
+   "aura": "#47f54d",
+   "skin": "#dac3a4"
+  },
+  "visual": {
+   "height": 0.78,
+   "bulk": 0.52,
+   "hairStyle": "ponytail",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "zabuza_awakening"
+  ]
+ },
+ {
+  "id": "haku",
+  "displayName": "Haku",
+  "shortName": "Haku",
+  "complete": false,
+  "archetype": "aerial",
+  "era": "classic",
+  "village": "mist",
+  "colors": {
+   "primary": "#a33398",
+   "secondary": "#70296d",
+   "accent": "#4fee5f",
+   "hair": "#000000",
+   "aura": "#f547ef",
+   "skin": "#b16d48"
+  },
+  "visual": {
+   "height": 1.1,
+   "bulk": 1.03,
+   "hairStyle": "short",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "haku_awakening"
+  ]
+ },
+ {
+  "id": "kimimaro",
+  "displayName": "Kimimaro",
+  "shortName": "Kimimaro",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "classic",
+  "village": "sound",
+  "colors": {
+   "primary": "#81a333",
+   "secondary": "#297048",
+   "accent": "#7e4fee",
+   "hair": "#5e8547",
+   "aura": "#47f592",
+   "skin": "#dac1a4"
+  },
+  "visual": {
+   "height": 0.81,
+   "bulk": 0.71,
+   "hairStyle": "long",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "kimimaro_awakening"
+  ]
+ },
+ {
+  "id": "kabuto",
+  "displayName": "Kabuto Yakushi",
+  "shortName": "Kabuto",
+  "complete": false,
+  "archetype": "healer",
+  "era": "shippuden",
+  "village": "sound",
+  "colors": {
+   "primary": "#57a333",
+   "secondary": "#295d70",
+   "accent": "#bb4fee",
+   "hair": "#376738",
+   "aura": "#47c7f5",
+   "skin": "#c5a372"
+  },
+  "visual": {
+   "height": 0.75,
+   "bulk": 0.77,
+   "hairStyle": "ponytail",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kabuto_sage"
+  ]
+ },
+ {
+  "id": "jugo",
+  "displayName": "Jugo",
+  "shortName": "Jugo",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "shippuden",
+  "village": "sound",
+  "colors": {
+   "primary": "#33a398",
+   "secondary": "#296b70",
+   "accent": "#ee4f5f",
+   "hair": "#000000",
+   "aura": "#47eaf5",
+   "skin": "#bc7c5c"
+  },
+  "visual": {
+   "height": 0.9,
+   "bulk": 1.05,
+   "hairStyle": "spiky",
+   "weapon": "kunai",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "jugo_awakening"
+  ]
+ },
+ {
+  "id": "suigetsu",
+  "displayName": "Suigetsu Hozuki",
+  "shortName": "Suigetsu",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "shippuden",
+  "village": "mist",
+  "colors": {
+   "primary": "#a38533",
+   "secondary": "#297039",
+   "accent": "#4f79ee",
+   "hair": "#a3a85d",
+   "aura": "#47f56d",
+   "skin": "#d3b992"
+  },
+  "visual": {
+   "height": 0.9400000000000001,
+   "bulk": 1.07,
+   "hairStyle": "spiky",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "suigetsu_awakening"
+  ]
+ },
+ {
+  "id": "karin",
+  "displayName": "Karin Uzumaki",
+  "shortName": "Karin",
+  "complete": false,
+  "archetype": "healer",
+  "era": "shippuden",
+  "village": "sound",
+  "colors": {
+   "primary": "#333fa3",
+   "secondary": "#293a70",
+   "accent": "#eede4f",
+   "hair": "#000000",
+   "aura": "#4770f5",
+   "skin": "#9c6640"
+  },
+  "visual": {
+   "height": 0.7,
+   "bulk": 0.7999999999999999,
+   "hairStyle": "ponytail",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "karin_awakening"
+  ]
+ },
+ {
+  "id": "hanzo",
+  "displayName": "Hanzo",
+  "shortName": "Hanzo",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "classic",
+  "village": "rain",
+  "colors": {
+   "primary": "#339da3",
+   "secondary": "#352970",
+   "accent": "#ee574f",
+   "hair": "#324c5d",
+   "aura": "#6447f5",
+   "skin": "#c4a26e"
+  },
+  "visual": {
+   "height": 1.05,
+   "bulk": 1.15,
+   "hairStyle": "bald",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "hanzo_awakening"
+  ]
+ },
+ {
+  "id": "ginkaku",
+  "displayName": "Ginkaku",
+  "shortName": "Ginkaku",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "war",
+  "village": "cloud",
+  "colors": {
+   "primary": "#a33357",
+   "secondary": "#702d29",
+   "accent": "#4feebb",
+   "hair": "#000000",
+   "aura": "#f55047",
+   "skin": "#be7c60"
+  },
+  "visual": {
+   "height": 0.6900000000000001,
+   "bulk": 0.6699999999999999,
+   "hairStyle": "ponytail",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "ginkaku_awakening"
+  ]
+ },
+ {
+  "id": "kinkaku",
+  "displayName": "Kinkaku",
+  "shortName": "Kinkaku",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "war",
+  "village": "cloud",
+  "colors": {
+   "primary": "#338ba3",
+   "secondary": "#522970",
+   "accent": "#ee714f",
+   "hair": "#466081",
+   "aura": "#ad47f5",
+   "skin": "#d3b892"
+  },
+  "visual": {
+   "height": 1.1,
+   "bulk": 1,
+   "hairStyle": "spiky",
+   "weapon": "claws",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kinkaku_awakening"
+  ]
+ },
+ {
+  "id": "gato",
+  "displayName": "Gato",
+  "shortName": "Gato",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "classic",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#5933a3",
+   "secondary": "#703329",
+   "accent": "#b9ee4f",
+   "hair": "#764b8b",
+   "aura": "#f55e47",
+   "skin": "#d4b796"
+  },
+  "visual": {
+   "height": 0.98,
+   "bulk": 0.87,
+   "hairStyle": "ponytail",
+   "weapon": "fan",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "gato_awakening"
+  ]
+ },
+ {
+  "id": "mizuki",
+  "displayName": "Mizuki",
+  "shortName": "Mizuki",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "academy",
+  "village": "leaf",
+  "colors": {
+   "primary": "#46a333",
+   "secondary": "#577029",
+   "accent": "#d34fee",
+   "hair": "#000000",
+   "aura": "#b8f547",
+   "skin": "#ae6247"
+  },
+  "visual": {
+   "height": 0.81,
+   "bulk": 0.76,
+   "hairStyle": "long",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "mizuki_awakening"
+  ]
+ },
+ {
+  "id": "dosu",
+  "displayName": "Dosu Kinuta",
+  "shortName": "Dosu",
+  "complete": false,
+  "archetype": "counter",
+  "era": "classic",
+  "village": "sound",
+  "colors": {
+   "primary": "#33a36f",
+   "secondary": "#4b2970",
+   "accent": "#ee4f99",
+   "hair": "#447e76",
+   "aura": "#9b47f5",
+   "skin": "#c5a572"
+  },
+  "visual": {
+   "height": 1.01,
+   "bulk": 1.1099999999999999,
+   "hairStyle": "long",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "dosu_awakening"
+  ]
+ },
+ {
+  "id": "zaku",
+  "displayName": "Zaku Abumi",
+  "shortName": "Zaku",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "classic",
+  "village": "sound",
+  "colors": {
+   "primary": "#6033a3",
+   "secondary": "#704129",
+   "accent": "#aeee4f",
+   "hair": "#9f6db0",
+   "aura": "#f58147",
+   "skin": "#c79d75"
+  },
+  "visual": {
+   "height": 1.04,
+   "bulk": 0.9299999999999999,
+   "hairStyle": "braided",
+   "weapon": "blades",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "zaku_awakening"
+  ]
+ },
+ {
+  "id": "kin",
+  "displayName": "Kin Tsuchi",
+  "shortName": "Kin",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "classic",
+  "village": "sound",
+  "colors": {
+   "primary": "#a33383",
+   "secondary": "#657029",
+   "accent": "#4fee7c",
+   "hair": "#6d3b4e",
+   "aura": "#dbf547",
+   "skin": "#d6c19a"
+  },
+  "visual": {
+   "height": 0.72,
+   "bulk": 0.63,
+   "hairStyle": "ponytail",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kin_awakening"
+  ]
+ },
+ {
+  "id": "jirobo",
+  "displayName": "Jirobo",
+  "shortName": "Jirobo",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "classic",
+  "village": "sound",
+  "colors": {
+   "primary": "#5133a3",
+   "secondary": "#70294e",
+   "accent": "#c3ee4f",
+   "hair": "#392546",
+   "aura": "#f547a1",
+   "skin": "#d3b892"
+  },
+  "visual": {
+   "height": 0.8400000000000001,
+   "bulk": 0.76,
+   "hairStyle": "bowl",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "jirobo_awakening"
+  ]
+ },
+ {
+  "id": "kidomaru",
+  "displayName": "Kidomaru",
+  "shortName": "Kidomaru",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "classic",
+  "village": "sound",
+  "colors": {
+   "primary": "#3353a3",
+   "secondary": "#295670",
+   "accent": "#eec14f",
+   "hair": "#090911",
+   "aura": "#47b5f5",
+   "skin": "#b97355"
+  },
+  "visual": {
+   "height": 0.9,
+   "bulk": 0.86,
+   "hairStyle": "bald",
+   "weapon": "kunai",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "kidomaru_awakening"
+  ]
+ },
+ {
+  "id": "tayuya",
+  "displayName": "Tayuya",
+  "shortName": "Tayuya",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "classic",
+  "village": "sound",
+  "colors": {
+   "primary": "#3346a3",
+   "secondary": "#702964",
+   "accent": "#eed34f",
+   "hair": "#504681",
+   "aura": "#f547d8",
+   "skin": "#c29f6b"
+  },
+  "visual": {
+   "height": 0.9400000000000001,
+   "bulk": 0.9,
+   "hairStyle": "hooded",
+   "weapon": "fan",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "tayuya_awakening"
+  ]
+ },
+ {
+  "id": "sakon",
+  "displayName": "Sakon and Ukon",
+  "shortName": "Sakon",
+  "complete": false,
+  "archetype": "counter",
+  "era": "classic",
+  "village": "sound",
+  "colors": {
+   "primary": "#80a333",
+   "secondary": "#295570",
+   "accent": "#814fee",
+   "hair": "#51743e",
+   "aura": "#47b2f5",
+   "skin": "#dac6a4"
+  },
+  "visual": {
+   "height": 0.73,
+   "bulk": 0.74,
+   "hairStyle": "bald",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "sakon_awakening"
+  ]
+ },
+ {
+  "id": "yugito",
+  "displayName": "Yugito Nii",
+  "shortName": "Yugito",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "shippuden",
+  "village": "cloud",
+  "colors": {
+   "primary": "#a38133",
+   "secondary": "#657029",
+   "accent": "#4f7eee",
+   "hair": "#000000",
+   "aura": "#dbf547",
+   "skin": "#b7744e"
+  },
+  "visual": {
+   "height": 0.88,
+   "bulk": 0.75,
+   "hairStyle": "ponytail",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "yugito_awakening"
+  ]
+ },
+ {
+  "id": "yagura",
+  "displayName": "Yagura Karatachi",
+  "shortName": "Yagura",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "shippuden",
+  "village": "mist",
+  "colors": {
+   "primary": "#a3334d",
+   "secondary": "#702d29",
+   "accent": "#4feec8",
+   "hair": "#070404",
+   "aura": "#f55047",
+   "skin": "#bc845c"
+  },
+  "visual": {
+   "height": 1.1,
+   "bulk": 0.9,
+   "hairStyle": "short",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "yagura_awakening"
+  ]
+ },
+ {
+  "id": "roshi",
+  "displayName": "Roshi",
+  "shortName": "Roshi",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "shippuden",
+  "village": "stone",
+  "colors": {
+   "primary": "#a33385",
+   "secondary": "#706729",
+   "accent": "#4fee79",
+   "hair": "#462532",
+   "aura": "#f5e147",
+   "skin": "#c19567"
+  },
+  "visual": {
+   "height": 0.99,
+   "bulk": 1.0899999999999999,
+   "hairStyle": "long",
+   "weapon": "staff",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "roshi_awakening"
+  ]
+ },
+ {
+  "id": "han",
+  "displayName": "Han",
+  "shortName": "Han",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "shippuden",
+  "village": "stone",
+  "colors": {
+   "primary": "#a333a3",
+   "secondary": "#412970",
+   "accent": "#4fee4f",
+   "hair": "#000000",
+   "aura": "#8147f5",
+   "skin": "#ae6947"
+  },
+  "visual": {
+   "height": 0.9,
+   "bulk": 0.96,
+   "hairStyle": "bowl",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "han_awakening"
+  ]
+ },
+ {
+  "id": "utakata",
+  "displayName": "Utakata",
+  "shortName": "Utakata",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "shippuden",
+  "village": "mist",
+  "colors": {
+   "primary": "#3342a3",
+   "secondary": "#622970",
+   "accent": "#eed84f",
+   "hair": "#7e70b2",
+   "aura": "#d247f5",
+   "skin": "#d1b78f"
+  },
+  "visual": {
+   "height": 1.07,
+   "bulk": 0.9099999999999999,
+   "hairStyle": "bowl",
+   "weapon": "puppet",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "utakata_awakening"
+  ]
+ },
+ {
+  "id": "fu",
+  "displayName": "Fu",
+  "shortName": "Fu",
+  "complete": false,
+  "archetype": "aerial",
+  "era": "shippuden",
+  "village": "waterfall",
+  "colors": {
+   "primary": "#5933a3",
+   "secondary": "#703329",
+   "accent": "#b9ee4f",
+   "hair": "#382442",
+   "aura": "#f55e47",
+   "skin": "#d7b89d"
+  },
+  "visual": {
+   "height": 0.74,
+   "bulk": 0.8099999999999999,
+   "hairStyle": "short",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "fu_awakening"
+  ]
+ },
+ {
+  "id": "shukaku",
+  "displayName": "Shukaku",
+  "shortName": "Shukaku",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#74a333",
+   "secondary": "#297064",
+   "accent": "#914fee",
+   "hair": "#689f56",
+   "aura": "#47f5d8",
+   "skin": "#cab17d"
+  },
+  "visual": {
+   "height": 0.92,
+   "bulk": 1.14,
+   "hairStyle": "wild",
+   "weapon": "fan",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "shukaku_awakening"
+  ]
+ },
+ {
+  "id": "matatabi",
+  "displayName": "Matatabi",
+  "shortName": "Matatabi",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#33a35c",
+   "secondary": "#296470",
+   "accent": "#ee4fb3",
+   "hair": "#57a28c",
+   "aura": "#47d8f5",
+   "skin": "#d0ba8b"
+  },
+  "visual": {
+   "height": 0.75,
+   "bulk": 0.62,
+   "hairStyle": "long",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "matatabi_awakening"
+  ]
+ },
+ {
+  "id": "isobu",
+  "displayName": "Isobu",
+  "shortName": "Isobu",
+  "complete": false,
+  "archetype": "defensive",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#3396a3",
+   "secondary": "#702967",
+   "accent": "#ee614f",
+   "hair": "#22323f",
+   "aura": "#f547e1",
+   "skin": "#cbad80"
+  },
+  "visual": {
+   "height": 1.08,
+   "bulk": 0.85,
+   "hairStyle": "braided",
+   "weapon": "scythe",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "isobu_awakening"
+  ]
+ },
+ {
+  "id": "songoku",
+  "displayName": "Son Goku",
+  "shortName": "Son",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#6233a3",
+   "secondary": "#3b2970",
+   "accent": "#abee4f",
+   "hair": "#000000",
+   "aura": "#7247f5",
+   "skin": "#98613e"
+  },
+  "visual": {
+   "height": 0.74,
+   "bulk": 0.72,
+   "hairStyle": "braided",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "songoku_awakening"
+  ]
+ },
+ {
+  "id": "kokuo",
+  "displayName": "Kokuo",
+  "shortName": "Kokuo",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#85a333",
+   "secondary": "#296570",
+   "accent": "#794fee",
+   "hair": "#88b06d",
+   "aura": "#47dbf5",
+   "skin": "#d3bd92"
+  },
+  "visual": {
+   "height": 1.1300000000000001,
+   "bulk": 0.9099999999999999,
+   "hairStyle": "ponytail",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "kokuo_awakening"
+  ]
+ },
+ {
+  "id": "saiken",
+  "displayName": "Saiken",
+  "shortName": "Saiken",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#a36b33",
+   "secondary": "#3b7029",
+   "accent": "#4f9eee",
+   "hair": "#9f9356",
+   "aura": "#72f547",
+   "skin": "#caa17d"
+  },
+  "visual": {
+   "height": 0.9400000000000001,
+   "bulk": 1.18,
+   "hairStyle": "hooded",
+   "weapon": "none",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "saiken_awakening"
+  ]
+ },
+ {
+  "id": "chomei",
+  "displayName": "Chomei",
+  "shortName": "Chomei",
+  "complete": false,
+  "archetype": "aerial",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#333ba3",
+   "secondary": "#70293c",
+   "accent": "#eee34f",
+   "hair": "#7663ab",
+   "aura": "#f54775",
+   "skin": "#d3b092"
+  },
+  "visual": {
+   "height": 0.81,
+   "bulk": 0.63,
+   "hairStyle": "hooded",
+   "weapon": "none",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "chomei_awakening"
+  ]
+ },
+ {
+  "id": "gyuki",
+  "displayName": "Gyuki",
+  "shortName": "Gyuki",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#4233a3",
+   "secondary": "#702957",
+   "accent": "#d8ee4f",
+   "hair": "#3e2d53",
+   "aura": "#f547b8",
+   "skin": "#ceb188"
+  },
+  "visual": {
+   "height": 0.97,
+   "bulk": 0.9099999999999999,
+   "hairStyle": "ponytail",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "gyuki_awakening"
+  ]
+ },
+ {
+  "id": "kurama",
+  "displayName": "Kurama",
+  "shortName": "Kurama",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#a36b33",
+   "secondary": "#5e7029",
+   "accent": "#4f9eee",
+   "hair": "#605934",
+   "aura": "#caf547",
+   "skin": "#ceac88"
+  },
+  "visual": {
+   "height": 0.67,
+   "bulk": 0.84,
+   "hairStyle": "spiky",
+   "weapon": "none",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "kurama_awakening"
+  ]
+ },
+ {
+  "id": "tentails",
+  "displayName": "Ten-Tails",
+  "shortName": "Ten-Tails",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#a34033",
+   "secondary": "#647029",
+   "accent": "#4fdbee",
+   "hair": "#8b684b",
+   "aura": "#d8f547",
+   "skin": "#c8ab79"
+  },
+  "visual": {
+   "height": 0.81,
+   "bulk": 0.64,
+   "hairStyle": "bowl",
+   "weapon": "none",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "tentails_awakening"
+  ]
+ },
+ {
+  "id": "kazekage1",
+  "displayName": "First Kazekage",
+  "shortName": "First",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "ancient",
+  "village": "sand",
+  "colors": {
+   "primary": "#3362a3",
+   "secondary": "#295770",
+   "accent": "#eeab4f",
+   "hair": "#000000",
+   "aura": "#47b8f5",
+   "skin": "#b76d4e"
+  },
+  "visual": {
+   "height": 0.8200000000000001,
+   "bulk": 0.84,
+   "hairStyle": "short",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kazekage1_awakening"
+  ]
+ },
+ {
+  "id": "reto",
+  "displayName": "Reto",
+  "shortName": "Reto",
+  "complete": false,
+  "archetype": "balanced",
+  "era": "ancient",
+  "village": "sand",
+  "colors": {
+   "primary": "#7133a3",
+   "secondary": "#302970",
+   "accent": "#96ee4f",
+   "hair": "#1c101e",
+   "aura": "#5847f5",
+   "skin": "#94613d"
+  },
+  "visual": {
+   "height": 0.93,
+   "bulk": 0.95,
+   "hairStyle": "wild",
+   "weapon": "fan",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "reto_awakening"
+  ]
+ },
+ {
+  "id": "shamon",
+  "displayName": "Shamon",
+  "shortName": "Shamon",
+  "complete": false,
+  "archetype": "defensive",
+  "era": "ancient",
+  "village": "sand",
+  "colors": {
+   "primary": "#a3337c",
+   "secondary": "#706f29",
+   "accent": "#4fee86",
+   "hair": "#985268",
+   "aura": "#f5f247",
+   "skin": "#d3b392"
+  },
+  "visual": {
+   "height": 0.67,
+   "bulk": 0.7,
+   "hairStyle": "hooded",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "shamon_awakening"
+  ]
+ },
+ {
+  "id": "kazekage3",
+  "displayName": "Third Kazekage",
+  "shortName": "Third",
+  "complete": false,
+  "archetype": "puppet",
+  "era": "classic",
+  "village": "sand",
+  "colors": {
+   "primary": "#3366a3",
+   "secondary": "#293070",
+   "accent": "#eea64f",
+   "hair": "#151828",
+   "aura": "#4758f5",
+   "skin": "#b97655"
+  },
+  "visual": {
+   "height": 0.93,
+   "bulk": 1.04,
+   "hairStyle": "long",
+   "weapon": "puppet",
+   "cape": true,
+   "markings": "seal"
+  },
+  "transformations": [
+   "kazekage3_awakening"
+  ]
+ },
+ {
+  "id": "rasa",
+  "displayName": "Rasa",
+  "shortName": "Rasa",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "classic",
+  "village": "sand",
+  "colors": {
+   "primary": "#3394a3",
+   "secondary": "#295570",
+   "accent": "#ee644f",
+   "hair": "#000000",
+   "aura": "#47b2f5",
+   "skin": "#c18c67"
+  },
+  "visual": {
+   "height": 0.68,
+   "bulk": 0.79,
+   "hairStyle": "spiky",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "rasa_awakening"
+  ]
+ },
+ {
+  "id": "gaara_kazekage",
+  "displayName": "Kazekage Gaara",
+  "shortName": "Kazekage",
+  "complete": false,
+  "archetype": "defensive",
+  "era": "shippuden",
+  "village": "sand",
+  "colors": {
+   "primary": "#33a348",
+   "secondary": "#517029",
+   "accent": "#ee4fd0",
+   "hair": "#1d3529",
+   "aura": "#aaf547",
+   "skin": "#9c5840"
+  },
+  "visual": {
+   "height": 1,
+   "bulk": 1.1,
+   "hairStyle": "spiky",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "gaara_kazekage_awakening"
+  ]
+ },
+ {
+  "id": "raikage3",
+  "displayName": "Third Raikage",
+  "shortName": "Third",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "classic",
+  "village": "cloud",
+  "colors": {
+   "primary": "#3394a3",
+   "secondary": "#297056",
+   "accent": "#ee644f",
+   "hair": "#000000",
+   "aura": "#47f5b5",
+   "skin": "#9f5941"
+  },
+  "visual": {
+   "height": 0.76,
+   "bulk": 0.61,
+   "hairStyle": "braided",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "raikage3_awakening"
+  ]
+ },
+ {
+  "id": "raikage4",
+  "displayName": "Fourth Raikage",
+  "shortName": "Fourth",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "shippuden",
+  "village": "cloud",
+  "colors": {
+   "primary": "#a34433",
+   "secondary": "#702956",
+   "accent": "#4fd6ee",
+   "hair": "#17120c",
+   "aura": "#f547b5",
+   "skin": "#b88151"
+  },
+  "visual": {
+   "height": 1.12,
+   "bulk": 1.07,
+   "hairStyle": "braided",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "raikage4_awakening"
+  ]
+ },
+ {
+  "id": "darui",
+  "displayName": "Darui",
+  "shortName": "Darui",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "shippuden",
+  "village": "cloud",
+  "colors": {
+   "primary": "#6b33a3",
+   "secondary": "#704029",
+   "accent": "#9eee4f",
+   "hair": "#653b6d",
+   "aura": "#f57e47",
+   "skin": "#cbae80"
+  },
+  "visual": {
+   "height": 0.68,
+   "bulk": 0.8099999999999999,
+   "hairStyle": "wild",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "darui_awakening"
+  ]
+ },
+ {
+  "id": "gengetsu",
+  "displayName": "Gengetsu Hozuki",
+  "shortName": "Gengetsu",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "ancient",
+  "village": "mist",
+  "colors": {
+   "primary": "#7433a3",
+   "secondary": "#702952",
+   "accent": "#91ee4f",
+   "hair": "#a767ad",
+   "aura": "#f547ad",
+   "skin": "#d7bc9d"
+  },
+  "visual": {
+   "height": 0.9500000000000001,
+   "bulk": 1.03,
+   "hairStyle": "hooded",
+   "weapon": "kunai",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "gengetsu_awakening"
+  ]
+ },
+ {
+  "id": "mei",
+  "displayName": "Mei Terumi",
+  "shortName": "Mei",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "shippuden",
+  "village": "mist",
+  "colors": {
+   "primary": "#33a364",
+   "secondary": "#29702c",
+   "accent": "#ee4fa9",
+   "hair": "#000000",
+   "aura": "#47f54d",
+   "skin": "#a76f44"
+  },
+  "visual": {
+   "height": 0.76,
+   "bulk": 0.6,
+   "hairStyle": "wild",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "mei_awakening"
+  ]
+ },
+ {
+  "id": "chojuro",
+  "displayName": "Chojuro",
+  "shortName": "Chojuro",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "boruto",
+  "village": "mist",
+  "colors": {
+   "primary": "#33a35a",
+   "secondary": "#292e70",
+   "accent": "#ee4fb6",
+   "hair": "#6db09b",
+   "aura": "#4753f5",
+   "skin": "#d0b08b"
+  },
+  "visual": {
+   "height": 1.1,
+   "bulk": 0.99,
+   "hairStyle": "wild",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "chojuro_awakening"
+  ]
+ },
+ {
+  "id": "mu",
+  "displayName": "Mu",
+  "shortName": "Mu",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "ancient",
+  "village": "stone",
+  "colors": {
+   "primary": "#4f33a3",
+   "secondary": "#70292e",
+   "accent": "#c6ee4f",
+   "hair": "#56396a",
+   "aura": "#f54753",
+   "skin": "#d7bd9d"
+  },
+  "visual": {
+   "height": 0.76,
+   "bulk": 0.77,
+   "hairStyle": "bald",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "mu_awakening"
+  ]
+ },
+ {
+  "id": "onoki",
+  "displayName": "Onoki",
+  "shortName": "Onoki",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "shippuden",
+  "village": "stone",
+  "colors": {
+   "primary": "#33a38e",
+   "secondary": "#297040",
+   "accent": "#ee4f6c",
+   "hair": "#000000",
+   "aura": "#47f57e",
+   "skin": "#bc865c"
+  },
+  "visual": {
+   "height": 0.88,
+   "bulk": 0.76,
+   "hairStyle": "ponytail",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "onoki_awakening"
+  ]
+ },
+ {
+  "id": "kurotsuchi",
+  "displayName": "Kurotsuchi",
+  "shortName": "Kurotsuchi",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "boruto",
+  "village": "stone",
+  "colors": {
+   "primary": "#a33376",
+   "secondary": "#70295c",
+   "accent": "#4fee8e",
+   "hair": "#000000",
+   "aura": "#f547c4",
+   "skin": "#b16348"
+  },
+  "visual": {
+   "height": 0.87,
+   "bulk": 0.77,
+   "hairStyle": "hooded",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kurotsuchi_awakening"
+  ]
+ },
+ {
+  "id": "temari",
+  "displayName": "Temari",
+  "shortName": "Temari",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "shippuden",
+  "village": "sand",
+  "colors": {
+   "primary": "#6233a3",
+   "secondary": "#352970",
+   "accent": "#abee4f",
+   "hair": "#000000",
+   "aura": "#6447f5",
+   "skin": "#9c5d40"
+  },
+  "visual": {
+   "height": 1.02,
+   "bulk": 1.1099999999999999,
+   "hairStyle": "hooded",
+   "weapon": "blades",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "temari_awakening"
+  ]
+ },
+ {
+  "id": "kankuro",
+  "displayName": "Kankuro",
+  "shortName": "Kankuro",
+  "complete": false,
+  "archetype": "puppet",
+  "era": "shippuden",
+  "village": "sand",
+  "colors": {
+   "primary": "#3390a3",
+   "secondary": "#293270",
+   "accent": "#ee694f",
+   "hair": "#30455a",
+   "aura": "#475bf5",
+   "skin": "#d4b396"
+  },
+  "visual": {
+   "height": 0.6900000000000001,
+   "bulk": 0.53,
+   "hairStyle": "braided",
+   "weapon": "puppet",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "kankuro_awakening"
+  ]
+ },
+ {
+  "id": "baki",
+  "displayName": "Baki",
+  "shortName": "Baki",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "classic",
+  "village": "sand",
+  "colors": {
+   "primary": "#a34a33",
+   "secondary": "#547029",
+   "accent": "#4fceee",
+   "hair": "#a68259",
+   "aura": "#b0f547",
+   "skin": "#c7a475"
+  },
+  "visual": {
+   "height": 1.1,
+   "bulk": 0.9299999999999999,
+   "hairStyle": "wild",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "baki_awakening"
+  ]
+ },
+ {
+  "id": "chiyo",
+  "displayName": "Chiyo",
+  "shortName": "Chiyo",
+  "complete": false,
+  "archetype": "puppet",
+  "era": "shippuden",
+  "village": "sand",
+  "colors": {
+   "primary": "#a39d33",
+   "secondary": "#706629",
+   "accent": "#4f57ee",
+   "hair": "#1a1e10",
+   "aura": "#f5de47",
+   "skin": "#9c6b40"
+  },
+  "visual": {
+   "height": 0.68,
+   "bulk": 0.61,
+   "hairStyle": "long",
+   "weapon": "puppet",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "chiyo_awakening"
+  ]
+ },
+ {
+  "id": "mangetsu",
+  "displayName": "Mangetsu Hozuki",
+  "shortName": "Mangetsu",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "war",
+  "village": "mist",
+  "colors": {
+   "primary": "#a37133",
+   "secondary": "#29704e",
+   "accent": "#4f96ee",
+   "hair": "#afa76a",
+   "aura": "#47f5a1",
+   "skin": "#d7bc9d"
+  },
+  "visual": {
+   "height": 0.68,
+   "bulk": 0.71,
+   "hairStyle": "braided",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "mangetsu_awakening"
+  ]
+ },
+ {
+  "id": "jinin",
+  "displayName": "Jinin Akebino",
+  "shortName": "Jinin",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "war",
+  "village": "mist",
+  "colors": {
+   "primary": "#8033a3",
+   "secondary": "#4d2970",
+   "accent": "#81ee4f",
+   "hair": "#000000",
+   "aura": "#9e47f5",
+   "skin": "#bb7158"
+  },
+  "visual": {
+   "height": 0.85,
+   "bulk": 0.6799999999999999,
+   "hairStyle": "hooded",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "jinin_awakening"
+  ]
+ },
+ {
+  "id": "jinpachi",
+  "displayName": "Jinpachi Munashi",
+  "shortName": "Jinpachi",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "war",
+  "village": "mist",
+  "colors": {
+   "primary": "#a33533",
+   "secondary": "#3b7029",
+   "accent": "#4febee",
+   "hair": "#8b614b",
+   "aura": "#72f547",
+   "skin": "#cbb180"
+  },
+  "visual": {
+   "height": 0.7,
+   "bulk": 0.56,
+   "hairStyle": "wild",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "jinpachi_awakening"
+  ]
+ },
+ {
+  "id": "kushimaru",
+  "displayName": "Kushimaru Kuriarare",
+  "shortName": "Kushimaru",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "war",
+  "village": "mist",
+  "colors": {
+   "primary": "#a3333f",
+   "secondary": "#705629",
+   "accent": "#4feede",
+   "hair": "#50332b",
+   "aura": "#f5b547",
+   "skin": "#d9bca1"
+  },
+  "visual": {
+   "height": 0.87,
+   "bulk": 0.7,
+   "hairStyle": "spiky",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kushimaru_awakening"
+  ]
+ },
+ {
+  "id": "ameyuri",
+  "displayName": "Ameyuri Ringo",
+  "shortName": "Ameyuri",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "war",
+  "village": "mist",
+  "colors": {
+   "primary": "#a35333",
+   "secondary": "#6b7029",
+   "accent": "#4fc1ee",
+   "hair": "#53442d",
+   "aura": "#eaf547",
+   "skin": "#d1b88f"
+  },
+  "visual": {
+   "height": 1.1300000000000001,
+   "bulk": 0.9,
+   "hairStyle": "spiky",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "ameyuri_awakening"
+  ]
+ },
+ {
+  "id": "fuguki",
+  "displayName": "Fuguki Suikazan",
+  "shortName": "Fuguki",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "war",
+  "village": "mist",
+  "colors": {
+   "primary": "#33a367",
+   "secondary": "#296570",
+   "accent": "#ee4fa3",
+   "hair": "#4f9284",
+   "aura": "#47dbf5",
+   "skin": "#d9c1a1"
+  },
+  "visual": {
+   "height": 0.91,
+   "bulk": 0.98,
+   "hairStyle": "bald",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "fuguki_awakening"
+  ]
+ },
+ {
+  "id": "c_cloud",
+  "displayName": "C",
+  "shortName": "C",
+  "complete": false,
+  "archetype": "support",
+  "era": "shippuden",
+  "village": "cloud",
+  "colors": {
+   "primary": "#333ba3",
+   "secondary": "#293d70",
+   "accent": "#eee34f",
+   "hair": "#000000",
+   "aura": "#4778f5",
+   "skin": "#bb7d58"
+  },
+  "visual": {
+   "height": 1.02,
+   "bulk": 0.86,
+   "hairStyle": "braided",
+   "weapon": "fan",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "c_cloud_awakening"
+  ]
+ },
+ {
+  "id": "omoi",
+  "displayName": "Omoi",
+  "shortName": "Omoi",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "boruto",
+  "village": "cloud",
+  "colors": {
+   "primary": "#a35333",
+   "secondary": "#702c29",
+   "accent": "#4fc1ee",
+   "hair": "#110e09",
+   "aura": "#f54d47",
+   "skin": "#b76d4e"
+  },
+  "visual": {
+   "height": 0.76,
+   "bulk": 0.83,
+   "hairStyle": "hooded",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "omoi_awakening"
+  ]
+ },
+ {
+  "id": "karui",
+  "displayName": "Karui",
+  "shortName": "Karui",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "shippuden",
+  "village": "cloud",
+  "colors": {
+   "primary": "#a3339d",
+   "secondary": "#706729",
+   "accent": "#4fee57",
+   "hair": "#3c2031",
+   "aura": "#f5e147",
+   "skin": "#c5a872"
+  },
+  "visual": {
+   "height": 1.04,
+   "bulk": 1.13,
+   "hairStyle": "bowl",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "seal"
+  },
+  "transformations": [
+   "karui_awakening"
+  ]
+ },
+ {
+  "id": "samui",
+  "displayName": "Samui",
+  "shortName": "Samui",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "shippuden",
+  "village": "cloud",
+  "colors": {
+   "primary": "#a33346",
+   "secondary": "#703429",
+   "accent": "#4feed3",
+   "hair": "#0a0605",
+   "aura": "#f56147",
+   "skin": "#bf7c63"
+  },
+  "visual": {
+   "height": 1.02,
+   "bulk": 1.12,
+   "hairStyle": "bald",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "samui_awakening"
+  ]
+ },
+ {
+  "id": "atsui",
+  "displayName": "Atsui",
+  "shortName": "Atsui",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "shippuden",
+  "village": "cloud",
+  "colors": {
+   "primary": "#44a333",
+   "secondary": "#297045",
+   "accent": "#d64fee",
+   "hair": "#000000",
+   "aura": "#47f58d",
+   "skin": "#b16b48"
+  },
+  "visual": {
+   "height": 0.77,
+   "bulk": 0.56,
+   "hairStyle": "ponytail",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "atsui_awakening"
+  ]
+ },
+ {
+  "id": "mabui",
+  "displayName": "Mabui",
+  "shortName": "Mabui",
+  "complete": false,
+  "archetype": "support",
+  "era": "shippuden",
+  "village": "cloud",
+  "colors": {
+   "primary": "#33a39d",
+   "secondary": "#297067",
+   "accent": "#ee4f57",
+   "hair": "#000000",
+   "aura": "#47f5e1",
+   "skin": "#b97155"
+  },
+  "visual": {
+   "height": 0.81,
+   "bulk": 0.84,
+   "hairStyle": "spiky",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "mabui_awakening"
+  ]
+ },
+ {
+  "id": "akatsuchi",
+  "displayName": "Akatsuchi",
+  "shortName": "Akatsuchi",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "shippuden",
+  "village": "stone",
+  "colors": {
+   "primary": "#6ba333",
+   "secondary": "#3e7029",
+   "accent": "#9e4fee",
+   "hair": "#060a05",
+   "aura": "#7bf547",
+   "skin": "#985c3e"
+  },
+  "visual": {
+   "height": 0.85,
+   "bulk": 0.7999999999999999,
+   "hairStyle": "wild",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "akatsuchi_awakening"
+  ]
+ },
+ {
+  "id": "sarada",
+  "displayName": "Sarada Uchiha",
+  "shortName": "Sarada",
+  "complete": false,
+  "archetype": "balanced",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#8ea333",
+   "secondary": "#706f29",
+   "accent": "#6c4fee",
+   "hair": "#2b381e",
+   "aura": "#f5f247",
+   "skin": "#bc765c"
+  },
+  "visual": {
+   "height": 0.9,
+   "bulk": 0.52,
+   "hairStyle": "bowl",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "sarada_awakening"
+  ]
+ },
+ {
+  "id": "mitsuki",
+  "displayName": "Mitsuki",
+  "shortName": "Mitsuki",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#336da3",
+   "secondary": "#293e70",
+   "accent": "#ee9b4f",
+   "hair": "#000000",
+   "aura": "#477bf5",
+   "skin": "#b5774a"
+  },
+  "visual": {
+   "height": 0.97,
+   "bulk": 1,
+   "hairStyle": "long",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "mitsuki_sage_transformation"
+  ]
+ },
+ {
+  "id": "himawari",
+  "displayName": "Himawari Uzumaki",
+  "shortName": "Himawari",
+  "complete": false,
+  "archetype": "counter",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a1a3",
+   "secondary": "#572970",
+   "accent": "#ee514f",
+   "hair": "#365363",
+   "aura": "#b847f5",
+   "skin": "#dac4a4"
+  },
+  "visual": {
+   "height": 0.9500000000000001,
+   "bulk": 1.08,
+   "hairStyle": "hooded",
+   "weapon": "scythe",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "himawari_awakening"
+  ]
+ },
+ {
+  "id": "inojin",
+  "displayName": "Inojin Yamanaka",
+  "shortName": "Inojin",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#8da333",
+   "secondary": "#704529",
+   "accent": "#6e4fee",
+   "hair": "#000000",
+   "aura": "#f58d47",
+   "skin": "#a36443"
+  },
+  "visual": {
+   "height": 0.92,
+   "bulk": 0.98,
+   "hairStyle": "long",
+   "weapon": "scythe",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "inojin_awakening"
+  ]
+ },
+ {
+  "id": "shikadai",
+  "displayName": "Shikadai Nara",
+  "shortName": "Shikadai",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3533a3",
+   "secondary": "#702937",
+   "accent": "#ebee4f",
+   "hair": "#7459a6",
+   "aura": "#f5476a",
+   "skin": "#c29f6b"
+  },
+  "visual": {
+   "height": 0.71,
+   "bulk": 0.73,
+   "hairStyle": "bowl",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "shikadai_awakening"
+  ]
+ },
+ {
+  "id": "chocho",
+  "displayName": "Chocho Akimichi",
+  "shortName": "Chocho",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#66a333",
+   "secondary": "#294270",
+   "accent": "#a64fee",
+   "hair": "#2d4c29",
+   "aura": "#4784f5",
+   "skin": "#d1b08f"
+  },
+  "visual": {
+   "height": 0.78,
+   "bulk": 0.75,
+   "hairStyle": "hooded",
+   "weapon": "none",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "chocho_awakening"
+  ]
+ },
+ {
+  "id": "metal_lee",
+  "displayName": "Metal Lee",
+  "shortName": "Metal",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a33340",
+   "secondary": "#667029",
+   "accent": "#4feedb",
+   "hair": "#8b594b",
+   "aura": "#def547",
+   "skin": "#c2996b"
+  },
+  "visual": {
+   "height": 0.68,
+   "bulk": 0.7,
+   "hairStyle": "braided",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "metal_lee_awakening"
+  ]
+ },
+ {
+  "id": "iwabe",
+  "displayName": "Iwabe Yuino",
+  "shortName": "Iwabe",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a353",
+   "secondary": "#295e70",
+   "accent": "#ee4fc1",
+   "hair": "#34604f",
+   "aura": "#47caf5",
+   "skin": "#c29b6b"
+  },
+  "visual": {
+   "height": 0.9,
+   "bulk": 0.6799999999999999,
+   "hairStyle": "spiky",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "iwabe_awakening"
+  ]
+ },
+ {
+  "id": "denki",
+  "displayName": "Denki Kaminarimon",
+  "shortName": "Denki",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a33376",
+   "secondary": "#702c29",
+   "accent": "#4fee8e",
+   "hair": "#11090b",
+   "aura": "#f54d47",
+   "skin": "#bb7858"
+  },
+  "visual": {
+   "height": 0.9500000000000001,
+   "bulk": 1.13,
+   "hairStyle": "ponytail",
+   "weapon": "claws",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "denki_awakening"
+  ]
+ },
+ {
+  "id": "sumire",
+  "displayName": "Sumire Kakei",
+  "shortName": "Sumire",
+  "complete": false,
+  "archetype": "support",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a3333f",
+   "secondary": "#705f29",
+   "accent": "#4feede",
+   "hair": "#a86e5d",
+   "aura": "#f5cd47",
+   "skin": "#d0b78b"
+  },
+  "visual": {
+   "height": 1.01,
+   "bulk": 1,
+   "hairStyle": "short",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "sumire_awakening"
+  ]
+ },
+ {
+  "id": "wasabi",
+  "displayName": "Wasabi Izuno",
+  "shortName": "Wasabi",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#7e33a3",
+   "secondary": "#632970",
+   "accent": "#84ee4f",
+   "hair": "#241424",
+   "aura": "#d547f5",
+   "skin": "#c18567"
+  },
+  "visual": {
+   "height": 0.7,
+   "bulk": 0.59,
+   "hairStyle": "short",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "wasabi_awakening"
+  ]
+ },
+ {
+  "id": "namida",
+  "displayName": "Namida Suzumeno",
+  "shortName": "Namida",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#9d33a3",
+   "secondary": "#702935",
+   "accent": "#57ee4f",
+   "hair": "#ad6799",
+   "aura": "#f54764",
+   "skin": "#c19e67"
+  },
+  "visual": {
+   "height": 0.74,
+   "bulk": 0.56,
+   "hairStyle": "long",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "namida_awakening"
+  ]
+ },
+ {
+  "id": "houki",
+  "displayName": "Houki Taketori",
+  "shortName": "Houki",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a38b",
+   "secondary": "#297042",
+   "accent": "#ee4f71",
+   "hair": "#000000",
+   "aura": "#47f584",
+   "skin": "#ae6147"
+  },
+  "visual": {
+   "height": 1,
+   "bulk": 1.06,
+   "hairStyle": "hooded",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "houki_awakening"
+  ]
+ },
+ {
+  "id": "naruto_adult",
+  "displayName": "Adult Naruto",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#339da3",
+   "secondary": "#296770",
+   "accent": "#ee574f",
+   "hair": "#000000",
+   "aura": "#47e1f5",
+   "skin": "#94633d"
+  },
+  "visual": {
+   "height": 1.01,
+   "bulk": 1.04,
+   "hairStyle": "braided",
+   "weapon": "staff",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "naruto_adult_awakening"
+  ]
+ },
+ {
+  "id": "sasuke_adult",
+  "displayName": "Adult Sasuke",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "counter",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a39833",
+   "secondary": "#487029",
+   "accent": "#4f5fee",
+   "hair": "#383f22",
+   "aura": "#92f547",
+   "skin": "#d0b58b"
+  },
+  "visual": {
+   "height": 1,
+   "bulk": 0.9,
+   "hairStyle": "ponytail",
+   "weapon": "scythe",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "sasuke_adult_awakening"
+  ]
+ },
+ {
+  "id": "sakura_adult",
+  "displayName": "Adult Sakura",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#5e33a3",
+   "secondary": "#4b2970",
+   "accent": "#b1ee4f",
+   "hair": "#000000",
+   "aura": "#9b47f5",
+   "skin": "#b57c4a"
+  },
+  "visual": {
+   "height": 0.86,
+   "bulk": 0.82,
+   "hairStyle": "ponytail",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "sakura_adult_awakening"
+  ]
+ },
+ {
+  "id": "shikamaru_adult",
+  "displayName": "Adult Shikamaru",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a38e",
+   "secondary": "#297034",
+   "accent": "#ee4f6c",
+   "hair": "#000000",
+   "aura": "#47f561",
+   "skin": "#94603d"
+  },
+  "visual": {
+   "height": 0.67,
+   "bulk": 0.58,
+   "hairStyle": "wild",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "shikamaru_adult_awakening"
+  ]
+ },
+ {
+  "id": "ino_adult",
+  "displayName": "Adult Ino",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "support",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a35933",
+   "secondary": "#703b29",
+   "accent": "#4fb9ee",
+   "hair": "#000000",
+   "aura": "#f57247",
+   "skin": "#b86e51"
+  },
+  "visual": {
+   "height": 1.07,
+   "bulk": 1.07,
+   "hairStyle": "ponytail",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "ino_adult_awakening"
+  ]
+ },
+ {
+  "id": "choji_adult",
+  "displayName": "Adult Choji",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3340a3",
+   "secondary": "#2a2970",
+   "accent": "#eedb4f",
+   "hair": "#000000",
+   "aura": "#4a47f5",
+   "skin": "#9c5740"
+  },
+  "visual": {
+   "height": 0.93,
+   "bulk": 0.87,
+   "hairStyle": "ponytail",
+   "weapon": "kunai",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "choji_adult_awakening"
+  ]
+ },
+ {
+  "id": "hinata_adult",
+  "displayName": "Adult Hinata",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "counter",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#71a333",
+   "secondary": "#705f29",
+   "accent": "#964fee",
+   "hair": "#000000",
+   "aura": "#f5cd47",
+   "skin": "#aa6446"
+  },
+  "visual": {
+   "height": 0.81,
+   "bulk": 0.75,
+   "hairStyle": "long",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "hinata_adult_awakening"
+  ]
+ },
+ {
+  "id": "kiba_adult",
+  "displayName": "Adult Kiba",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3353a3",
+   "secondary": "#293970",
+   "accent": "#eec14f",
+   "hair": "#201e38",
+   "aura": "#476df5",
+   "skin": "#b16348"
+  },
+  "visual": {
+   "height": 0.68,
+   "bulk": 0.55,
+   "hairStyle": "ponytail",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "kiba_adult_awakening"
+  ]
+ },
+ {
+  "id": "shino_adult",
+  "displayName": "Adult Shino",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a33392",
+   "secondary": "#70296f",
+   "accent": "#4fee66",
+   "hair": "#0d070a",
+   "aura": "#f547f2",
+   "skin": "#bc765c"
+  },
+  "visual": {
+   "height": 1.02,
+   "bulk": 0.97,
+   "hairStyle": "long",
+   "weapon": "kunai",
+   "cape": true,
+   "markings": "seal"
+  },
+  "transformations": [
+   "shino_adult_awakening"
+  ]
+ },
+ {
+  "id": "lee_adult",
+  "displayName": "Adult Rock Lee",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a33398",
+   "secondary": "#6f2970",
+   "accent": "#4fee5f",
+   "hair": "#000000",
+   "aura": "#f247f5",
+   "skin": "#b7714e"
+  },
+  "visual": {
+   "height": 0.8400000000000001,
+   "bulk": 0.63,
+   "hairStyle": "short",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "lee_adult_awakening"
+  ]
+ },
+ {
+  "id": "tenten_adult",
+  "displayName": "Adult Tenten",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3ba333",
+   "secondary": "#297033",
+   "accent": "#e34fee",
+   "hair": "#000000",
+   "aura": "#47f55e",
+   "skin": "#bf7a63"
+  },
+  "visual": {
+   "height": 0.8300000000000001,
+   "bulk": 0.78,
+   "hairStyle": "short",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "tenten_adult_awakening"
+  ]
+ },
+ {
+  "id": "temari_adult",
+  "displayName": "Adult Temari",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a35c",
+   "secondary": "#4a2970",
+   "accent": "#ee4fb3",
+   "hair": "#57a28c",
+   "aura": "#9847f5",
+   "skin": "#d6bf9a"
+  },
+  "visual": {
+   "height": 0.72,
+   "bulk": 0.55,
+   "hairStyle": "long",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "temari_adult_awakening"
+  ]
+ },
+ {
+  "id": "kankuro_adult",
+  "displayName": "Adult Kankuro",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "puppet",
+  "era": "boruto",
+  "village": "sand",
+  "colors": {
+   "primary": "#6233a3",
+   "secondary": "#703429",
+   "accent": "#abee4f",
+   "hair": "#52325d",
+   "aura": "#f56147",
+   "skin": "#cbac80"
+  },
+  "visual": {
+   "height": 0.9,
+   "bulk": 0.59,
+   "hairStyle": "spiky",
+   "weapon": "puppet",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "kankuro_adult_awakening"
+  ]
+ },
+ {
+  "id": "gaara_adult",
+  "displayName": "Adult Gaara",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "defensive",
+  "era": "boruto",
+  "village": "sand",
+  "colors": {
+   "primary": "#a33364",
+   "secondary": "#706d29",
+   "accent": "#4feea9",
+   "hair": "#462529",
+   "aura": "#f5ef47",
+   "skin": "#d3b392"
+  },
+  "visual": {
+   "height": 0.74,
+   "bulk": 0.7999999999999999,
+   "hairStyle": "hooded",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "gaara_adult_awakening"
+  ]
+ },
+ {
+  "id": "konohamaru_adult",
+  "displayName": "Adult Konohamaru",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "balanced",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#8b33a3",
+   "secondary": "#704729",
+   "accent": "#71ee4f",
+   "hair": "#9c5493",
+   "aura": "#f59047",
+   "skin": "#cda684"
+  },
+  "visual": {
+   "height": 0.9400000000000001,
+   "bulk": 0.9299999999999999,
+   "hairStyle": "hooded",
+   "weapon": "kunai",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "konohamaru_adult_awakening"
+  ]
+ },
+ {
+  "id": "hanabi_adult",
+  "displayName": "Adult Hanabi",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "counter",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#48a333",
+   "secondary": "#293370",
+   "accent": "#d04fee",
+   "hair": "#25462a",
+   "aura": "#475ef5",
+   "skin": "#cbb280"
+  },
+  "visual": {
+   "height": 0.86,
+   "bulk": 0.61,
+   "hairStyle": "bald",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "hanabi_adult_awakening"
+  ]
+ },
+ {
+  "id": "sai_adult",
+  "displayName": "Adult Sai",
+  "shortName": "Adult",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "boruto",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a38b33",
+   "secondary": "#705729",
+   "accent": "#4f71ee",
+   "hair": "#1f2112",
+   "aura": "#f5b847",
+   "skin": "#bf7f63"
+  },
+  "visual": {
+   "height": 0.86,
+   "bulk": 0.59,
+   "hairStyle": "wild",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "sai_adult_awakening"
+  ]
+ },
+ {
+  "id": "jigen",
+  "displayName": "Jigen",
+  "shortName": "Jigen",
+  "complete": false,
+  "archetype": "counter",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#9fa333",
+   "secondary": "#706c29",
+   "accent": "#544fee",
+   "hair": "#000000",
+   "aura": "#f5ed47",
+   "skin": "#ae6647"
+  },
+  "visual": {
+   "height": 1.06,
+   "bulk": 0.9,
+   "hairStyle": "hooded",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "jigen_awakening"
+  ]
+ },
+ {
+  "id": "isshiki",
+  "displayName": "Isshiki Otsutsuki",
+  "shortName": "Isshiki",
+  "complete": false,
+  "archetype": "counter",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#33a362",
+   "secondary": "#294770",
+   "accent": "#ee4fab",
+   "hair": "#57a290",
+   "aura": "#4790f5",
+   "skin": "#d7bb9d"
+  },
+  "visual": {
+   "height": 0.81,
+   "bulk": 0.76,
+   "hairStyle": "bald",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "isshiki_awakening"
+  ]
+ },
+ {
+  "id": "delta",
+  "displayName": "Delta",
+  "shortName": "Delta",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#6233a3",
+   "secondary": "#702950",
+   "accent": "#abee4f",
+   "hair": "#955da8",
+   "aura": "#f547a7",
+   "skin": "#d4b396"
+  },
+  "visual": {
+   "height": 0.92,
+   "bulk": 1,
+   "hairStyle": "bald",
+   "weapon": "puppet",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "delta_awakening"
+  ]
+ },
+ {
+  "id": "boro",
+  "displayName": "Boro",
+  "shortName": "Boro",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#8ba333",
+   "secondary": "#527029",
+   "accent": "#714fee",
+   "hair": "#161e10",
+   "aura": "#adf547",
+   "skin": "#be8a60"
+  },
+  "visual": {
+   "height": 0.8200000000000001,
+   "bulk": 0.6599999999999999,
+   "hairStyle": "hooded",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "boro_awakening"
+  ]
+ },
+ {
+  "id": "koji",
+  "displayName": "Koji Kashin",
+  "shortName": "Koji",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#7aa333",
+   "secondary": "#706f29",
+   "accent": "#894fee",
+   "hair": "#000000",
+   "aura": "#f5f247",
+   "skin": "#bc845c"
+  },
+  "visual": {
+   "height": 0.79,
+   "bulk": 0.6699999999999999,
+   "hairStyle": "hooded",
+   "weapon": "none",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "koji_awakening"
+  ]
+ },
+ {
+  "id": "code",
+  "displayName": "Code",
+  "shortName": "Code",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#5933a3",
+   "secondary": "#292970",
+   "accent": "#b9ee4f",
+   "hair": "#000000",
+   "aura": "#4747f5",
+   "skin": "#c18667"
+  },
+  "visual": {
+   "height": 1.12,
+   "bulk": 1.0899999999999999,
+   "hairStyle": "spiky",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "code_awakening"
+  ]
+ },
+ {
+  "id": "daemon",
+  "displayName": "Daemon",
+  "shortName": "Daemon",
+  "complete": false,
+  "archetype": "counter",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#a33d33",
+   "secondary": "#6b7029",
+   "accent": "#4fe0ee",
+   "hair": "#926b4f",
+   "aura": "#eaf547",
+   "skin": "#c2a16b"
+  },
+  "visual": {
+   "height": 0.88,
+   "bulk": 0.6499999999999999,
+   "hairStyle": "braided",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "daemon_awakening"
+  ]
+ },
+ {
+  "id": "eida",
+  "displayName": "Eida",
+  "shortName": "Eida",
+  "complete": false,
+  "archetype": "support",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#94a333",
+   "secondary": "#577029",
+   "accent": "#644fee",
+   "hair": "#000000",
+   "aura": "#b8f547",
+   "skin": "#b57a4a"
+  },
+  "visual": {
+   "height": 0.96,
+   "bulk": 1.17,
+   "hairStyle": "bowl",
+   "weapon": "puppet",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "eida_awakening"
+  ]
+ },
+ {
+  "id": "victor",
+  "displayName": "Victor",
+  "shortName": "Victor",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#9833a3",
+   "secondary": "#2f2970",
+   "accent": "#5fee4f",
+   "hair": "#1e101b",
+   "aura": "#5547f5",
+   "skin": "#a76844"
+  },
+  "visual": {
+   "height": 0.93,
+   "bulk": 1.17,
+   "hairStyle": "bald",
+   "weapon": "puppet",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "victor_awakening"
+  ]
+ },
+ {
+  "id": "deepa",
+  "displayName": "Deepa",
+  "shortName": "Deepa",
+  "complete": false,
+  "archetype": "defensive",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#33a381",
+   "secondary": "#295470",
+   "accent": "#ee4f7e",
+   "hair": "#3b6c6d",
+   "aura": "#47b0f5",
+   "skin": "#d4b396"
+  },
+  "visual": {
+   "height": 0.8400000000000001,
+   "bulk": 0.55,
+   "hairStyle": "spiky",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "deepa_awakening"
+  ]
+ },
+ {
+  "id": "amado",
+  "displayName": "Amado Sanzu",
+  "shortName": "Amado",
+  "complete": false,
+  "archetype": "support",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#3933a3",
+   "secondary": "#295970",
+   "accent": "#e6ee4f",
+   "hair": "#000000",
+   "aura": "#47bef5",
+   "skin": "#b97f55"
+  },
+  "visual": {
+   "height": 1.05,
+   "bulk": 1.06,
+   "hairStyle": "braided",
+   "weapon": "claws",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "amado_awakening"
+  ]
+ },
+ {
+  "id": "ao",
+  "displayName": "Ao",
+  "shortName": "Ao",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#33a353",
+   "secondary": "#392970",
+   "accent": "#ee4fc1",
+   "hair": "#366352",
+   "aura": "#6d47f5",
+   "skin": "#ceb588"
+  },
+  "visual": {
+   "height": 1.01,
+   "bulk": 1.16,
+   "hairStyle": "short",
+   "weapon": "scythe",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "ao_awakening"
+  ]
+ },
+ {
+  "id": "kaguya",
+  "displayName": "Kaguya Otsutsuki",
+  "shortName": "Kaguya",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#33a38b",
+   "secondary": "#296d70",
+   "accent": "#ee4f71",
+   "hair": "#070d0d",
+   "aura": "#47eff5",
+   "skin": "#94533d"
+  },
+  "visual": {
+   "height": 0.99,
+   "bulk": 0.9,
+   "hairStyle": "short",
+   "weapon": "claws",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "kaguya_awakening"
+  ]
+ },
+ {
+  "id": "hagoromo",
+  "displayName": "Hagoromo Otsutsuki",
+  "shortName": "Hagoromo",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#8b33a3",
+   "secondary": "#70293a",
+   "accent": "#71ee4f",
+   "hair": "#502b4b",
+   "aura": "#f54770",
+   "skin": "#d6ba9a"
+  },
+  "visual": {
+   "height": 1.06,
+   "bulk": 1.12,
+   "hairStyle": "ponytail",
+   "weapon": "scythe",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "hagoromo_awakening"
+  ]
+ },
+ {
+  "id": "hamura",
+  "displayName": "Hamura Otsutsuki",
+  "shortName": "Hamura",
+  "complete": false,
+  "archetype": "counter",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#a33383",
+   "secondary": "#527029",
+   "accent": "#4fee7c",
+   "hair": "#6d3b4e",
+   "aura": "#adf547",
+   "skin": "#c29c6b"
+  },
+  "visual": {
+   "height": 1.05,
+   "bulk": 0.89,
+   "hairStyle": "braided",
+   "weapon": "staff",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "hamura_awakening"
+  ]
+ },
+ {
+  "id": "indra",
+  "displayName": "Indra Otsutsuki",
+  "shortName": "Indra",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#a3339d",
+   "secondary": "#706c29",
+   "accent": "#4fee57",
+   "hair": "#af6a94",
+   "aura": "#f5ed47",
+   "skin": "#c19d67"
+  },
+  "visual": {
+   "height": 1.01,
+   "bulk": 0.89,
+   "hairStyle": "long",
+   "weapon": "blades",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "indra_awakening"
+  ]
+ },
+ {
+  "id": "ashura",
+  "displayName": "Ashura Otsutsuki",
+  "shortName": "Ashura",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "ancient",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#a37c33",
+   "secondary": "#297040",
+   "accent": "#4f86ee",
+   "hair": "#6a6939",
+   "aura": "#47f57e",
+   "skin": "#d4ba96"
+  },
+  "visual": {
+   "height": 0.87,
+   "bulk": 0.63,
+   "hairStyle": "long",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "ashura_awakening"
+  ]
+ },
+ {
+  "id": "toneri",
+  "displayName": "Toneri Otsutsuki",
+  "shortName": "Toneri",
+  "complete": false,
+  "archetype": "counter",
+  "era": "blank-period",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#51a333",
+   "secondary": "#3e7029",
+   "accent": "#c34fee",
+   "hair": "#1e3820",
+   "aura": "#7bf547",
+   "skin": "#aa6046"
+  },
+  "visual": {
+   "height": 0.8300000000000001,
+   "bulk": 0.76,
+   "hairStyle": "wild",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "toneri_awakening"
+  ]
+ },
+ {
+  "id": "kinshiki",
+  "displayName": "Kinshiki Otsutsuki",
+  "shortName": "Kinshiki",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#6233a3",
+   "secondary": "#4a2970",
+   "accent": "#abee4f",
+   "hair": "#060407",
+   "aura": "#9847f5",
+   "skin": "#a36b43"
+  },
+  "visual": {
+   "height": 0.6900000000000001,
+   "bulk": 0.6,
+   "hairStyle": "bald",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "kinshiki_awakening"
+  ]
+ },
+ {
+  "id": "urashiki",
+  "displayName": "Urashiki Otsutsuki",
+  "shortName": "Urashiki",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "boruto",
+  "village": "unaffiliated",
+  "colors": {
+   "primary": "#a33340",
+   "secondary": "#377029",
+   "accent": "#4feedb",
+   "hair": "#71483d",
+   "aura": "#6af547",
+   "skin": "#caa67d"
+  },
+  "visual": {
+   "height": 0.75,
+   "bulk": 0.6799999999999999,
+   "hairStyle": "spiky",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "urashiki_awakening"
+  ]
+ },
+ {
+  "id": "menma",
+  "displayName": "Menma Uzumaki",
+  "shortName": "Menma",
+  "complete": false,
+  "archetype": "transformation",
+  "era": "blank-period",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a353",
+   "secondary": "#29702f",
+   "accent": "#ee4fc1",
+   "hair": "#0b1410",
+   "aura": "#47f555",
+   "skin": "#b16b48"
+  },
+  "visual": {
+   "height": 0.99,
+   "bulk": 0.9,
+   "hairStyle": "ponytail",
+   "weapon": "scythe",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "menma_awakening"
+  ]
+ },
+ {
+  "id": "rtn_naruto",
+  "displayName": "Road to Ninja Naruto",
+  "shortName": "Road",
+  "complete": false,
+  "archetype": "balanced",
+  "era": "blank-period",
+  "village": "leaf",
+  "colors": {
+   "primary": "#66a333",
+   "secondary": "#297044",
+   "accent": "#a64fee",
+   "hair": "#5c9c54",
+   "aura": "#47f58a",
+   "skin": "#ceb588"
+  },
+  "visual": {
+   "height": 0.96,
+   "bulk": 0.86,
+   "hairStyle": "braided",
+   "weapon": "none",
+   "cape": false,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "rtn_naruto_awakening"
+  ]
+ },
+ {
+  "id": "rtn_sasuke",
+  "displayName": "Road to Ninja Sasuke",
+  "shortName": "Road",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "blank-period",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a3336f",
+   "secondary": "#702951",
+   "accent": "#4fee99",
+   "hair": "#000000",
+   "aura": "#f547aa",
+   "skin": "#bc815c"
+  },
+  "visual": {
+   "height": 0.68,
+   "bulk": 0.7999999999999999,
+   "hairStyle": "hooded",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "rtn_sasuke_awakening"
+  ]
+ },
+ {
+  "id": "guren",
+  "displayName": "Guren",
+  "shortName": "Guren",
+  "complete": false,
+  "archetype": "zoning",
+  "era": "shippuden",
+  "village": "sound",
+  "colors": {
+   "primary": "#3337a3",
+   "secondary": "#702949",
+   "accent": "#eee84f",
+   "hair": "#7963ab",
+   "aura": "#f54795",
+   "skin": "#d1bb8f"
+  },
+  "visual": {
+   "height": 1.1,
+   "bulk": 1.13,
+   "hairStyle": "braided",
+   "weapon": "kunai",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "guren_awakening"
+  ]
+ },
+ {
+  "id": "rin",
+  "displayName": "Rin Nohara",
+  "shortName": "Rin",
+  "complete": false,
+  "archetype": "healer",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a33355",
+   "secondary": "#706a29",
+   "accent": "#4feebe",
+   "hair": "#774240",
+   "aura": "#f5e747",
+   "skin": "#c79b75"
+  },
+  "visual": {
+   "height": 1.1300000000000001,
+   "bulk": 0.9299999999999999,
+   "hairStyle": "long",
+   "weapon": "kunai",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "rin_awakening"
+  ]
+ },
+ {
+  "id": "obito_young",
+  "displayName": "Young Obito",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a33339",
+   "secondary": "#587029",
+   "accent": "#4feee6",
+   "hair": "#a26d57",
+   "aura": "#bbf547",
+   "skin": "#cda784"
+  },
+  "visual": {
+   "height": 0.8400000000000001,
+   "bulk": 0.61,
+   "hairStyle": "ponytail",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "obito_young_awakening"
+  ]
+ },
+ {
+  "id": "kakashi_young",
+  "displayName": "Young Kakashi",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a35c33",
+   "secondary": "#29703e",
+   "accent": "#4fb3ee",
+   "hair": "#6a5b39",
+   "aura": "#47f57b",
+   "skin": "#d1b48f"
+  },
+  "visual": {
+   "height": 1.1,
+   "bulk": 1.05,
+   "hairStyle": "braided",
+   "weapon": "sword",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "kakashi_young_awakening"
+  ]
+ },
+ {
+  "id": "minato_young",
+  "displayName": "Young Minato",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a36033",
+   "secondary": "#427029",
+   "accent": "#4faeee",
+   "hair": "#675a37",
+   "aura": "#84f547",
+   "skin": "#c79e75"
+  },
+  "visual": {
+   "height": 0.79,
+   "bulk": 0.6,
+   "hairStyle": "bald",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "minato_young_awakening"
+  ]
+ },
+ {
+  "id": "jiraiya_young",
+  "displayName": "Young Jiraiya",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#339aa3",
+   "secondary": "#297050",
+   "accent": "#ee5c4f",
+   "hair": "#1d2b35",
+   "aura": "#47f5a7",
+   "skin": "#bb8058"
+  },
+  "visual": {
+   "height": 1.12,
+   "bulk": 0.86,
+   "hairStyle": "braided",
+   "weapon": "puppet",
+   "cape": false,
+   "markings": "seal"
+  },
+  "transformations": [
+   "jiraiya_young_awakening"
+  ]
+ },
+ {
+  "id": "orochimaru_young",
+  "displayName": "Young Orochimaru",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#337ca3",
+   "secondary": "#297064",
+   "accent": "#ee864f",
+   "hair": "#19202e",
+   "aura": "#47f5d8",
+   "skin": "#9f6841"
+  },
+  "visual": {
+   "height": 0.85,
+   "bulk": 0.58,
+   "hairStyle": "ponytail",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "orochimaru_young_awakening"
+  ]
+ },
+ {
+  "id": "tsunade_young",
+  "displayName": "Young Tsunade",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "grappler",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3fa333",
+   "secondary": "#293a70",
+   "accent": "#de4fee",
+   "hair": "#57a269",
+   "aura": "#4770f5",
+   "skin": "#d0b08b"
+  },
+  "visual": {
+   "height": 0.88,
+   "bulk": 0.83,
+   "hairStyle": "hooded",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "tsunade_young_awakening"
+  ]
+ },
+ {
+  "id": "hiruzen_young",
+  "displayName": "Young Hiruzen",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "ancient",
+  "village": "leaf",
+  "colors": {
+   "primary": "#5733a3",
+   "secondary": "#6b2970",
+   "accent": "#bbee4f",
+   "hair": "#000000",
+   "aura": "#ea47f5",
+   "skin": "#aa6f46"
+  },
+  "visual": {
+   "height": 0.9400000000000001,
+   "bulk": 0.97,
+   "hairStyle": "short",
+   "weapon": "staff",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "hiruzen_young_awakening"
+  ]
+ },
+ {
+  "id": "hashirama_young",
+  "displayName": "Young Hashirama",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "summoner",
+  "era": "ancient",
+  "village": "leaf",
+  "colors": {
+   "primary": "#33a367",
+   "secondary": "#297040",
+   "accent": "#ee4fa3",
+   "hair": "#040706",
+   "aura": "#47f57e",
+   "skin": "#aa6e46"
+  },
+  "visual": {
+   "height": 0.9,
+   "bulk": 0.72,
+   "hairStyle": "ponytail",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "hashirama_young_awakening"
+  ]
+ },
+ {
+  "id": "tobirama_young",
+  "displayName": "Young Tobirama",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "ranged",
+  "era": "ancient",
+  "village": "leaf",
+  "colors": {
+   "primary": "#3392a3",
+   "secondary": "#294870",
+   "accent": "#ee664f",
+   "hair": "#10171e",
+   "aura": "#4792f5",
+   "skin": "#c18867"
+  },
+  "visual": {
+   "height": 0.89,
+   "bulk": 0.74,
+   "hairStyle": "spiky",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "tobirama_young_awakening"
+  ]
+ },
+ {
+  "id": "madara_young",
+  "displayName": "Young Madara",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "weapon",
+  "era": "ancient",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a34633",
+   "secondary": "#697029",
+   "accent": "#4fd3ee",
+   "hair": "#3c2e20",
+   "aura": "#e4f547",
+   "skin": "#d3b992"
+  },
+  "visual": {
+   "height": 0.8,
+   "bulk": 0.6699999999999999,
+   "hairStyle": "long",
+   "weapon": "sword",
+   "cape": true,
+   "markings": "none"
+  },
+  "transformations": [
+   "madara_young_awakening"
+  ]
+ },
+ {
+  "id": "guy_young",
+  "displayName": "Young Might Guy",
+  "shortName": "Young",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#a3333d",
+   "secondary": "#702f29",
+   "accent": "#4feee0",
+   "hair": "#211612",
+   "aura": "#f55547",
+   "skin": "#945b3d"
+  },
+  "visual": {
+   "height": 0.77,
+   "bulk": 0.52,
+   "hairStyle": "spiky",
+   "weapon": "none",
+   "cape": false,
+   "markings": "none"
+  },
+  "transformations": [
+   "guy_young_awakening"
+  ]
+ },
+ {
+  "id": "dai",
+  "displayName": "Might Dai",
+  "shortName": "Might",
+  "complete": false,
+  "archetype": "rushdown",
+  "era": "classic",
+  "village": "leaf",
+  "colors": {
+   "primary": "#7833a3",
+   "secondary": "#332970",
+   "accent": "#8cee4f",
+   "hair": "#000000",
+   "aura": "#5e47f5",
+   "skin": "#b97355"
+  },
+  "visual": {
+   "height": 0.81,
+   "bulk": 0.57,
+   "hairStyle": "ponytail",
+   "cape": true,
+   "markings": "stripes"
+  },
+  "transformations": [
+   "dai_awakening"
+  ]
+ }
+]

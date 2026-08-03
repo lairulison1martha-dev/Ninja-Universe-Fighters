@@ -16,17 +16,13 @@ const ICONS = [
   './assets/icons/icon-192.png',
 ];
 
-/**
- * Sprite sets to load at boot. Adding a new one is a data change: drop the
- * folder in, add its id here, and any fighter with a matching `spriteId` picks
- * it up — everyone else falls back to `base-ninja`.
- */
-const SPRITE_SETS = ['base-ninja'];
-
 class AssetLoader {
   constructor() {
     this.images = new Map();
     this.portraits = new Map();
+    this.spriteManifest = null;
+    this.spriteIds = null;
+    this._spritePending = new Map();
     this.loaded = 0;
     this.total = 0;
   }
@@ -60,39 +56,104 @@ class AssetLoader {
     return true;
   }
 
+  /* ------------------------------------------------------- sprite sets -- */
+
   /**
-   * Load the fighter sprite atlases and register them.
-   *
-   * A missing or broken set is never fatal: the fighter renderer falls back to
-   * the procedural silhouette, so the game still runs (just without sprites)
-   * if the assets fail to fetch.
-   *
-   * @returns {Promise<{ loaded: string[], failed: string[] }>}
+   * Read the sprite manifest: which fighters have art, and which of those are
+   * precached for a first offline run.
    */
-  async loadSpriteSets(onProgress) {
-    const loaded = [];
-    const failed = [];
-    for (let i = 0; i < SPRITE_SETS.length; i++) {
-      const id = SPRITE_SETS[i];
+  async loadSpriteManifest() {
+    if (this.spriteManifest) return this.spriteManifest;
+    try {
+      const res = await fetch(this.url('./assets/fighters/manifest.json'), { cache: 'force-cache' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      this.spriteManifest = await res.json();
+    } catch (err) {
+      console.warn('[assets] sprite manifest unavailable — procedural fighters only', err);
+      this.spriteManifest = { fighters: [], precached: [] };
+    }
+    this.spriteIds = new Set(this.spriteManifest.fighters || []);
+    return this.spriteManifest;
+  }
+
+  hasSpriteSet(id) {
+    return !!this.spriteIds && this.spriteIds.has(id);
+  }
+
+  /**
+   * Load one fighter's sprite set and register it.
+   *
+   * Sets are fetched per match rather than all at boot: 192 atlases is several
+   * megabytes, and a phone should not download the whole roster to play one
+   * fight. The service worker caches each one the first time it is fetched, so
+   * a fighter you have used before still works offline.
+   *
+   * Failure is never fatal — the renderer falls back to the procedural
+   * silhouette for that fighter alone.
+   */
+  async loadSpriteSet(id) {
+    if (!id) return null;
+    const existing = spriteRegistry.get(id);
+    if (existing) return existing;
+    const pending = this._spritePending.get(id);
+    if (pending) return pending;
+
+    const job = (async () => {
       try {
         const res = await fetch(this.url(`./assets/fighters/${id}/fighter.json`), {
           cache: 'force-cache',
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const meta = await res.json();
-        // The path in the metadata is repo-relative; resolve it the same way as
-        // every other asset so a Pages subdirectory still works.
+        // Paths in the metadata are repo-relative; resolve them like every
+        // other asset so a Pages subdirectory still works.
         const image = await this.loadImage(`./${meta.spriteSheet.replace(/^\.?\//, '')}`);
         if (!image) throw new Error('sprite sheet image failed to load');
-        spriteRegistry.add(id, new SpriteSheet(meta, image));
-        loaded.push(id);
+        return spriteRegistry.add(id, new SpriteSheet(meta, image));
       } catch (err) {
-        console.warn(`[assets] sprite set "${id}" unavailable — using procedural fighters`, err);
-        failed.push(id);
+        console.warn(`[assets] sprite set "${id}" unavailable — procedural fallback`, err);
+        return null;
+      } finally {
+        this._spritePending.delete(id);
       }
-      onProgress?.((i + 1) / SPRITE_SETS.length);
-    }
+    })();
+    this._spritePending.set(id, job);
+    return job;
+  }
+
+  /** Load several sets at once — used before a match starts. */
+  async loadSpriteSets(ids, onProgress) {
+    const wanted = [...new Set(ids.filter(Boolean))];
+    const loaded = [];
+    const failed = [];
+    let done = 0;
+    await Promise.all(wanted.map(async (id) => {
+      const set = await this.loadSpriteSet(id);
+      (set ? loaded : failed).push(id);
+      done++;
+      onProgress?.(done / wanted.length);
+    }));
     return { loaded, failed };
+  }
+
+  /** Portrait image path for a fighter, or null when they have no set. */
+  portraitPath(id) {
+    return this.hasSpriteSet(id) ? `./assets/fighters/${id}/portrait.png` : null;
+  }
+
+  /**
+   * A fighter's portrait image if it is already decoded, else null — and start
+   * fetching it, calling `onReady` when it arrives.
+   *
+   * Portraits are ~1 KB each, so the select screen can pull them in as cards
+   * scroll into view without the roster costing a download up front.
+   */
+  portraitImage(id, onReady) {
+    const path = this.portraitPath(id);
+    if (!path) return null;
+    if (this.images.has(path)) return this.images.get(path);
+    this.loadImage(path).then((img) => { if (img && onReady) onReady(img); });
+    return null;
   }
 
   /**

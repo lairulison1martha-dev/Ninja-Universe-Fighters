@@ -141,9 +141,6 @@ export class Fighter {
     this.anim.onEvent = (name) => this._onAnimationEvent(name);
     this._animForce = true;
     this._ctx = null;
-    // Build the recoloured atlas now, at match setup, rather than during the
-    // first frame of the first round.
-    this.sheet?.tinted?.(this.data.colors.primary);
   }
 
   get name() { return this.data.displayName; }

@@ -309,11 +309,13 @@ const STAGES = [
     },
   },
   {
-    label: 'Loading fighter sprites',
-    run: async (report) => {
-      const { loaded, failed } = await assets.loadSpriteSets(report);
-      if (failed.length) return `${loaded.length} loaded, ${failed.length} unavailable`;
-      return `${loaded.length} sprite set${loaded.length === 1 ? '' : 's'}`;
+    label: 'Indexing fighter sprites',
+    run: async () => {
+      // Only the index is read at boot. Each fighter's atlas is fetched when a
+      // match needs it — downloading 192 of them up front would cost several
+      // megabytes for one fight.
+      const manifest = await assets.loadSpriteManifest();
+      return `${(manifest.fighters || []).length} sprite sets available`;
     },
   },
   {

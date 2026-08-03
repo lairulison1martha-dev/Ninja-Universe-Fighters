@@ -16,9 +16,9 @@
 
 /** Animation names the combat state machine can ask for. */
 export const ANIMATIONS = [
-  'idle', 'walk', 'run', 'jump', 'fall', 'dash',
-  'lightAttack', 'heavyAttack', 'jutsu1', 'jutsu2',
-  'hurt', 'knockdown', 'getUp', 'guard', 'victory', 'defeat',
+  'idle', 'walk', 'run', 'jump', 'fall', 'dash', 'guard',
+  'lightAttack', 'heavyAttack', 'jutsu1', 'jutsu2', 'jutsu3', 'ultimate',
+  'hurt', 'knockdown', 'getUp', 'victory', 'defeat', 'transformation',
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -43,7 +43,6 @@ export class SpriteSheet {
      */
     this.bodyHeight = meta.bodyHeight || Math.round(meta.frameHeight * 0.8);
     this.animations = meta.animations || {};
-    this._tints = new Map();
   }
 
   has(name) { return !!this.animations[name]; }
@@ -60,70 +59,6 @@ export class SpriteSheet {
     out.sw = this.frameWidth;
     out.sh = this.frameHeight;
     return out;
-  }
-
-  /**
-   * A recoloured copy of the sheet.
-   *
-   * Every fighter currently shares this one temporary sheet, so without this
-   * the whole roster would look identical on screen.
-   *
-   * The source art is very dark — three quarters of its opaque pixels sit
-   * below luminance 48 — so a multiply tint just produces mud. Instead the
-   * outfit's shading ramp is *remapped* onto the fighter's colour: black stays
-   * black (that is the outline), skin and bright highlights are left alone,
-   * and everything between is redrawn as a light-to-dark ramp of the target
-   * hue. Results are cached per colour.
-   */
-  tinted(hexColor) {
-    if (!this.image || !hexColor) return this.image;
-    const cached = this._tints.get(hexColor);
-    if (cached) return cached;
-    if (typeof document === 'undefined') return this.image;
-
-    const w = this.image.width;
-    const h = this.image.height;
-    const canvas = document.createElement('canvas');
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(this.image, 0, 0);
-
-    let data;
-    try {
-      data = ctx.getImageData(0, 0, w, h);
-    } catch {
-      return this.image;   // tainted canvas (should not happen, same origin)
-    }
-
-    const tr = parseInt(hexColor.slice(1, 3), 16);
-    const tg = parseInt(hexColor.slice(3, 5), 16);
-    const tb = parseInt(hexColor.slice(5, 7), 16);
-    if (!Number.isFinite(tr + tg + tb)) return this.image;
-
-    const px = data.data;
-    for (let i = 0; i < px.length; i += 4) {
-      if (px[i + 3] < 8) continue;
-      const r = px[i];
-      const g = px[i + 1];
-      const b = px[i + 2];
-      const lum = (r * 2 + g * 3 + b) / 6;
-      // Leave the outline (near-black), the skin, and bright highlights such
-      // as the headband plate and the eyes.
-      if (lum < 18 || lum > 150) continue;
-      if (r > g + 16 && g > b + 10 && r > 90) continue;
-      const shade = 0.40 + 0.95 * Math.min(1, (lum - 18) / 92);
-      px[i] = Math.min(255, tr * shade);
-      px[i + 1] = Math.min(255, tg * shade);
-      px[i + 2] = Math.min(255, tb * shade);
-    }
-    ctx.putImageData(data, 0, 0);
-    // A whole recoloured atlas is ~1.8 MB of canvas memory, so keep only a
-    // handful — a match never needs more than the fighters on screen.
-    if (this._tints.size >= 6) this._tints.delete(this._tints.keys().next().value);
-    this._tints.set(hexColor, canvas);
-    return canvas;
   }
 }
 
@@ -275,16 +210,22 @@ export class SpriteAnimator {
 class SpriteRegistry {
   constructor() {
     this.sets = new Map();
-    this.defaultId = 'base-ninja';
   }
 
   add(id, sheet) { this.sets.set(id, sheet); return sheet; }
 
   get(id) { return this.sets.get(id) || null; }
 
-  /** The sheet a fighter should use: their own if present, else the base. */
+  /**
+   * The sheet a fighter should use.
+   *
+   * Every fighter has their own art, so there is deliberately no shared
+   * fallback sheet here: a fighter whose set has not loaded renders
+   * procedurally rather than borrowing somebody else's body.
+   */
   forFighter(fighterData) {
-    return this.sets.get(fighterData?.spriteId) || this.sets.get(this.defaultId) || null;
+    if (!fighterData) return null;
+    return this.sets.get(fighterData.spriteId || fighterData.id) || null;
   }
 
   /** Metadata only — safe outside a browser, so tests can use it. */
@@ -322,15 +263,20 @@ export function animationForAbility(ability, slotIndex = -1) {
       return 'dash';
     case 'counter':
       return 'guard';
+    case 'ultimate':
+      return 'ultimate';
     case 'healing':
     case 'buff':
     case 'debuff':
       return 'jutsu2';
-    case 'ultimate':
-      return 'jutsu2';
-    default:
-      // melee-jutsu / ranged-jutsu / area-jutsu / projectile / summon
-      return slotIndex === 1 || slotIndex === 2 ? 'jutsu2' : 'jutsu1';
+    default: {
+      // melee-jutsu / ranged-jutsu / area-jutsu / projectile / summon.
+      // Each of the three ability slots gets its own cast so a fighter's
+      // jutsu do not all look like the same animation.
+      if (slotIndex === 1) return 'jutsu2';
+      if (slotIndex === 2) return 'jutsu3';
+      return 'jutsu1';
+    }
   }
 }
 
@@ -357,7 +303,7 @@ export function animationForState(state, airborne) {
     case 'wakeup': return 'getUp';
     case 'ko': return 'defeat';
     case 'victory': return 'victory';
-    case 'transform': return 'jutsu2';
+    case 'transform': return 'transformation';
     case 'crouch':
     case 'charge':
     case 'land':

@@ -16,6 +16,7 @@
  */
 
 import settings from '../settings-manager.js';
+import assets from '../asset-loader.js';
 import { STATE } from './fighter-state.js';
 
 /**
@@ -206,12 +207,11 @@ export class FighterRenderer {
   static _sprite(ctx, f, sheet, worldHeight) {
     const r = sheet.rect(f.anim.name, f.anim.index, RECT);
     if (!r) return;
-    const image = sheet.tinted(f.data.colors.primary) || sheet.image;
     const scale = worldHeight / (sheet.bodyHeight || sheet.frameHeight);
     const smoothing = ctx.imageSmoothingEnabled;
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(
-      image,
+      sheet.image,
       r.sx, r.sy, r.sw, r.sh,
       -sheet.anchor.x * scale, -sheet.anchor.y * scale,
       sheet.frameWidth * scale, sheet.frameHeight * scale,
@@ -495,7 +495,46 @@ export class FighterRenderer {
     }
   }
 
-  /** Portrait render used by the character-select cards. */
+  /**
+   * Paint a fighter portrait into a canvas.
+   *
+   * Prefers the fighter's own generated portrait so the select screen shows
+   * the character you will actually see in the match. The image is fetched
+   * lazily; until it lands (and forever, if it fails) the procedural
+   * silhouette stands in, so the roster never renders empty.
+   */
+  static paintPortrait(canvas, fighterData, opts = {}) {
+    const img = assets.portraitImage(fighterData.id,
+      () => FighterRenderer.paintPortrait(canvas, fighterData, opts));
+    if (!img) {
+      FighterRenderer.drawPortrait(canvas, fighterData, opts);
+      return;
+    }
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const g = ctx.createRadialGradient(w / 2, h * 0.34, 4, w / 2, h * 0.34, h * 0.8);
+    g.addColorStop(0, withAlpha(fighterData.colors.aura, 0.27));
+    g.addColorStop(1, 'rgba(4,8,16,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+
+    // Pixel art: integer-ish scale and no smoothing.
+    ctx.imageSmoothingEnabled = false;
+    const scale = Math.min(w / img.naturalWidth, h / img.naturalHeight);
+    const dw = img.naturalWidth * scale;
+    const dh = img.naturalHeight * scale;
+    ctx.drawImage(img, (w - dw) / 2, h - dh, dw, dh);
+
+    if (opts.locked) {
+      ctx.fillStyle = 'rgba(4,8,16,.55)';
+      ctx.fillRect(0, 0, w, h);
+    }
+  }
+
+  /** Procedural portrait: the fallback, and still unique per fighter. */
   static drawPortrait(canvas, fighterData, opts = {}) {
     const ctx = canvas.getContext('2d');
     const w = canvas.width;
