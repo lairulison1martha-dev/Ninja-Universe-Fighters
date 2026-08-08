@@ -11,7 +11,7 @@
  * such as /Ninja-Universe-Fighters/.
  */
 
-const CACHE_VERSION = 'v0.10.0';
+const CACHE_VERSION = 'v0.11.0';
 const CACHE_NAME = `nuf-${CACHE_VERSION}`;
 
 /** Resolve relative to the worker's own scope, never to the domain root. */

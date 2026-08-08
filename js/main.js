@@ -181,6 +181,7 @@ export class Game {
       opponentId: cfg.opponentId || roster.randomAny(cfg.playerId),
       playerCostume: cfg.playerCostume || 'default',
       opponentCostume: cfg.opponentCostume || 'default',
+      assistId: cfg.assistId || null,
       difficulty: cfg.difficulty,
       rounds: cfg.rounds,
       timer: cfg.timer,
@@ -189,6 +190,9 @@ export class Game {
     // so startMatch usually finds it already registered.
     assets.loadFighterArt(this.pendingMatch.playerId, this.pendingMatch.playerCostume);
     assets.loadFighterArt(this.pendingMatch.opponentId, this.pendingMatch.opponentCostume);
+    // The assist is drawn with its own sprite set, so its art has to be
+    // registered before the match builds it.
+    if (this.pendingMatch.assistId) assets.loadFighterArt(this.pendingMatch.assistId, 'default');
     this.stageScreen.render();
     screens.show('stage');
   }
@@ -541,6 +545,7 @@ export class Game {
     await Promise.all([
       assets.loadFighterArt(cfg.playerId, cfg.playerCostume),
       assets.loadFighterArt(cfg.opponentId, cfg.opponentCostume),
+      cfg.assistId ? assets.loadFighterArt(cfg.assistId, 'default') : Promise.resolve(),
     ]);
 
     const engine = new CombatEngine();
@@ -554,6 +559,7 @@ export class Game {
       timer: cfg.timer,
       playerCostume: cfg.playerCostume,
       opponentCostume: cfg.opponentCostume,
+      assistId: cfg.assistId || null,
       conditions: cfg.conditions,
       opponentHealthBonus: cfg.opponentHealthBonus,
       startHealth: cfg.startHealth,
@@ -625,6 +631,9 @@ export class Game {
   setupTouchLabels(fighter) {
     this.jutsuSlot = 0;
     this.refreshJutsuButton(fighter);
+    // The assist readout beside CHAKRA shows who is on call this match.
+    const assistId = this.engine?.assists.assistIdFor(fighter) || null;
+    this.touch.setAssist(assistId, assistId ? assets.portraitPath(assistId) : null);
   }
 
   /**
@@ -713,8 +722,15 @@ export class Game {
       if (check.ok) e.requestTransform(f);
       else { toast(check.reason); audio.play('sfx_ui_error', { volume: 0.6 }); }
     }
+    // A quick tap of CHAKRA calls the assist. They come in, act and leave —
+    // the player keeps control of their own fighter throughout.
     if (st.consume('assist')) {
-      if (!e.assists.call(f)) audio.play('sfx_ui_error', { volume: 0.5 });
+      if (e.assists.call(f, e.other(f))) {
+        audio.play('sfx_summon', { volume: 0.7 });
+      } else {
+        toast(e.assists.reason(f));
+        audio.play('sfx_ui_error', { volume: 0.5 });
+      }
     }
 
     // Attacks
@@ -834,14 +850,12 @@ export class Game {
     e.camera.applyTo(ctx);
     this.stageRenderer.draw(ctx, e.camera, frameDt);
 
-    // assists behind fighters
+    // Assists draw behind the fighters, with their own sprite set — the same
+    // renderer the roster uses, so a called assist looks like that character.
     for (const s of e.assists.live()) {
       ctx.save();
-      ctx.globalAlpha = 0.9;
-      ctx.fillStyle = s.assist.color;
-      ctx.beginPath();
-      ctx.ellipse(s.x, -(s.y + 60), 42 * s.assist.size, 56 * s.assist.size, 0, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.globalAlpha = Math.max(0, Math.min(1, s.alpha));
+      FighterRenderer.draw(ctx, s.partner, frameDt);
       ctx.restore();
     }
 
@@ -964,8 +978,17 @@ export class Game {
     this.touch.setReady('awaken', awakenReady);
     this.touch.setDisabled('awaken', !awakenReady);
 
-    // Chakra can only be gathered with both feet down and nothing in progress.
-    this.touch.setDisabled('chakra', f.airborne || f.state === 'attack' || f.chakra >= COMBAT.chakraMax);
+    // CHAKRA does two jobs, so it is only greyed out when neither is possible.
+    // A full chakra gauge no longer disables it: the tap still calls the assist.
+    this.touch.setDisabled('chakra', f.airborne || f.state === 'attack');
+
+    // The assist chip beside it carries the assist's own state.
+    this.touch.setAssistState({
+      ready: this.engine.assists.available(f),
+      cooldown: this.engine.assists.cooldownFor(f),
+      seconds: this.engine.assists.cooldownSeconds(f),
+      active: !!this.engine.assists.slotFor(f)?.active,
+    });
 
     void canSubstitute;
   }

@@ -26,7 +26,25 @@
   .menu__panel { width: min(250px, 32vw); }
   .select__grid { grid-template-columns: repeat(auto-fill, minmax(66px, 1fr)); gap: .28rem; }
   .fcard__name { font-size: .52rem; }
-  .select__body { grid-template-columns: minmax(78px, 13%) 1fr minmax(78px, 13%); }
+  .select__body {
+    grid-template-columns:
+      minmax(calc(84px + var(--sal)), 20%) 1fr minmax(calc(84px + var(--sar)), 20%);
+  }
+  /* Three stacked slots have to fit between header and footer, so the player
+     panel gets tighter rather than letting the assist slot scroll out of
+     sight: smaller preview, one-line name, and no archetype line (it is on
+     the roster card and in the detail sheet already). */
+  .select__panel { gap: .18rem; }
+  .select__portrait { max-width: 64px; }
+  .select__panel--p1 strong {
+    font-size: .68rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .select__panel--p1 #meta-p1 { display: none; }
+  #btn-costume { min-height: 26px; padding: .1rem .4rem; font-size: .6rem; }
   .list__body { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
   .setting { min-height: 46px; }
 }

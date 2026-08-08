@@ -36,6 +36,13 @@ const MIN_BUTTON = 44;
 const MAX_BUTTON = 92;
 
 /**
+ * How long CHAKRA must be held before it counts as a charge rather than a tap.
+ * Short enough that charging still feels immediate, long enough that a
+ * deliberate assist tap never crosses it.
+ */
+const HOLD_MS = 200;
+
+/**
  * Every control on screen.
  *
  * `dir` marks the four movement buttons: they feed the analogue axis instead of
@@ -51,7 +58,17 @@ const BUTTONS = [
 
   { id: 'jutsu', label: 'JUTSU', action: 'jutsu', theme: 'jutsu', icon: 'jutsu', caption: true },
   { id: 'guard', label: 'GUARD', action: 'guard', theme: 'guard', icon: 'guard', caption: true },
-  { id: 'chakra', label: 'CHAKRA', action: 'chakra', theme: 'chakra', icon: 'chakra', caption: true },
+  // Dual-function, so the assist needs no permanent circle of its own:
+  // a quick tap calls the assist, holding past the threshold charges chakra.
+  {
+    id: 'chakra',
+    label: 'CHAKRA',
+    theme: 'chakra',
+    icon: 'chakra',
+    caption: true,
+    tapAction: 'assist',
+    holdAction: 'chakra',
+  },
   { id: 'light', label: 'PUNCH', action: 'light', theme: 'punch', icon: 'punch', caption: true },
   { id: 'heavy', label: 'KICK', action: 'heavy', theme: 'kick', icon: 'kick', caption: true },
 
@@ -83,6 +100,7 @@ export class MobileControls {
     this.buttons = new Map();
     this.pointers = new Map();     // pointerId -> { id }
     this.held = new Set();         // currently held direction ids
+    this._taps = new Map();        // dual-function buttons mid press
     this.enabled = true;
     this.disabledActions = new Set();
     /** Tapped when the player wants a different jutsu slot. */
@@ -132,6 +150,20 @@ export class MobileControls {
     });
     this.el.appendChild(cyc);
     this.cycleEl = cyc;
+
+    // The assist indicator: a small portrait with a cooldown sweep, parked
+    // beside CHAKRA because that is the button that calls it. It is a readout,
+    // not a control — no sixth circle was added to the layout.
+    const assist = document.createElement('div');
+    assist.className = 'ctrl__assist';
+    assist.id = 'ctrl-assist';
+    assist.hidden = true;
+    assist.innerHTML =
+      '<img class="ctrl__assist-face" id="ctrl-assist-face" alt="" width="48" height="48">'
+      + '<span class="ctrl__assist-cd"></span>'
+      + '<span class="ctrl__assist-secs" id="ctrl-assist-secs"></span>';
+    this.el.appendChild(assist);
+    this.assistEl = assist;
 
     this.el.addEventListener('pointerdown', this._onDown, { passive: false });
     this.el.addEventListener('pointermove', this._onMove, { passive: false });
@@ -227,6 +259,7 @@ export class MobileControls {
     document.documentElement.style.setProperty('--ctrl-topright-w', `${Math.ceil(topRightReach)}px`);
 
     this._placeCycle();
+    this._placeAssist();
     this.el.dataset.hand = mirror ? 'left' : 'right';
     this.el.style.setProperty('--ctrl-opacity', String(settings.values.controlOpacity));
   }
@@ -262,6 +295,59 @@ export class MobileControls {
     if (seen.get(k) === value) return false;
     seen.set(k, value);
     return true;
+  }
+
+  /** Park the assist readout above the CHAKRA button that calls it. */
+  _placeAssist() {
+    const ch = this.buttons.get('chakra');
+    if (!this.assistEl || !ch || ch.hidden) return;
+    const size = Number.parseFloat(ch.style.width) || MIN_BUTTON;
+    const chip = Math.max(26, size * 0.62);
+    const cx = Number.parseFloat(ch.style.left) || 0;
+    const cy = Number.parseFloat(ch.style.top) || 0;
+    Object.assign(this.assistEl.style, {
+      width: `${chip}px`,
+      height: `${chip}px`,
+      left: `${cx}px`,
+      top: `${cy - size * 0.78}px`,
+      fontSize: `${Math.max(8, chip * 0.34)}px`,
+    });
+  }
+
+  /**
+   * Show which fighter is on assist duty. `null` hides the chip entirely —
+   * a loadout with no assist should not leave an empty frame on screen.
+   */
+  setAssist(fighterId, portraitSrc) {
+    if (!this.assistEl) return;
+    this.assistId = fighterId || null;
+    this.assistEl.hidden = !fighterId;
+    const img = this.assistEl.querySelector('.ctrl__assist-face');
+    if (!img) return;
+    if (!fighterId || !portraitSrc) { img.removeAttribute('src'); return; }
+    if (img.dataset.src === portraitSrc) return;
+    img.dataset.src = portraitSrc;
+    img.onerror = () => { img.removeAttribute('src'); };
+    img.src = portraitSrc;
+    this._placeAssist();
+  }
+
+  /** Ready ring, cooldown sweep, or dimmed — written only when it changes. */
+  setAssistState({ ready, cooldown, seconds, active }) {
+    const el = this.assistEl;
+    if (!el || el.hidden) return;
+    const cd = Math.round(Math.max(0, Math.min(1, cooldown || 0)) * 100) / 100;
+    if (this._changed('assist', 'cd', cd)) el.style.setProperty('--cd', `${cd}turn`);
+    if (this._changed('assist', 'ready', !!ready)) el.classList.toggle('is-ready', !!ready);
+    if (this._changed('assist', 'active', !!active)) el.classList.toggle('is-active', !!active);
+    if (this._changed('assist', 'dim', !ready && !active)) {
+      el.classList.toggle('is-dim', !ready && !active);
+    }
+    const secs = cd > 0 ? String(Math.ceil(seconds || 0)) : '';
+    if (this._changed('assist', 'secs', secs)) {
+      const n = el.querySelector('.ctrl__assist-secs');
+      if (n) n.textContent = secs;
+    }
   }
 
   /** Grey out an action (e.g. no transformation available yet). */
@@ -333,10 +419,48 @@ export class MobileControls {
       // UP is upward movement; in a side-view engine that is the jump.
       if (def.action) this.state.press(def.action);
       this._checkDoubleTap(id);
+    } else if (def.tapAction) {
+      this._startTapHold(id, def);
     } else if (def.action) {
       this.state.press(def.action);
     }
     settings.vibrate(id === 'ultimate' || id === 'awaken' ? 22 : 9);
+  }
+
+  /**
+   * Tap/hold split for the dual-function CHAKRA button.
+   *
+   * Nothing happens on the way down. The hold action starts only when the
+   * timer fires, and the tap action fires only if the finger lifts before it.
+   * That makes the two outcomes mutually exclusive by construction: a quick
+   * tap can never visibly start charging, and a long hold can never emit the
+   * tap afterwards.
+   */
+  _startTapHold(id, def) {
+    const rec = { def, holding: false, timer: 0 };
+    rec.timer = setTimeout(() => {
+      rec.holding = true;
+      this.buttons.get(id)?.classList.add('is-holding');
+      this.state.press(def.holdAction);
+    }, HOLD_MS);
+    this._taps.set(id, rec);
+  }
+
+  _endTapHold(id) {
+    const rec = this._taps.get(id);
+    if (!rec) return;
+    this._taps.delete(id);
+    clearTimeout(rec.timer);
+    this.buttons.get(id)?.classList.remove('is-holding');
+    if (rec.holding) {
+      // It was a charge; releasing stops it and never emits the tap.
+      this.state.release(rec.def.holdAction);
+      return;
+    }
+    // Released before the threshold: this was a tap.
+    this.state.press(rec.def.tapAction);
+    this.state.release(rec.def.tapAction);
+    settings.vibrate(14);
   }
 
   /**
@@ -364,6 +488,8 @@ export class MobileControls {
       this.held.delete(id);
       this._applyAxis();
       if (def.action) this.state.release(def.action);
+    } else if (def.tapAction) {
+      this._endTapHold(id);
     } else if (def.action) {
       this.state.release(def.action);
     }
@@ -427,6 +553,13 @@ export class MobileControls {
     for (const [, p] of this.pointers) this._release(p.id);
     this.pointers.clear();
     this.held.clear();
+    // A pending hold timer must not fire into a match that has moved on.
+    for (const [id, rec] of this._taps) {
+      clearTimeout(rec.timer);
+      this.buttons.get(id)?.classList.remove('is-holding');
+      if (rec.holding) this.state.release(rec.def.holdAction);
+    }
+    this._taps.clear();
     this.state.setAxis(0, 0);
   }
 

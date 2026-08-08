@@ -124,6 +124,15 @@
         <strong id="name-p1">—</strong>
         <span class="select__meta" id="meta-p1"></span>
         <button type="button" class="btn btn--ghost btn--tiny" id="btn-costume" hidden>Costume</button>
+
+        <!-- Assist slot: a second roster fighter, called briefly in battle.
+             Not a second player — see js/combat/assist-system.js. -->
+        <button type="button" class="assist-slot" id="btn-assist" aria-label="Choose your assist">
+          <span class="select__panel-label">Assist</span>
+          <span class="assist-slot__face"><img id="assist-portrait" alt="" width="48" height="48"></span>
+          <span class="assist-slot__name" id="assist-name">Choose</span>
+          <span class="assist-slot__move" id="assist-move"></span>
+        </button>
       </div>
 
       <div class="select__gridwrap">
@@ -167,6 +176,25 @@
         <div class="sheet__content">
           <h3 id="costume-title">Choose Costume</h3>
           <div class="costumes" id="costume-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assist picker: the same 110-fighter roster, minus your own fighter -->
+    <div class="sheet" id="assist-sheet" hidden>
+      <div class="sheet__scrim" data-action="close-assist"></div>
+      <div class="sheet__panel sheet__panel--wide" role="dialog" aria-modal="true" aria-labelledby="assist-title">
+        <button type="button" class="btn btn--icon sheet__close" data-action="close-assist" aria-label="Close">×</button>
+        <div class="sheet__content">
+          <h3 id="assist-title">Choose Assist</h3>
+          <p class="sheet__note">Called briefly in battle, then leaves. You keep control of your own fighter.</p>
+          <div class="select__search">
+            <input type="search" id="assist-search" placeholder="Search fighters" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Search assists">
+          </div>
+          <div class="assists" id="assist-list" role="listbox" aria-label="Assist roster"></div>
+        </div>
+        <div class="sheet__actions">
+          <button type="button" class="btn btn--ghost" id="btn-assist-none">No assist</button>
         </div>
       </div>
     </div>

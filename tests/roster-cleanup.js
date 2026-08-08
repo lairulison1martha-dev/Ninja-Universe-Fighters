@@ -28,6 +28,7 @@ const { CombatEngine } = await import('../js/combat/combat-engine.js');
 const { migrate, defaultSave } = await import('../js/save-manager.js');
 const { SIM_DT } = await import('../js/constants.js');
 const { levelForXp } = await import('../js/data/unlocks.js');
+const { SAVE_VERSION } = await import('../js/constants.js');
 
 /** The 110 the game is specified to have, by name. */
 const EXPECTED_NAMES = [
@@ -428,7 +429,7 @@ export function run() {
     };
     const s = migrate(structuredClone(legacy));
 
-    assertEqual(s.version, 5, 'save version');
+    assertEqual(s.version, SAVE_VERSION, 'save version');
     assertEqual(s.xp, 4200, 'xp survives');
     // `level` is derived from xp on load, so it is normalised rather than
     // carried across verbatim — that is the save manager's existing rule.
@@ -469,16 +470,24 @@ export function run() {
     for (const key of ['unlockedFighters', 'favorites', 'recent']) {
       assertEqual(new Set(s[key]).size, s[key].length, `${key} has duplicates`);
     }
+
+    // A save written before assists existed gains an empty loadout rather
+    // than having one guessed for it.
+    assert(s.loadout && typeof s.loadout === 'object', 'loadout container exists');
+    assertEqual(s.loadout.selectedAssistId, null, 'no assist is invented for an old save');
+    assertEqual(s.loadout.fighterId, null, 'no fighter is invented for an old save');
   });
 
   test('a fresh save is already on the current version', () => {
     const s = defaultSave();
-    assertEqual(s.version, 5, 'default save version');
+    assertEqual(s.version, SAVE_VERSION, 'default save version');
     assert(Array.isArray(s.unlockedFighters) && s.unlockedFighters.length > 0,
       'starters unlocked');
     const bad = s.unlockedFighters.filter((id) => !FIGHTERS[id]);
     assertEmpty(bad, 'Default save unlocks a fighter that does not exist');
     assert(s.costumes && typeof s.costumes === 'object', 'costume store exists');
+    assert(s.loadout && typeof s.loadout === 'object', 'loadout store exists');
+    assertEqual(s.loadout.selectedAssistId, null, 'a fresh save starts with no assist');
   });
 
   test('migrating twice is a no-op', () => {

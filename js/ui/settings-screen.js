@@ -226,7 +226,7 @@ export class SettingsScreen {
     const k = this._group('Keyboard (desktop testing)');
     const note = document.createElement('div');
     note.className = 'settings__note';
-    note.innerHTML = 'Move <b>WASD / arrows</b> · Punch <b>J</b> · Kick <b>K</b> · Jutsu <b>F</b> (or <b>U / I / Y</b> for a slot directly) · Ultimate <b>O</b> · Guard <b>L</b> · Chakra <b>C</b> · Substitution <b>;</b> · Awaken <b>P</b> · Assist <b>H</b> · Jump <b>Space</b> · Dash <b>Shift</b> · Pause <b>Esc</b>. Gamepads are polled with the standard mapping.';
+    note.innerHTML = 'Move <b>WASD / arrows</b> · Punch <b>J</b> · Kick <b>K</b> · Jutsu <b>F</b> (or <b>U / I / Y</b> for a slot directly) · Ultimate <b>O</b> · Guard <b>L</b> · Chakra <b>C</b> · Assist <b>H</b> · Substitution <b>;</b> · Awaken <b>P</b> · Jump <b>Space</b> · Dash <b>Shift</b> · Pause <b>Esc</b>. Gamepads are polled with the standard mapping.';
     k.appendChild(note);
   }
 

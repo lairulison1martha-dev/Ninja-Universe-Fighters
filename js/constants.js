@@ -10,7 +10,7 @@ export const APP_NAME = 'Ninja Universe Fighters';
 export const APP_SHORT_NAME = 'Ninja Fighters';
 
 /** Bump on every deploy. Also drives the service-worker cache name. */
-export const APP_VERSION = '0.10.0';
+export const APP_VERSION = '0.11.0';
 
 /** Storage keys (namespaced so we never collide with other projects). */
 export const STORAGE_PREFIX = 'nuf';
@@ -20,7 +20,7 @@ export const SAVE_SLOT_KEY = (slot) => `${STORAGE_PREFIX}.save.slot${slot}`;
 export const SAVE_SLOT_COUNT = 3;
 
 /** Save schema version. Migrations live in save-manager.js. */
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 
 /* -------------------------------------------------------------------------- */
 /* Combat tuning                                                              */

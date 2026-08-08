@@ -73,6 +73,20 @@ export function defaultSave() {
     /** { [fighterId]: costumeId } — what each fighter is currently wearing. */
     equippedCostumes: {},
 
+    /**
+     * The last loadout the player took into a match, so the select screen
+     * comes back the way they left it.
+     *
+     * `selectedAssistId` is the roster fighter called as the assist. `null`
+     * means they have not chosen one yet, or chose to fight without one —
+     * both are valid, and neither is guessed at on their behalf.
+     */
+    loadout: {
+      fighterId: null,
+      selectedAssistId: null,
+      opponentId: null,
+    },
+
     story: { completedChapters: [], completedNodes: {}, current: null },
     arcade: { cleared: {}, bestScore: {} },
     survival: { bestWave: 0, bestScore: 0, runs: 0 },
@@ -226,6 +240,19 @@ const MIGRATIONS = {
 
     return s;
   },
+  5: (s) => {
+    // v5 → v6: the player picks a roster fighter as their assist.
+    //
+    // A save written before assists existed has no preference to preserve, so
+    // the loadout starts empty rather than picking someone at random. Nothing
+    // else is touched: an old save keeps every unlock, costume and statistic.
+    s.loadout = {
+      fighterId: s.loadout?.fighterId ?? null,
+      selectedAssistId: s.loadout?.selectedAssistId ?? null,
+      opponentId: s.loadout?.opponentId ?? null,
+    };
+    return s;
+  },
 };
 
 /** Fill in any key added since the save was written, without touching existing values. */
@@ -234,7 +261,7 @@ function reconcile(save) {
   const out = { ...base, ...save };
 
   // Deep-merge the nested containers so new sub-keys appear but old values win.
-  for (const key of ['story', 'arcade', 'survival', 'tower', 'bossRush', 'training', 'stats']) {
+  for (const key of ['story', 'arcade', 'survival', 'tower', 'bossRush', 'training', 'stats', 'loadout']) {
     out[key] = { ...base[key], ...(save[key] || {}) };
   }
   out.mastery = save.mastery || {};
@@ -480,6 +507,43 @@ class SaveManager extends EventTarget {
       return (this.data.mastery?.[fighterId]?.level || 0) >= (rule.value || 0);
     }
     return false;
+  }
+
+  /* ------------------------------------------------------------ loadout -- */
+
+  /** The last fighter / assist / opponent the player took into a match. */
+  get loadout() {
+    const l = this.data.loadout || {};
+    return {
+      fighterId: l.fighterId ?? null,
+      selectedAssistId: l.selectedAssistId ?? null,
+      opponentId: l.opponentId ?? null,
+    };
+  }
+
+  /**
+   * Remember part or all of the loadout. Written on every match start, so
+   * coming back to the select screen restores what the player last used.
+   */
+  setLoadout(patch) {
+    this.update((d) => {
+      d.loadout = { ...(d.loadout || {}), ...patch };
+    });
+    return this.loadout;
+  }
+
+  /**
+   * The assist the player has chosen, or null.
+   *
+   * Validated on read: an assist that is no longer a real fighter, or that is
+   * the fighter you are about to play, is reported as none rather than taken
+   * into a match where it cannot be called.
+   */
+  selectedAssist(forFighterId = null) {
+    const id = this.data.loadout?.selectedAssistId || null;
+    if (!id) return null;
+    if (forFighterId && id === forFighterId) return null;
+    return id;
   }
 
   /** Mark a costume unlocked. Returns true when this call changed anything. */

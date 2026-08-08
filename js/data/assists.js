@@ -1,9 +1,15 @@
 /**
- * Assists and summons.
+ * Summon catalogue.
  *
- * An assist is a timed helper that performs one scripted behaviour then leaves.
- * combat/assist-system.js runs them; each has a real cooldown and a clear,
- * single behaviour so the player always knows what calling it will do.
+ * These are the named creatures and partners each fighter can summon — Akamaru,
+ * Gamabunta, Katsuyu, Susanoo's arm — referenced by `fighters[].assists` and
+ * shown in the collection.
+ *
+ * NOTE: this is no longer the assist *mechanic*. The player now picks a second
+ * roster fighter as their assist, defined in `js/data/fighter-assists.js` and
+ * run by `combat/assist-system.js`. This file is kept because the summon list
+ * is real per-fighter data that the roster and its tests still describe; it is
+ * not wired to the assist button.
  */
 
 export const ASSISTS = Object.create(null);

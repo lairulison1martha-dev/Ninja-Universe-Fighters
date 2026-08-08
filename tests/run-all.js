@@ -20,6 +20,7 @@ const SUITES = [
   './sprite-validation.js',
   './roster-cleanup.js',
   './costume-validation.js',
+  './assist-validation.js',
   './github-pages-paths.js',
   './data-integrity.js',
 ];

@@ -18,6 +18,7 @@ import { ProjectilePool } from './projectile.js';
 import { EffectPool } from './effect-pool.js';
 import { CameraController } from './camera-controller.js';
 import { AssistSystem } from './assist-system.js';
+import { canAssist } from '../data/fighter-assists.js';
 import { STATE, HIT_STATES } from './fighter-state.js';
 import { SCRATCH, overlaps } from './hitbox.js';
 import { canBlock, applyBlock } from './guard-system.js';
@@ -132,8 +133,10 @@ export class CombatEngine extends EventTarget {
     player.opponentHasStatus = (id) => enemy.statuses.some((s) => s.id === id);
     enemy.opponentHasStatus = (id) => player.statuses.some((s) => s.id === id);
 
-    this.assists.register(player);
-    this.assists.register(enemy);
+    // Only the human brings an assist. The AI opponent stays a single fighter
+    // until that is explicitly turned on.
+    this.assists.register(player, canAssist(cfg.playerId, cfg.assistId) ? cfg.assistId || null : null);
+    this.assists.register(enemy, null);
 
     const difficulty = cfg.difficulty || settings.values.defaultDifficulty;
     const ai = new AIController(enemy, difficulty);
@@ -493,15 +496,24 @@ export class CombatEngine extends EventTarget {
     }
   }
 
-  _applyAssistHit(owner, target, assist) {
+  /**
+   * An assist connecting. Damage is credited to the owner — the assist is
+   * their move, not a second combatant — and normal hitbox rules apply, so
+   * it can be substituted out of and it respects invulnerability.
+   */
+  _applyAssistHit(owner, target, ability) {
     if (target.invulnerable) return;
-    const dmg = assist.damage * owner.attackPower;
+    const dmg = ability.damage * owner.attackPower * 0.8;
     target.health = Math.max(0, target.health - dmg);
     target.stats.damageTaken += dmg;
-    target.vx += Math.sign(target.x - owner.x || 1) * assist.knockbackX;
-    target.setState(STATE.HITSTUN, assist.hitStun);
-    applyStatusEffects(owner, target, assist.statusEffects, { damage: dmg });
-    this.effects.emit(assist.effectId, target.x, target.y + 80, { scale: assist.size, color: assist.color });
+    owner.stats.damageDealt += dmg;
+    target.vx += Math.sign(target.x - owner.x || 1) * ability.knockbackX;
+    if (ability.knockbackY) target.vy += ability.knockbackY;
+    target.setState(STATE.HITSTUN, ability.hitStun);
+    applyStatusEffects(owner, target, ability.statusEffects, { damage: dmg });
+    this.effects.emit(ability.effectId, target.x, target.y + 80, {
+      scale: 1.1, color: owner.data.colors.aura,
+    });
     this.effects.number(target.x, target.y + 150, String(Math.round(dmg)), '#cfe8ff');
     this.playSound('sfx_hit_light', target);
   }

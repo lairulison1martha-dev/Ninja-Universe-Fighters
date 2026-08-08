@@ -163,7 +163,7 @@ Storage → **Clear site data**.
 | Story chapters | **10** (original campaign, "The Severed Accord") |
 | Challenge Tower floors | **100** |
 | Arcade ladders / Boss Rushes | 4 / 4 |
-| Assists and summons | 24 |
+| Assists | **110** — any roster fighter can be called as your assist |
 | Achievements | 31 |
 | Fighter sprite sets | **110** — one per fighter, 22 animations / 94 frames each |
 | Costume sprite sets | **75** — every costume has its own art |
@@ -248,6 +248,48 @@ Armour → Partial → Full Shukaku), Boruto and Kawaki (Karma chains), plus Obi
 Killer Bee, Minato, Hashirama, Itachi, Pain, Sakura, Tsunade, Kakashi, Jiraiya,
 Orochimaru, Momoshiki, Kabuto and Mitsuki.
 
+### Assists
+
+Before a match you pick a **second roster fighter as your assist**. Character
+select has three slots — **Your Fighter**, **Assist**, **AI Opponent** — and the
+assist picker offers the same 110 fighters, minus the one you are playing, since
+nobody can assist themselves. (Allowing duplicates is a flag on
+`canAssist()` / `eligibleAssists()`, off by default.) The assist may be the same
+character as the AI opponent; they are separate instances.
+
+This is still single-player PvE:
+
+```
+PLAYER: main fighter (you control)  +  assist (called, acts, leaves)
+AI:     one opponent
+```
+
+The assist is **not Player 2**. It is not in `engine.fighters`, has no
+controller, takes no hits and is not a target, so `assertPvE()` still counts
+exactly one human and one AI. It is on screen only during a call: it enters,
+performs one ability, and leaves.
+
+Every fighter has an `assist` record in `js/data/fighter-assists.js` —
+`abilityId`, `cooldown`, `duration`, `entryStyle`, `exitStyle`, `aiBehavior`
+and `chakraCost`. The ability is one the fighter already owns, so nothing is
+invented: Naruto's Rasengan, Sasuke's Chidori, Kakashi's Lightning Cutter,
+Lee's Leaf Hurricane, Guy's Dynamic Entry, Pain's Almighty Push, Bee's Lariat,
+Madara's Majestic Destroyer Flame, Minato's Flying Raijin, Hashirama's Wood
+Dragon, Gaara's Sand Tsunami, Jiraiya's Toad Oil Flame Bullet, and so on. The
+twenty hand-authored fighters name a signature technique each; the other ninety
+use their own archetype template ability, which is a prototype assist and is
+labelled as such in the data (`authored: false`).
+
+Cooldowns run 10–15 s, varying per fighter. An assist cannot be called while
+one is already out, while cooling down, without the chakra, or once the fighter
+is down — and the HUD says which of those it is.
+
+The assist draws with its **own sprite set and costume**, through the same
+renderer the roster uses. It plays `assistEntry` / `assistAttack` /
+`assistExit` where a sheet carries those clips and falls back to existing clips
+where it does not, so no fighter needs new art to be callable. It does not
+transform during its short appearance.
+
 ### AI
 
 Five difficulties (Easy → Legendary) and 20 named personalities plus archetype
@@ -272,6 +314,15 @@ launcher modifier while held.
 
 **Right thumb — five buttons**: **JUTSU** and **GUARD** on the upper row,
 **CHAKRA**, **PUNCH** and **KICK** below.
+
+**CHAKRA does two jobs**, so the assist needed no sixth circle: a **quick tap
+calls your assist**, and **holding past 200 ms charges chakra**. The two are
+mutually exclusive by construction — nothing happens on the way down, the
+charge starts only when the timer fires, and the tap fires only if the finger
+lifts before it. A quick tap can never visibly start charging, and a long hold
+can never emit the tap afterwards. A small **assist portrait sits above the
+CHAKRA button** with a cooldown sweep, a seconds countdown and a ready ring; it
+takes no pointer events, so it cannot be mistaken for a button.
 
 **Top-right corner, held apart from everything else**: **AWAKENING** and
 **ULTIMATE**, so a special can never be caught while reaching for Punch. Each
@@ -298,7 +349,8 @@ Contextual inputs, all reachable without extra buttons:
 - Hold **UP** + attack → launcher.
 - Double-tap **LEFT** or **RIGHT** → dash; attack during it → dash attack.
 - Tap **GUARD** while being hit → substitution, if a stock is available.
-- Hold **CHAKRA** (grounded, not mid-attack) → charge chakra.
+- Tap **CHAKRA** → call your assist; hold it (grounded, not mid-attack) → charge
+  chakra.
 - The chip on the **JUTSU** button steps through the fighter's jutsu; the
   caption names the one that will fire.
 
@@ -320,11 +372,11 @@ vibration, and reset to default.
 | Jutsu (selected slot) | `F` |
 | Jutsu 1 / 2 / 3 | `U` / `I` / `Y` |
 | Charge chakra | `C` |
+| Call assist | `H` |
 | Ultimate | `O` |
 | Guard | `L` |
 | Substitution | `;` |
 | Awaken | `P` |
-| Assist | `H` |
 | Jump / Dash | `Space` / `Shift` |
 | Pause | `Esc` |
 
