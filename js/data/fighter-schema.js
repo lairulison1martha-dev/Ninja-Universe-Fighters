@@ -145,7 +145,9 @@ export function defineFighter(id, displayName, o = {}) {
     abilities: kit.abilities,
     ultimate: kit.ultimate,
 
-    assists: o.assists || [],
+    /** Named creatures this fighter can summon — see js/data/summons.js.
+     *  NOT the selectable assist, which is any roster fighter. */
+    summons: o.summons || [],
     transformations: o.transformations || [],
 
     portrait: `assets/fighters/${id}/portrait.png`,

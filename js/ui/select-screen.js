@@ -718,7 +718,7 @@ export class SelectScreen {
             </div>`).join('')}
         </div>` : '<p class="small muted">No transformations.</p>'}
 
-      ${info.assists.length ? `<h4>Assists</h4><div class="movelist">${info.assists.map((a) => `
+      ${info.summons.length ? `<h4>Summons</h4><div class="movelist">${info.summons.map((a) => `
         <div class="move"><div class="move__top"><strong>${a.displayName}</strong><span>${a.cooldown}s · ${a.chakraCost} ck</span></div>
         <div class="move__desc">${a.description}</div></div>`).join('')}</div>` : ''}
 

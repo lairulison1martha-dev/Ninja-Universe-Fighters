@@ -1,5 +1,5 @@
 /**
- * Cross-cutting data integrity: stages, story, arcade, tower, assists,
+ * Cross-cutting data integrity: stages, story, arcade, tower, summons,
  * achievements and the full validator.
  */
 
@@ -8,7 +8,7 @@ import validateAll from '../js/data-validator.js';
 import { STAGES, STAGE_ORDER } from '../js/data/stages.js';
 import { STORY } from '../js/data/story.js';
 import { ARCADE_LADDERS, BOSS_RUSHES, TOWER_FLOORS, CONDITIONS } from '../js/data/arcade.js';
-import { ASSISTS } from '../js/data/assists.js';
+import { SUMMONS } from '../js/data/summons.js';
 import { ACHIEVEMENTS } from '../js/data/achievements.js';
 import { AI_PROFILES } from '../js/data/ai-profiles.js';
 import { FIGHTERS, FIGHTER_ORDER } from '../js/data/fighters.js';
@@ -143,9 +143,9 @@ export function run() {
     assertEmpty(bad, 'Boss rush rosters');
   });
 
-  test('assists have a behaviour, a cooldown and a cost', () => {
+  test('summons have a behaviour, a cooldown and a cost', () => {
     const bad = [];
-    for (const [id, a] of Object.entries(ASSISTS)) {
+    for (const [id, a] of Object.entries(SUMMONS)) {
       if (!a.behaviour) bad.push(`${id}: no behaviour`);
       if (!(a.cooldown > 0)) bad.push(`${id}: cooldown ${a.cooldown}`);
       if (!(a.chakraCost > 0)) bad.push(`${id}: cost ${a.chakraCost}`);

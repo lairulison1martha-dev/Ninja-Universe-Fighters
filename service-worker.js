@@ -11,7 +11,7 @@
  * such as /Ninja-Universe-Fighters/.
  */
 
-const CACHE_VERSION = 'v0.11.0';
+const CACHE_VERSION = 'v0.11.1';
 const CACHE_NAME = `nuf-${CACHE_VERSION}`;
 
 /** Resolve relative to the worker's own scope, never to the domain root. */
@@ -92,7 +92,7 @@ const PRECACHE = [
   './js/data/fighter-schema.js',
   './js/data/fighters.js',
   './js/data/transformations.js',
-  './js/data/assists.js',
+  './js/data/summons.js',
   './js/data/stages.js',
   './js/data/story.js',
   './js/data/arcade.js',

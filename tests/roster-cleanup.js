@@ -143,9 +143,9 @@ export function run() {
   test('Akamaru is not a fighter but is still in Kiba\'s kit', () => {
     assert(!FIGHTERS.akamaru, 'Akamaru must not be selectable');
     const kiba = FIGHTERS.kiba;
-    const mentionsAkamaru = (kiba.assists || []).some((a) => /akamaru/i.test(a))
+    const mentionsAkamaru = (kiba.summons || []).some((a) => /akamaru/i.test(a))
       || /akamaru/i.test(kiba.description || '');
-    assert(mentionsAkamaru, 'Akamaru should survive as one of Kiba\'s assists');
+    assert(mentionsAkamaru, 'Akamaru should survive as one of Kiba\'s summons');
   });
 
   test('tailed beasts survive as transformations, not as roster cards', () => {

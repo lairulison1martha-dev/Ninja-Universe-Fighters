@@ -39,7 +39,7 @@ complete('naruto', 'Naruto Uzumaki', {
   description: 'Relentless clone pressure and the Rasengan. Forgiving on the ground, and his transformation chain is the deepest in the game.',
   passiveAbilities: ['Kurama Reserve — regenerates 30% more chakra below half health.'],
   transformations: TF.NARUTO_CHAIN,
-  assists: ['assist_gamakichi', 'assist_shadow_clones'],
+  summons: ['summon_gamakichi', 'summon_shadow_clones'],
   aiProfile: 'naruto',
   unlockRequirement: { type: 'default' },
   stats: { health: 1080, chakra: 118, attack: 102, defense: 100, speed: 104, chakraControl: 96, guard: 100, substitution: 104, awakeningRate: 118 },
@@ -55,7 +55,7 @@ complete('sasuke', 'Sasuke Uchiha', {
   description: 'Blade poke into Chidori. Excellent mid-range mix-ups and the only fighter with a position swap.',
   passiveAbilities: ['Sharingan Read — guard meter recovers 25% faster.'],
   transformations: TF.SASUKE_CHAIN,
-  assists: ['assist_aoda', 'assist_taka'],
+  summons: ['summon_aoda', 'summon_taka'],
   aiProfile: 'sasuke',
   unlockRequirement: { type: 'default' },
   stats: { health: 1000, chakra: 112, attack: 106, defense: 98, speed: 108, chakraControl: 110, guard: 104, substitution: 106, awakeningRate: 108 },
@@ -71,7 +71,7 @@ complete('sakura', 'Sakura Haruno', {
   description: 'Slow but colossal single hits, terrain smashes and the only reliable self-heal among the starters.',
   passiveAbilities: ['Medical Training — healing effects on Sakura are 20% stronger.'],
   transformations: TF.SAKURA_CHAIN,
-  assists: ['assist_katsuyu'],
+  summons: ['summon_katsuyu'],
   aiProfile: 'sakura',
   unlockRequirement: { type: 'default' },
   stats: { health: 1100, chakra: 106, attack: 118, defense: 108, speed: 92, chakraControl: 116, guard: 106, substitution: 96, awakeningRate: 100 },
@@ -87,7 +87,7 @@ complete('kakashi', 'Kakashi Hatake', {
   description: 'A toolkit fighter with an answer to everything: hounds to pin, a water dragon to zone, and Kamui to phase straight through your punish.',
   passiveAbilities: ['Copy Ninja — cooldowns tick 15% faster while guarding.'],
   transformations: TF.KAKASHI_CHAIN,
-  assists: ['assist_ninja_hounds'],
+  summons: ['summon_ninja_hounds'],
   aiProfile: 'kakashi',
   unlockRequirement: { type: 'default' },
   stats: { health: 1000, chakra: 110, attack: 102, defense: 104, speed: 106, chakraControl: 116, guard: 114, substitution: 112, awakeningRate: 100 },
@@ -103,7 +103,7 @@ complete('lee', 'Rock Lee', {
   description: 'Zero projectiles, zero excuses. Lee has the fastest normals in the game and six gates of escalating self-harm.',
   passiveAbilities: ['Taijutsu Specialist — cannot use ranged jutsu, but all melee damage is +8%.'],
   transformations: TF.LEE_CHAIN,
-  assists: ['assist_guy'],
+  summons: ['summon_guy'],
   aiProfile: 'lee',
   unlockRequirement: { type: 'default' },
   stats: { health: 990, chakra: 78, attack: 108, defense: 94, speed: 124, chakraControl: 60, guard: 96, substitution: 108, awakeningRate: 120 },
@@ -119,7 +119,7 @@ complete('gaara', 'Gaara', {
   description: 'Controls the whole arena with sand and blocks automatically. Terrible dash game — if you get opened up, you stay opened up.',
   passiveAbilities: ['Automatic Defence — the first hit of any combo does 30% less damage.'],
   transformations: TF.GAARA_CHAIN,
-  assists: ['assist_temari'],
+  summons: ['summon_temari'],
   aiProfile: 'gaara',
   unlockRequirement: { type: 'default' },
   stats: { health: 1050, chakra: 116, attack: 96, defense: 120, speed: 86, chakraControl: 118, guard: 126, substitution: 92, awakeningRate: 98 },
@@ -135,7 +135,7 @@ complete('itachi', 'Itachi Uchiha', {
   description: 'Built entirely around counters, clones and unblockable genjutsu. Punishing to play, devastating when read correctly.',
   passiveAbilities: ['Deception — successful counters restore 12 chakra.'],
   transformations: TF.ITACHI_CHAIN,
-  assists: ['assist_kisame'],
+  summons: ['summon_kisame'],
   aiProfile: 'itachi',
   unlockRequirement: { type: 'story', value: 'chapter_3' },
   stats: { health: 940, chakra: 118, attack: 104, defense: 96, speed: 110, chakraControl: 124, guard: 110, substitution: 118, awakeningRate: 104 },
@@ -151,7 +151,7 @@ complete('pain', 'Pain', {
   description: 'Owns the space you want to stand in. Almighty Push clears the screen, Universal Pull drags you back, and jumping is a mistake.',
   passiveAbilities: ['Six Paths Vision — projectiles gain 15% extra tracking.'],
   transformations: TF.PAIN_CHAIN,
-  assists: ['assist_konan'],
+  summons: ['summon_konan'],
   aiProfile: 'pain',
   unlockRequirement: { type: 'story', value: 'chapter_4' },
   stats: { health: 1000, chakra: 122, attack: 100, defense: 102, speed: 92, chakraControl: 126, guard: 108, substitution: 96, awakeningRate: 100 },
@@ -167,7 +167,7 @@ complete('madara', 'Madara Uchiha', {
   description: 'Six transformation stages, armour on nearly everything, and enormous reach. The game\'s benchmark boss character.',
   passiveAbilities: ['Uchiha Pride — awakening builds 25% faster while below 50% health.'],
   transformations: TF.MADARA_CHAIN,
-  assists: ['assist_susanoo'],
+  summons: ['summon_susanoo'],
   aiProfile: 'madara',
   unlockRequirement: { type: 'story', value: 'chapter_6' },
   stats: { health: 1080, chakra: 118, attack: 110, defense: 108, speed: 100, chakraControl: 114, guard: 112, substitution: 96, awakeningRate: 130 },
@@ -183,7 +183,7 @@ complete('boruto', 'Boruto Uzumaki', {
   description: 'The fastest ultimate start-up in the roster, an invisible Rasengan and the quickest projectile in the game.',
   passiveAbilities: ['Jougan Flicker — dashes have 4 extra invulnerable frames.'],
   transformations: TF.BORUTO_CHAIN,
-  assists: ['assist_sarada', 'assist_mitsuki'],
+  summons: ['summon_sarada', 'summon_mitsuki'],
   aiProfile: 'boruto',
   unlockRequirement: { type: 'default' },
   stats: { health: 950, chakra: 108, attack: 98, defense: 92, speed: 120, chakraControl: 108, guard: 96, substitution: 110, awakeningRate: 114 },
@@ -199,7 +199,7 @@ complete('kawaki', 'Kawaki', {
   description: 'Body-modification bruiser. Long blade pokes, armoured pistons and the best absorb window in the game.',
   passiveAbilities: ['Vessel Body — absorbing a jutsu refunds 1.4× its chakra cost.'],
   transformations: TF.KAWAKI_CHAIN,
-  assists: ['assist_delta'],
+  summons: ['summon_delta'],
   aiProfile: 'kawaki',
   unlockRequirement: { type: 'story', value: 'chapter_7' },
   stats: { health: 1090, chakra: 96, attack: 114, defense: 110, speed: 96, chakraControl: 92, guard: 110, substitution: 92, awakeningRate: 112 },
@@ -215,7 +215,7 @@ complete('momoshiki', 'Momoshiki Otsutsuki', {
   description: 'Absorbs your jutsu and gives it back amplified. Playing ranged against him is a losing plan.',
   passiveAbilities: ['Rinnegan Palms — a stored jutsu boosts the next ranged attack by 40%.'],
   transformations: TF.MOMOSHIKI_CHAIN,
-  assists: ['assist_kinshiki'],
+  summons: ['summon_kinshiki'],
   aiProfile: 'momoshiki',
   unlockRequirement: { type: 'arcade', value: 1 },
   stats: { health: 1020, chakra: 126, attack: 106, defense: 104, speed: 104, chakraControl: 128, guard: 110, substitution: 100, awakeningRate: 106 },
@@ -231,7 +231,7 @@ complete('minato', 'Minato Namikaze', {
   description: 'Mark them, then teleport on top of them. The fastest movement in the roster and a counter for almost anything.',
   passiveAbilities: ['Yellow Flash — dash start-up is 2 frames faster than anyone else.'],
   transformations: TF.MINATO_CHAIN,
-  assists: ['assist_gamabunta'],
+  summons: ['summon_gamabunta'],
   aiProfile: 'minato',
   unlockRequirement: { type: 'level', value: 8 },
   stats: { health: 970, chakra: 114, attack: 102, defense: 96, speed: 126, chakraControl: 120, guard: 102, substitution: 116, awakeningRate: 104 },
@@ -247,7 +247,7 @@ complete('hashirama', 'Hashirama Senju', {
   description: 'Reshapes the arena with wood and outlasts anyone. The best sustain and the largest area attacks in the game.',
   passiveAbilities: ['Senju Vitality — regenerates 4 health per second at all times.'],
   transformations: TF.HASHIRAMA_CHAIN,
-  assists: ['assist_wood_clone'],
+  summons: ['summon_wood_clone'],
   aiProfile: 'hashirama',
   unlockRequirement: { type: 'level', value: 12 },
   stats: { health: 1140, chakra: 124, attack: 104, defense: 118, speed: 92, chakraControl: 122, guard: 118, substitution: 94, awakeningRate: 100 },
@@ -263,7 +263,7 @@ complete('guy', 'Might Guy', {
   description: 'Eight gates. Every one past the third costs health, and the eighth may well kill you — but Night Guy hits harder than anything else in the game.',
   passiveAbilities: ['Gate Discipline — health drain from gates is 20% lower than Lee\'s.'],
   transformations: TF.GUY_CHAIN,
-  assists: ['assist_lee'],
+  summons: ['summon_lee'],
   aiProfile: 'guy',
   unlockRequirement: { type: 'level', value: 6 },
   stats: { health: 1060, chakra: 82, attack: 114, defense: 100, speed: 118, chakraControl: 62, guard: 102, substitution: 104, awakeningRate: 124 },
@@ -279,7 +279,7 @@ complete('bee', 'Killer Bee', {
   description: 'Seven swords held in places swords should not be held. Unpredictable multi-hit strings that are very hard to guard on reaction.',
   passiveAbilities: ['Acrobat Stance — multi-hit strings do 10% less guard damage but 15% more on hit.'],
   transformations: TF.BEE_CHAIN,
-  assists: ['assist_gyuki'],
+  summons: ['summon_gyuki'],
   aiProfile: 'bee',
   unlockRequirement: { type: 'level', value: 10 },
   stats: { health: 1070, chakra: 104, attack: 108, defense: 106, speed: 108, chakraControl: 98, guard: 104, substitution: 100, awakeningRate: 112 },
@@ -295,7 +295,7 @@ complete('obito', 'Obito Uchiha', {
   description: 'The longest intangibility window in the game. Phase through the punish, hook them back with rods, repeat.',
   passiveAbilities: ['Intangible — the first 4 frames of every dash are invulnerable.'],
   transformations: TF.OBITO_CHAIN,
-  assists: ['assist_zetsu'],
+  summons: ['summon_zetsu'],
   aiProfile: 'obito',
   unlockRequirement: { type: 'story', value: 'chapter_8' },
   stats: { health: 1010, chakra: 116, attack: 104, defense: 100, speed: 110, chakraControl: 118, guard: 106, substitution: 120, awakeningRate: 108 },
@@ -311,7 +311,7 @@ complete('jiraiya', 'Jiraiya', {
   description: 'Traps and terrain first, sage brawling second. The Swamp slows you to a crawl and Frog Song is unblockable across the whole arena.',
   passiveAbilities: ['Toad Sage — status effects Jiraiya applies last 25% longer.'],
   transformations: TF.JIRAIYA_CHAIN,
-  assists: ['assist_gamabunta'],
+  summons: ['summon_gamabunta'],
   aiProfile: 'jiraiya',
   unlockRequirement: { type: 'level', value: 4 },
   stats: { health: 1060, chakra: 118, attack: 102, defense: 106, speed: 94, chakraControl: 118, guard: 108, substitution: 98, awakeningRate: 100 },
@@ -327,7 +327,7 @@ complete('orochimaru', 'Orochimaru', {
   description: 'Poison chip, the strongest armour buff in the game, and a full heal that clears every debuff. Very hard to actually finish off.',
   passiveAbilities: ['Immortality — the first time Orochimaru would drop below 1 health each round, he survives at 1.'],
   transformations: TF.OROCHIMARU_CHAIN,
-  assists: ['assist_manda'],
+  summons: ['summon_manda'],
   aiProfile: 'orochimaru',
   unlockRequirement: { type: 'level', value: 9 },
   stats: { health: 1060, chakra: 120, attack: 100, defense: 116, speed: 100, chakraControl: 124, guard: 118, substitution: 112, awakeningRate: 98 },
@@ -343,7 +343,7 @@ complete('tsunade', 'Tsunade', {
   description: 'The heaviest hitter in the roster with the strongest sustained heal. Slow — every whiff is a full punish.',
   passiveAbilities: ['Hundred Strength — critical hits (heavy attacks on a launched opponent) do +25%.'],
   transformations: TF.TSUNADE_CHAIN,
-  assists: ['assist_katsuyu'],
+  summons: ['summon_katsuyu'],
   aiProfile: 'tsunade',
   unlockRequirement: { type: 'level', value: 7 },
   stats: { health: 1150, chakra: 110, attack: 122, defense: 112, speed: 86, chakraControl: 120, guard: 108, substitution: 92, awakeningRate: 98 },
@@ -371,7 +371,7 @@ function proto(id, name, c) {
     description: c.desc || '',
     passiveAbilities: c.passive ? [c.passive] : [],
     transformations: forms,
-    assists: c.assists || [],
+    summons: c.summons || [],
     aiProfile: c.ai || c.a,
     unlockRequirement: c.unlock || { type: 'level', value: 2 },
     stats: c.stats,
@@ -389,7 +389,7 @@ proto('yamato', 'Yamato', { e: 'shippuden', v: 'leaf', o: 'anbu', a: 'defensive'
 proto('shikamaru', 'Shikamaru Nara', { e: 'shippuden', v: 'leaf', c: 'nara', a: 'zoning', d: 4, n: ['yin'], ai: 'trapper', desc: 'Shadow traps and setups.', tags: ['nara', 'strategist'] });
 proto('choji', 'Choji Akimichi', { e: 'shippuden', v: 'leaf', c: 'akimichi', a: 'grappler', d: 2, n: ['earth', 'yang'], ai: 'bruiser', desc: 'Expansion jutsu and rolling pressure.', tags: ['akimichi'] });
 proto('ino', 'Ino Yamanaka', { e: 'shippuden', v: 'leaf', c: 'yamanaka', a: 'support', d: 3, n: ['yin'], ai: 'zoner', desc: 'Mind transfer disruption.', tags: ['yamanaka'] });
-proto('kiba', 'Kiba Inuzuka', { e: 'shippuden', v: 'leaf', c: 'inuzuka', a: 'rushdown', d: 2, n: ['none'], ai: 'rusher', assists: ['assist_akamaru'], desc: 'Fang Over Fang with Akamaru.', tags: ['inuzuka'] });
+proto('kiba', 'Kiba Inuzuka', { e: 'shippuden', v: 'leaf', c: 'inuzuka', a: 'rushdown', d: 2, n: ['none'], ai: 'rusher', summons: ['summon_akamaru'], desc: 'Fang Over Fang with Akamaru.', tags: ['inuzuka'] });
 proto('hinata', 'Hinata Hyuga', { e: 'shippuden', v: 'leaf', c: 'hyuga', a: 'counter', d: 3, n: ['none'], ai: 'counter', desc: 'Gentle Fist chakra denial.', tags: ['hyuga', 'byakugan'] });
 proto('neji', 'Neji Hyuga', { e: 'shippuden', v: 'leaf', c: 'hyuga', a: 'counter', d: 4, n: ['none'], ai: 'counter', desc: 'Eight Trigrams rotation and palm strings.', tags: ['hyuga', 'byakugan'] });
 proto('tenten', 'Tenten', { e: 'shippuden', v: 'leaf', o: 'team-guy', a: 'weapon', d: 3, n: ['none'], ai: 'zoner', desc: 'Scroll-summoned weapon barrages.', tags: ['weapons'] });
@@ -402,7 +402,7 @@ proto('ebisu', 'Ebisu', { e: 'classic', v: 'leaf', a: 'support', d: 1, n: ['eart
 
 /* --- Hokage and Leaf legends ---------------------------------------------- */
 proto('tobirama', 'Tobirama Senju', { e: 'ancient', v: 'leaf', c: 'senju', a: 'ranged', d: 4, n: ['water', 'lightning', 'yin', 'yang'], rank: 'kage', ai: 'zoner', unlock: { type: 'level', value: 11 }, desc: 'Water walls, flying-raijin markers and reanimation.', tags: ['hokage', 'senju', 'legend'] });
-proto('hiruzen', 'Hiruzen Sarutobi', { e: 'classic', v: 'leaf', c: 'sarutobi', a: 'summoner', d: 4, n: ['fire', 'wind', 'lightning', 'earth', 'water', 'yin', 'yang'], rank: 'kage', unlock: { type: 'level', value: 10 }, desc: 'The Professor. Every nature, plus Enma.', assists: ['assist_enma'], tags: ['hokage', 'legend'] });
+proto('hiruzen', 'Hiruzen Sarutobi', { e: 'classic', v: 'leaf', c: 'sarutobi', a: 'summoner', d: 4, n: ['fire', 'wind', 'lightning', 'earth', 'water', 'yin', 'yang'], rank: 'kage', unlock: { type: 'level', value: 10 }, desc: 'The Professor. Every nature, plus Enma.', summons: ['summon_enma'], tags: ['hokage', 'legend'] });
 proto('shisui', 'Shisui Uchiha', { e: 'classic', v: 'leaf', c: 'uchiha', a: 'rushdown', d: 4, n: ['fire', 'lightning', 'yin'], unlock: { type: 'level', value: 13 }, desc: 'Body-flicker rushdown and Kotoamatsukami.', tags: ['uchiha', 'sharingan'] });
 proto('fugaku', 'Fugaku Uchiha', { e: 'classic', v: 'leaf', c: 'uchiha', a: 'balanced', d: 3, n: ['fire', 'yin'], desc: 'Uchiha clan head.', tags: ['uchiha'] });
 proto('izuna', 'Izuna Uchiha', { e: 'ancient', v: 'leaf', c: 'uchiha', a: 'weapon', d: 4, n: ['fire', 'yin'], unlock: { type: 'level', value: 14 }, desc: 'Madara\'s brother. Blade-first Sharingan duellist.', tags: ['uchiha', 'ancient'] });
@@ -454,7 +454,7 @@ proto('onoki', 'Onoki', { e: 'shippuden', v: 'stone', a: 'ranged', d: 4, n: ['du
 proto('kurotsuchi', 'Kurotsuchi', { e: 'boruto', v: 'stone', a: 'ranged', d: 3, n: ['lava', 'earth', 'water'], rank: 'kage', desc: 'Fourth Tsuchikage. Quicklime and lava.', tags: ['kage', 'stone'] });
 
 /* --- Sand ------------------------------------------------------------------ */
-proto('temari', 'Temari', { e: 'shippuden', v: 'sand', a: 'zoning', d: 2, n: ['wind'], unlock: { type: 'default' }, desc: 'Giant fan wind walls. Excellent starter zoner.', assists: ['assist_kamatari'], tags: ['sand', 'starter'] });
+proto('temari', 'Temari', { e: 'shippuden', v: 'sand', a: 'zoning', d: 2, n: ['wind'], unlock: { type: 'default' }, desc: 'Giant fan wind walls. Excellent starter zoner.', summons: ['summon_kamatari'], tags: ['sand', 'starter'] });
 proto('kankuro', 'Kankuro', { e: 'shippuden', v: 'sand', a: 'puppet', d: 3, n: ['none'], desc: 'Three puppets, all poisoned.', tags: ['sand', 'puppet'] });
 proto('chiyo', 'Chiyo', { e: 'shippuden', v: 'sand', a: 'puppet', d: 4, n: ['none'], desc: 'Ten-puppet control and the transmutation seal.', tags: ['sand', 'puppet', 'elder'] });
 

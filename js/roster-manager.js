@@ -6,7 +6,7 @@
 import { FIGHTERS, FIGHTER_ORDER } from './data/fighters.js';
 import { getAbility } from './data/abilities.js';
 import { TRANSFORMATIONS } from './data/transformations.js';
-import { getAssist } from './data/assists.js';
+import { getSummon } from './data/summons.js';
 import saveManager from './save-manager.js';
 import unlocks from './unlock-manager.js';
 import { ERA_LABELS, PLAYABLE_STATUS } from './constants.js';
@@ -195,7 +195,7 @@ class RosterManager {
       jutsu: d.abilities.map(resolve).filter(Boolean),
       ultimate: resolve(d.ultimate),
       transformations: chain,
-      assists: d.assists.map((aid) => getAssist(aid)).filter(Boolean),
+      summons: (d.summons || []).map((sid) => getSummon(sid)).filter(Boolean),
     };
   }
 

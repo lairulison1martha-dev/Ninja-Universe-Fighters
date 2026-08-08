@@ -12,7 +12,7 @@ const REQUIRED = [
   'rank', 'archetype', 'description', 'difficulty', 'playableStatus',
   'unlockRequirement', 'baseStats', 'chakraNatures', 'passiveAbilities',
   'basicCombos', 'airCombos', 'dashAttack', 'throwAttack', 'guardCounter',
-  'abilities', 'ultimate', 'assists', 'transformations', 'portrait',
+  'abilities', 'ultimate', 'summons', 'transformations', 'portrait',
   'spriteSet', 'audioSet', 'aiProfile', 'colors', 'tags',
 ];
 

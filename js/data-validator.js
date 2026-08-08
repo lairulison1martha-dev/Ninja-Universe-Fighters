@@ -12,7 +12,7 @@
 import { FIGHTERS, FIGHTER_ORDER } from './data/fighters.js';
 import { ABILITIES } from './data/abilities.js';
 import { TRANSFORMATIONS } from './data/transformations.js';
-import { ASSISTS } from './data/assists.js';
+import { SUMMONS } from './data/summons.js';
 import { STAGES } from './data/stages.js';
 import { AI_PROFILES } from './data/ai-profiles.js';
 import { STORY } from './data/story.js';
@@ -88,9 +88,9 @@ export function validateAll({ strict = false } = {}) {
       }
     }
 
-    // assists
-    for (const aid of f.assists) {
-      if (!ASSISTS[aid]) err(`Fighter ${id}: references missing assist "${aid}"`);
+    // summons
+    for (const aid of f.summons) {
+      if (!SUMMONS[aid]) err(`Fighter ${id}: references missing summon "${aid}"`);
     }
 
     // unlocks
@@ -204,7 +204,7 @@ export function validateAll({ strict = false } = {}) {
     abilities: Object.keys(ABILITIES).length,
     signatureAbilities: Object.values(ABILITIES).filter((a) => !a.prototype).length,
     transformations: Object.keys(TRANSFORMATIONS).length,
-    assists: Object.keys(ASSISTS).length,
+    summons: Object.keys(SUMMONS).length,
     stages: Object.keys(STAGES).length,
     chapters: STORY.chapters.length,
     towerFloors: TOWER_FLOORS.length,

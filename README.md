@@ -164,6 +164,7 @@ Storage → **Clear site data**.
 | Challenge Tower floors | **100** |
 | Arcade ladders / Boss Rushes | 4 / 4 |
 | Assists | **110** — any roster fighter can be called as your assist |
+| Summons | 24 named creatures, listed per fighter (not the assist system) |
 | Achievements | 31 |
 | Fighter sprite sets | **110** — one per fighter, 22 animations / 94 frames each |
 | Costume sprite sets | **75** — every costume has its own art |
@@ -222,7 +223,7 @@ Movement, running, dash, back dash, air dash, jump, double jump, guard, guard
 meter, guard damage, guard break, substitution (with stocks and chakra cost),
 light and heavy chains, launchers, air combos, dash attacks, throws, guard
 counters, two jutsu slots, ultimates with cut-ins, in-battle transformations,
-assists, knockback, hit stun, block stun, hit stop, invulnerability frames,
+assist calls, knockback, hit stun, block stun, hit stop, invulnerability frames,
 armour, wall bounce, ground bounce, knockdown and wake-up invulnerability,
 combo counter, damage scaling, hit-stun decay, a hard combo cap, chakra
 regeneration and charging, cooldowns, round timer, multiple rounds, slow-motion
@@ -268,6 +269,11 @@ The assist is **not Player 2**. It is not in `engine.fighters`, has no
 controller, takes no hits and is not a target, so `assertPvE()` still counts
 exactly one human and one AI. It is on screen only during a call: it enters,
 performs one ability, and leaves.
+
+Do not confuse this with **summons** (`js/data/summons.js`): Akamaru,
+Gamabunta, Katsuyu and the rest are descriptive roster data listed on the
+fighter detail sheet under `fighters[].summons`. They are not wired to the
+CHAKRA button and are not the selectable assist.
 
 Every fighter has an `assist` record in `js/data/fighter-assists.js` —
 `abilityId`, `cooldown`, `duration`, `entryStyle`, `exitStyle`, `aiBehavior`
@@ -414,7 +420,8 @@ Gamepads are polled with the standard mapping.
 │   │                           transformation/assist systems, AI, training,
 │   │                           stage + fighter renderers, sprite animator
 │   ├── data/                   fighters, roster-migration, costumes, abilities,
-│   │                           transformations, assists, stages, story, arcade,
+│   │                           transformations, fighter-assists (the selectable
+│   │                           assist), summons, stages, story, arcade,
 │   │                           achievements, unlocks, ai-profiles
 │   └── ui/                     menu, select, stage, list, settings, layout
 │                               editor, HUD, overlays
@@ -648,7 +655,6 @@ any other project.
 - **The game is deliberately single-player.** Every match is one human against
   one AI, asserted at match setup by `CombatEngine.assertPvE()`. There is no
   second human controller, no local versus, and no networking of any kind.
-- Assists render as a coloured silhouette rather than a distinct summon design.
 
 ---
 
