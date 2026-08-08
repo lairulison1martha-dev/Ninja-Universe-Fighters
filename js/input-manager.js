@@ -12,8 +12,8 @@
 import { COMBAT } from './constants.js';
 
 export const ACTIONS = [
-  'light', 'heavy', 'jutsu1', 'jutsu2', 'jutsu3', 'ultimate',
-  'guard', 'substitution', 'awaken', 'assist',
+  'light', 'heavy', 'jutsu', 'jutsu1', 'jutsu2', 'jutsu3', 'ultimate',
+  'guard', 'chakra', 'substitution', 'awaken', 'assist',
   'jump', 'dash', 'pause',
 ];
 
@@ -21,7 +21,7 @@ const KEY_MAP = {
   KeyJ: 'light', KeyK: 'heavy', KeyU: 'jutsu1', KeyI: 'jutsu2', KeyY: 'jutsu3',
   KeyO: 'ultimate', KeyL: 'guard', Semicolon: 'substitution',
   KeyP: 'awaken', KeyH: 'assist', Space: 'jump', ShiftLeft: 'dash',
-  ShiftRight: 'dash', Escape: 'pause',
+  ShiftRight: 'dash', Escape: 'pause', KeyF: 'jutsu', KeyC: 'chakra',
 };
 const AXIS_KEYS = {
   ArrowLeft: [-1, 0], KeyA: [-1, 0],

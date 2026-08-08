@@ -61,32 +61,28 @@ export class LayoutEditor {
 
   /** Push the working copy into the DOM without touching saved settings. */
   _applyLocal() {
-    const r = this.stage.getBoundingClientRect();
-    const w = r.width;
-    const h = r.height;
+    const safe = this.controls.safeRect();
     const scale = settings.values.controlScale;
     const mirror = settings.values.leftHanded;
-    const mx = (x) => (mirror ? 1 - x : x);
-
-    const stick = this.controls.stick;
-    const s = this.layout.stick;
-    const size = Math.max(80, s.size * h * scale);
-    Object.assign(stick.style, {
-      width: `${size}px`, height: `${size}px`,
-      left: `${mx(s.x) * w}px`, top: `${s.y * h}px`,
-    });
-    stick.classList.remove('is-floating');
 
     for (const [id, el] of this.controls.buttons) {
       const b = this.layout.buttons[id];
-      if (!b) continue;
-      const bs = Math.max(42, b.size * h * scale);
+      if (!b) { el.hidden = true; continue; }
+      el.hidden = false;
+      const bs = Math.min(92, Math.max(44, b.size * safe.h * scale));
+      const half = bs / 2;
+      let anchor = b.anchor || 'left';
+      if (mirror) anchor = anchor === 'left' ? 'right' : 'left';
+      const off = b.dx * safe.h;
+      const cx = anchor === 'left' ? safe.x + off : safe.right - off;
       Object.assign(el.style, {
         width: `${bs}px`, height: `${bs}px`,
-        left: `${mx(b.x) * w}px`, top: `${b.y * h}px`,
-        fontSize: `${Math.max(9, bs * 0.24)}px`,
+        left: `${Math.max(safe.x + half, Math.min(safe.right - half, cx))}px`,
+        top: `${Math.max(safe.y + half, Math.min(safe.bottom - half, safe.y + b.y * safe.h))}px`,
+        fontSize: `${Math.max(8, bs * 0.2)}px`,
       });
     }
+    this.controls._placeCycle();
   }
 
   _hit(x, y) {
@@ -98,10 +94,11 @@ export class LayoutEditor {
       return null;
     };
     for (const [id, el] of this.controls.buttons) {
+      if (el.hidden) continue;
       const h = check(el, id);
       if (h) return h;
     }
-    return check(this.controls.stick, 'stick');
+    return null;
   }
 
   _down = (e) => {
@@ -125,17 +122,22 @@ export class LayoutEditor {
     if (!this.dragging || e.pointerId !== this.dragging.pointerId) return;
     e.preventDefault();
     const r = this.stage.getBoundingClientRect();
+    const safe = this.controls.safeRect();
     const mirror = settings.values.leftHanded;
-    let nx = (e.clientX - this.dragging.dx - r.left) / r.width;
-    const ny = (e.clientY - this.dragging.dy - r.top) / r.height;
-    if (mirror) nx = 1 - nx;
+    const target = this.layout.buttons[this.dragging.key];
+    if (!target) return;
 
-    const clamp = (v) => Math.max(0.05, Math.min(0.95, v));
-    const target = this.dragging.key === 'stick'
-      ? this.layout.stick
-      : this.layout.buttons[this.dragging.key];
-    target.x = clamp(nx);
-    target.y = clamp(ny);
+    // Positions are stored as an offset from an anchored edge in height units,
+    // so convert the drop point back into that space rather than into raw
+    // fractions of the viewport.
+    const px = e.clientX - this.dragging.dx - r.left;
+    const py = e.clientY - this.dragging.dy - r.top;
+    let anchor = target.anchor || 'left';
+    if (mirror) anchor = anchor === 'left' ? 'right' : 'left';
+    const off = anchor === 'left' ? px - safe.x : safe.right - px;
+
+    target.dx = Math.max(0.06, Math.min((safe.w / safe.h) - 0.06, off / safe.h));
+    target.y = Math.max(0.06, Math.min(0.94, (py - safe.y) / safe.h));
     this._applyLocal();
   };
 

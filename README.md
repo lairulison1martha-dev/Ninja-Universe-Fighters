@@ -263,32 +263,63 @@ input buffer. A test asserts this by scanning the controller's source.
 
 ### Touch (primary)
 
-Left thumb: virtual joystick (fixed or floating), **JUMP**, **DASH**.
-Right thumb: **A** (light), **B** (heavy), **J1** / **J2** / **J3** (jutsu), **ULT**,
-**GRD** (guard), **SUB** (substitution), **AWK** (awaken/transform), **AST**
-(assist).
+An arcade layout, built for a phone held in landscape.
 
-Multi-touch is handled with pointer IDs, so moving while attacking and guarding
-at the same time works properly. Presses are buffered for ~0.22 s so a tap made
-slightly early during recovery still comes out.
+**Left thumb — four directional buttons**, not a joystick: **UP**, **DOWN**,
+**LEFT**, **RIGHT** in a cross. There is no Jump button: UP *is* upward
+movement, which in a side-view fighter means the jump, and it doubles as the
+launcher modifier while held.
 
-Contextual inputs:
-- Hold **toward the opponent** + **B** at close range → throw.
-- Hold **up** + attack → launcher.
-- Attack during a dash → dash attack.
-- Hold **GRD** + **down** → charge chakra.
+**Right thumb — five buttons**: **JUTSU** and **GUARD** on the upper row,
+**CHAKRA**, **PUNCH** and **KICK** below.
+
+**Top-right corner, held apart from everything else**: **AWAKENING** and
+**ULTIMATE**, so a special can never be caught while reaching for Punch. Each
+shows its state honestly — a pulsing ring when it can fire, a cooldown sweep
+while it recharges, and dimmed and *unpressable* when the requirement is not
+met. A dimmed button does not register the touch at all, so it cannot be
+activated early.
+
+The HUD's fighter plate reads from the fighter actually in the match: portrait,
+name, a large green health bar and the chakra bar under it, all following the
+selected character and the costume they are wearing. The middle of the screen
+is left clear.
+
+Multi-touch is handled with pointer IDs — one pointer owns one button — so
+holding RIGHT while tapping PUNCH, or LEFT while holding GUARD, works properly
+and releasing one finger never drops another. Presses are buffered for ~0.22 s
+so a tap made slightly early during recovery still comes out. The control layer
+sets `touch-action: none` and cancels its pointer events, which stops scrolling,
+pull-to-refresh, double-tap zoom, text selection and long-press menus inside
+combat without affecting navigation anywhere else.
+
+Contextual inputs, all reachable without extra buttons:
+- Hold **toward the opponent** + **KICK** at close range → throw.
+- Hold **UP** + attack → launcher.
+- Double-tap **LEFT** or **RIGHT** → dash; attack during it → dash attack.
+- Tap **GUARD** while being hit → substitution, if a stock is available.
+- Hold **CHAKRA** (grounded, not mid-attack) → charge chakra.
+- The chip on the **JUTSU** button steps through the fighter's jutsu; the
+  caption names the one that will fire.
+
+Buttons are laid out inside the safe-area insets and clamped there, so nothing
+reaches the notch, the Dynamic Island or the home indicator. Sizes scale with
+viewport height between a 44 px minimum and a cap, so they stay thumb-sized on a
+small phone without bloating on a large one.
 
 Everything is customisable in Settings → Controls: size, opacity, per-button
-placement (drag-and-drop editor), fixed vs floating joystick, dead zone,
-sensitivity, left-handed mirroring, vibration, and reset to default.
+placement (drag-and-drop editor), touch sensitivity, left-handed mirroring,
+vibration, and reset to default.
 
 ### Keyboard (desktop testing)
 
 | Action | Key |
 |---|---|
 | Move | `WASD` / arrows |
-| Light / Heavy | `J` / `K` |
+| Punch / Kick | `J` / `K` |
+| Jutsu (selected slot) | `F` |
 | Jutsu 1 / 2 / 3 | `U` / `I` / `Y` |
+| Charge chakra | `C` |
 | Ultimate | `O` |
 | Guard | `L` |
 | Substitution | `;` |

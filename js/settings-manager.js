@@ -9,23 +9,45 @@
 import saveManager from './save-manager.js';
 import { QUALITY_TUNING, FPS_TARGETS, LANGUAGES } from './constants.js';
 
-/** Normalised default control layout (0..1 of the viewport). */
+/**
+ * Bump when the control set itself changes shape. A stored layout from an
+ * older version is replaced rather than merged: merging would keep stale
+ * coordinates for buttons that still exist by name (guard, ultimate…) and
+ * scatter the new cluster. Only the layout is reset — the rest of the save is
+ * untouched.
+ */
+export const LAYOUT_VERSION = 2;
+
+/**
+ * Default control layout.
+ *
+ * `y` and `size` are fractions of the SAFE RECT's height. `dx` is an offset
+ * from the anchored edge measured in those same height units, so each cluster
+ * holds its shape on any aspect ratio instead of stretching across the screen.
+ */
 export function defaultLayout() {
+  const MOVE = 0.150;   // the four directional buttons
+  const ACT = 0.160;    // punch / kick / guard / jutsu / chakra
+  const SPECIAL = 0.150; // awakening / ultimate
   return {
-    stick: { x: 0.135, y: 0.735, size: 0.30 },   // size is a fraction of viewport height
+    v: LAYOUT_VERSION,
     buttons: {
-      jump:         { x: 0.300, y: 0.640, size: 0.155 },
-      dash:         { x: 0.285, y: 0.860, size: 0.155 },
-      light:        { x: 0.845, y: 0.800, size: 0.175 },
-      heavy:        { x: 0.925, y: 0.620, size: 0.175 },
-      jutsu1:       { x: 0.740, y: 0.860, size: 0.150 },
-      jutsu2:       { x: 0.700, y: 0.660, size: 0.150 },
-      jutsu3:       { x: 0.598, y: 0.470, size: 0.140 },
-      guard:        { x: 0.640, y: 0.870, size: 0.165 },
-      substitution: { x: 0.585, y: 0.680, size: 0.140 },
-      ultimate:     { x: 0.945, y: 0.400, size: 0.160 },
-      awaken:       { x: 0.828, y: 0.400, size: 0.145 },
-      assist:       { x: 0.712, y: 0.420, size: 0.130 },
+      // Left: a four-way cross, centred at dx 0.300 / y 0.760.
+      up:       { anchor: 'left', dx: 0.300, y: 0.603, size: MOVE },
+      left:     { anchor: 'left', dx: 0.143, y: 0.760, size: MOVE },
+      right:    { anchor: 'left', dx: 0.458, y: 0.760, size: MOVE },
+      down:     { anchor: 'left', dx: 0.300, y: 0.918, size: MOVE },
+
+      // Right: jutsu / guard above, chakra / punch / kick below.
+      jutsu:    { anchor: 'right', dx: 0.303, y: 0.608, size: ACT },
+      guard:    { anchor: 'right', dx: 0.135, y: 0.608, size: ACT },
+      chakra:   { anchor: 'right', dx: 0.471, y: 0.800, size: ACT },
+      light:    { anchor: 'right', dx: 0.303, y: 0.800, size: ACT },
+      heavy:    { anchor: 'right', dx: 0.135, y: 0.800, size: ACT },
+
+      // Top-right corner, deliberately far from the attack cluster.
+      awaken:   { anchor: 'right', dx: 0.345, y: 0.115, size: SPECIAL },
+      ultimate: { anchor: 'right', dx: 0.125, y: 0.115, size: SPECIAL },
     },
   };
 }
@@ -53,9 +75,6 @@ export function defaultSettings() {
     layout: defaultLayout(),
     controlOpacity: 0.82,
     controlScale: 1.0,
-    joystickMode: 'fixed',  // fixed | floating
-    joystickDeadzone: 0.16,
-    joystickSensitivity: 1.0,
     touchSensitivity: 1.0,
     vibration: true,
     leftHanded: false,
@@ -87,10 +106,11 @@ class SettingsManager extends EventTarget {
     if (stored && typeof stored === 'object') {
       this.values = { ...base, ...stored };
       // nested objects need their own merge so new keys appear
-      this.values.layout = {
-        stick: { ...base.layout.stick, ...(stored.layout?.stick || {}) },
-        buttons: { ...base.layout.buttons, ...(stored.layout?.buttons || {}) },
-      };
+      // A layout from an older control set is discarded, not merged: its
+      // coordinates describe buttons that no longer exist in those places.
+      this.values.layout = stored.layout?.v === LAYOUT_VERSION
+        ? { v: LAYOUT_VERSION, buttons: { ...base.layout.buttons, ...(stored.layout.buttons || {}) } }
+        : base.layout;
     } else {
       this.values = base;
       // Respect the OS preference the first time only.

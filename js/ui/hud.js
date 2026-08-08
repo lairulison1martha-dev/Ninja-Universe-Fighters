@@ -25,6 +25,7 @@ export class HUD {
     };
     this.sides = [1, 2].map((n) => ({
       name: $(`hud-name-p${n}`),
+      portrait: $(`hud-portrait-p${n}`),
       health: $(`hud-health-p${n}`),
       healthLag: $(`hud-healthlag-p${n}`),
       chakra: $(`hud-chakra-p${n}`),
@@ -39,11 +40,35 @@ export class HUD {
     this.lastCombo = -1;
   }
 
+  /**
+   * The name and face on the bar are whoever is actually in the match — read
+   * off the fighter the engine is running, never a fixed id — and they follow
+   * the costume that fighter is wearing, so a costume with its own art shows
+   * its own face.
+   */
+  setFighter(i, fighter) {
+    const s = this.sides[i];
+    if (!s) return;
+    s.name.textContent = (fighter.name || '').toUpperCase();
+    const img = s.portrait;
+    if (!img) return;
+    const setId = fighter.costumeSetId || fighter.data.id;
+    const dir = setId.includes('__')
+      ? `assets/fighters/${setId.split('__')[0]}/costumes/${setId.split('__')[1]}`
+      : `assets/fighters/${setId}`;
+    const src = `./${dir}/portrait.png`;
+    if (img.dataset.src === src) return;
+    img.dataset.src = src;
+    // A missing portrait must not leave a broken-image icon over the fight.
+    img.onerror = () => { img.removeAttribute('src'); img.dataset.src = ''; };
+    img.src = src;
+  }
+
   bind(engine) {
     this.engine = engine;
     const [a, b] = engine.fighters;
-    this.sides[0].name.textContent = a.name;
-    this.sides[1].name.textContent = b.name;
+    this.setFighter(0, a);
+    this.setFighter(1, b);
     this.cache = [{}, {}];
     this.lastTimer = -1;
     this.lastCombo = -1;

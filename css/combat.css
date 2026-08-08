@@ -25,8 +25,14 @@
 
 .hud__top {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: .6rem;
+  /* Two fighter bars with a gap wide enough for the pause button and the
+     round/timer stack, which are centred on the SCREEN rather than on this
+     grid — the right column is inset by the specials, so a middle grid track
+     would not sit under the pause button. */
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(76px, 22vh, 104px);
+  /* Symmetric padding keeps the two columns centred on the SCREEN, so the gap
+     always sits under the pause button. */
   padding-left: var(--sal);
   padding-right: var(--sar);
   align-items: start;
@@ -34,21 +40,97 @@
 
 .hud__side { display: flex; flex-direction: column; gap: .18rem; min-width: 0; }
 .hud__side--p2 { align-items: flex-end; }
+/* The Awakening / Ultimate pair owns the top-right corner; the controls
+   publish how much room they take so the opponent's bar never slides under
+   them on any screen size. */
+.hud__side--p2 { padding-right: var(--ctrl-topright-w, 0px); }
 .hud__side--p2 .bar i { transform-origin: right center; left: auto; right: 0; }
 .hud__side--p2 .bar b { transform-origin: right center; left: auto; right: 0; }
 .hud__side .bar { width: 100%; }
 
+/* ---------------------------------------------------- fighter name plate --
+ * Angular arcade frame: a pixel portrait beside a stack of skewed meters.
+ * The cut corners come from clip-path rather than images so they stay sharp
+ * at any size and cost nothing to load. */
+.fbar {
+  display: flex;
+  align-items: stretch;
+  gap: .34rem;
+  width: 100%;
+  min-width: 0;
+}
+.fbar__portrait {
+  flex: 0 0 auto;
+  width: clamp(34px, 11.5vh, 56px);
+  height: clamp(34px, 11.5vh, 56px);
+  background: linear-gradient(160deg, #1b2438, #070b14);
+  border: 2px solid var(--gold);
+  box-shadow: 0 3px 10px rgba(0,0,0,.65), inset 0 0 0 1px rgba(0,0,0,.8);
+  overflow: hidden;
+}
+.fbar__portrait img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+.fbar__stack {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
+}
+
 .hud__name {
-  font-size: clamp(.62rem, 1.9vh, .8rem);
-  font-weight: 800;
-  letter-spacing: .06em;
+  align-self: flex-start;
+  padding: 1px .5rem 1px .34rem;
+  font-size: clamp(.6rem, 1.8vh, .78rem);
+  font-weight: 900;
+  letter-spacing: .1em;
   text-transform: uppercase;
-  text-shadow: 0 2px 6px #000;
+  color: #fff;
+  background: rgba(6,10,20,.86);
+  border-left: 3px solid var(--gold);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+  text-shadow: 0 2px 4px #000;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
 }
+.hud__side--p2 .hud__name {
+  align-self: flex-end;
+  border-left: 0;
+  border-right: 3px solid var(--gold);
+  padding: 1px .34rem 1px .5rem;
+  clip-path: polygon(7px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Angular meters. Health is the big green bar; chakra sits under it; guard is
+   a hairline so the mechanic stays visible without crowding the frame. */
+.hud__side .bar {
+  border-radius: 0;
+  border: 2px solid rgba(0,0,0,.85);
+  background: rgba(4,7,14,.8);
+  box-shadow: 0 2px 6px rgba(0,0,0,.55);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+}
+.hud__side--p2 .bar { clip-path: polygon(9px 0, 100% 0, 100% 100%, 0 100%); }
+.hud__side .bar i, .hud__side .bar b { border-radius: 0; }
+.hud__side .bar--health { height: clamp(11px, 3.4vh, 17px); }
+.hud__side .bar--health i {
+  background: linear-gradient(180deg, #b6ff5a 0%, #62d61e 52%, #2f9410 100%);
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.35);
+}
+.hud__side .bar--chakra { height: clamp(6px, 1.9vh, 10px); }
+.hud__side .bar--chakra i {
+  background: linear-gradient(180deg, #ffd0d8, #ff7f95 60%, #d33a58);
+}
+.hud__side .bar--guard { height: 3px; }
+.hud__side .bar--guard i { background: linear-gradient(90deg, #8fefc0, #4ad991); }
 
 .hud__meters {
   display: flex;
@@ -71,16 +153,36 @@
   min-height: .9em;
 }
 
-.hud__centre { display: flex; flex-direction: column; align-items: center; }
+/* Round and timer sit UNDER the pause button, which owns the very top middle.
+ * Centred on the screen, not on the grid, so they always line up with it. */
+.hud__centre {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(var(--sat) + clamp(30px, 10vh, 44px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 .hud__timer {
-  font-size: clamp(1.3rem, 5vh, 2.1rem);
-  font-weight: 800;
+  font-size: clamp(1.2rem, 4.4vh, 1.9rem);
+  font-weight: 900;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  text-shadow: 0 3px 10px #000;
+  color: #ff3b30;
+  -webkit-text-stroke: 1px rgba(6,10,26,.9);
+  text-shadow: 0 3px 0 rgba(4,8,20,.85), 0 0 12px rgba(255,59,48,.5);
 }
-.hud__timer.is-low { color: var(--danger); animation: timer-pulse .9s infinite; }
-.hud__round { font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-dim); }
+.hud__timer.is-low { animation: timer-pulse .9s infinite; }
+.hud__round {
+  font-size: clamp(.58rem, 1.9vh, .72rem);
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #47d64a;
+  text-shadow: 0 2px 0 rgba(4,8,20,.85);
+}
 
 @keyframes timer-pulse { 0%,100% { opacity: 1 } 50% { opacity: .55 } }
 
@@ -95,8 +197,15 @@
   animation: pop 180ms var(--ease);
 }
 .hud__combo[hidden] { display: none; }
-.hud__combo b { font-size: clamp(1.6rem, 6vh, 2.6rem); font-weight: 900; color: var(--gold); line-height: 1; }
-.hud__combo span { font-size: .7rem; font-weight: 800; letter-spacing: .16em; color: var(--ink-dim); }
+/* Slanted arcade lettering, in the same visual language as the reference. */
+.hud__combo b, .hud__combo span {
+  font-style: italic;
+  color: #4f7dff;
+  -webkit-text-stroke: 1px rgba(6,10,26,.9);
+  text-shadow: 0 3px 0 rgba(4,8,20,.8), 0 0 14px rgba(79,125,255,.55);
+}
+.hud__combo b { font-size: clamp(1.6rem, 6vh, 2.6rem); font-weight: 900; line-height: 1; }
+.hud__combo span { font-size: clamp(.8rem, 2.6vh, 1.15rem); font-weight: 900; letter-spacing: .06em; }
 .hud__combo em { display: block; width: 100%; font-style: normal; font-size: .7rem; color: var(--ink-dim); }
 
 .hud__announce {

@@ -42,7 +42,7 @@ import {
 import { FIGHTERS, ROSTER_SIZE } from './data/fighters.js';
 import { STAGES } from './data/stages.js';
 import { getChapter } from './data/story.js';
-import { APP_VERSION, DIFFICULTY_LABELS } from './constants.js';
+import { APP_VERSION, DIFFICULTY_LABELS, COMBAT } from './constants.js';
 import { labelize } from './roster-manager.js';
 
 const $ = (id) => document.getElementById(id);
@@ -60,6 +60,8 @@ export class Game {
     this.pendingMatch = null;
     this.flow = null;     // { kind, data } for story/arcade/survival/tower
     this.dpr = 1;
+    /** Which jutsu slot the single touch JUTSU button fires. */
+    this.jutsuSlot = 0;
   }
 
   /* ----------------------------------------------------------------- init */
@@ -78,6 +80,7 @@ export class Game {
     this.layoutEditor = new LayoutEditor(() => screens.back());
 
     this.touch.build();
+    this.touch.onCycleJutsu = () => this.cycleJutsuSlot();
     this.touch.hide();
 
     screens.addEventListener('show', (e) => this.onScreenShown(e.detail));
@@ -95,7 +98,7 @@ export class Game {
     settings.addEventListener('change', (e) => {
       const key = e.detail?.key;
       if (key === 'controlScale' || key === 'leftHanded' || key === 'controlOpacity'
-        || key === 'joystickMode' || key === 'layout') {
+        || key === 'layout') {
         this.touch.layout();
       }
       if (key === 'quality') {
@@ -620,13 +623,38 @@ export class Game {
   }
 
   setupTouchLabels(fighter) {
-    const slots = fighter.abilities.slots;
-    this.touch.setLabel('jutsu1', Game.abbreviate(slots[0]?.displayName, 'J1'));
-    this.touch.setLabel('jutsu2', Game.abbreviate(slots[1]?.displayName, 'J2'));
-    this.touch.setLabel('jutsu3', Game.abbreviate(slots[2]?.displayName, 'J3'));
-    this.touch.setDisabled('jutsu2', !slots[1]);
-    this.touch.setDisabled('jutsu3', !slots[2]);
-    this.touch.setDisabled('assist', fighter.data.assists.length === 0);
+    this.jutsuSlot = 0;
+    this.refreshJutsuButton(fighter);
+  }
+
+  /**
+   * The touch HUD carries one JUTSU button, so its caption names the slot it
+   * will fire and the chip beside it steps to the next one. A fighter with a
+   * single jutsu never sees the chip.
+   */
+  refreshJutsuButton(fighter) {
+    const slots = (fighter || this.engine?.player)?.abilities.slots || [];
+    const usable = slots.filter(Boolean);
+    if (this.jutsuSlot >= slots.length || !slots[this.jutsuSlot]) this.jutsuSlot = 0;
+    const a = slots[this.jutsuSlot];
+    // With one jutsu the caption is simply JUTSU, as designed. With more than
+    // one it names the selected technique, so the cycle chip beside it means
+    // something rather than changing an unlabelled thing.
+    this.touch.setLabel('jutsu', usable.length > 1 ? Game.abbreviate(a?.displayName, 'JUTSU') : 'JUTSU');
+    this.touch.setDisabled('jutsu', !a);
+    if (this.touch.cycleEl) this.touch.cycleEl.hidden = usable.length < 2;
+  }
+
+  /** Step the touch JUTSU button to the fighter's next available slot. */
+  cycleJutsuSlot() {
+    const slots = this.engine?.player?.abilities.slots || [];
+    if (slots.filter(Boolean).length < 2) return;
+    for (let i = 1; i <= slots.length; i++) {
+      const next = (this.jutsuSlot + i) % slots.length;
+      if (slots[next]) { this.jutsuSlot = next; break; }
+    }
+    this.refreshJutsuButton();
+    audio.play('sfx_ui_move', { volume: 0.4 });
   }
 
   /* ---------------------------------------------------------- simulation -- */
@@ -674,6 +702,12 @@ export class Game {
       if (canSubstitute(f)) e.requestSubstitution(f);
       else audio.play('sfx_ui_error', { volume: 0.5 });
     }
+    // The touch HUD has no Substitution button. Tapping GUARD while being hit
+    // spends a stock instead — the escape input every fighting game already
+    // trains, so the mechanic survives the smaller button set.
+    if (f.state === 'hitstun' && st.consume('guard') && canSubstitute(f)) {
+      e.requestSubstitution(f);
+    }
     if (st.consume('awaken')) {
       const check = canTransform(f);
       if (check.ok) e.requestTransform(f);
@@ -689,14 +723,18 @@ export class Game {
     if (st.consume('jutsu1')) this.useSlot(f, 0);
     if (st.consume('jutsu2')) this.useSlot(f, 1);
     if (st.consume('jutsu3')) this.useSlot(f, 2);
+    // The touch HUD has one JUTSU button; it fires whichever slot is selected.
+    if (st.consume('jutsu')) this.useSlot(f, this.jutsuSlot);
     if (st.consume('ultimate')) {
       const ult = f.abilities.ultimate;
       if (ult && f.use(ult)) e.onUltimateStarted(f, ult);
       else audio.play('sfx_ui_error', { volume: 0.5 });
     }
 
-    // Chakra charge: hold guard + down with no other input.
-    f.charging = f.guardHeld && ay > 0.6;
+    // Chakra charge: the dedicated CHAKRA button, or the original
+    // guard-and-crouch hold, which keyboard and gamepad players still use.
+    f.charging = (st.isHeld('chakra') || (f.guardHeld && ay > 0.6))
+      && !f.airborne && f.state !== 'attack';
   }
 
   attack(f, kind, ax, ay) {
@@ -903,18 +941,33 @@ export class Game {
     if (this.training) this.hud.setTraining(this.training.readout(input.p1));
   }
 
+  /**
+   * Keep every button honest about what it can do right now: ready ring,
+   * cooldown sweep, or dimmed and unpressable. A control that looks live but
+   * refuses is worse than one that says up front it is not available, so the
+   * disabled state here is the same check `readInput` makes.
+   */
   updateTouchFeedback() {
     const f = this.engine?.player;
     if (!f) return;
-    const slots = f.abilities.slots;
-    this.touch.setCooldown('jutsu1', f.cooldownFrac(slots[0]));
-    this.touch.setCooldown('jutsu2', f.cooldownFrac(slots[1]));
-    this.touch.setCooldown('jutsu3', f.cooldownFrac(slots[2]));
-    this.touch.setCooldown('ultimate', f.cooldownFrac(f.abilities.ultimate));
-    this.touch.setReady('ultimate', !!f.abilities.ultimate && f.canUse(f.abilities.ultimate).ok);
-    this.touch.setReady('awaken', canTransform(f).ok);
-    this.touch.setReady('substitution', canSubstitute(f));
-    this.touch.setCooldown('assist', this.engine.assists.cooldownFor(f));
+    const slot = f.abilities.slots[this.jutsuSlot];
+    this.touch.setCooldown('jutsu', f.cooldownFrac(slot));
+    this.touch.setDisabled('jutsu', !slot);
+
+    const ult = f.abilities.ultimate;
+    const ultReady = !!ult && f.canUse(ult).ok;
+    this.touch.setCooldown('ultimate', f.cooldownFrac(ult));
+    this.touch.setReady('ultimate', ultReady);
+    this.touch.setDisabled('ultimate', !ultReady);
+
+    const awakenReady = canTransform(f).ok;
+    this.touch.setReady('awaken', awakenReady);
+    this.touch.setDisabled('awaken', !awakenReady);
+
+    // Chakra can only be gathered with both feet down and nothing in progress.
+    this.touch.setDisabled('chakra', f.airborne || f.state === 'attack' || f.chakra >= COMBAT.chakraMax);
+
+    void canSubstitute;
   }
 
   /* ------------------------------------------------------------- pausing -- */

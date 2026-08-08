@@ -216,18 +216,17 @@ export class SettingsScreen {
       }
     });
 
-    const j = this._group('Joystick');
-    this._segmented(j, 'Joystick mode', 'Floating places the stick wherever you touch.', 'joystickMode', [
-      { value: 'fixed', label: 'Fixed' }, { value: 'floating', label: 'Floating' },
-    ]);
-    this._slider(j, 'Sensitivity', '', 'joystickSensitivity', { min: 0.5, max: 2, step: 0.05, format: (v) => `${v.toFixed(2)}×` });
-    this._slider(j, 'Dead zone', 'How far you must move before the fighter walks.', 'joystickDeadzone', { min: 0.02, max: 0.4, step: 0.02 });
+    const j = this._group('Movement');
+    const mnote = document.createElement('div');
+    mnote.className = 'settings__note';
+    mnote.innerHTML = 'Movement is four directional buttons. <b>Up</b> jumps, <b>Down</b> crouches, and holding a direction while attacking still changes the move that comes out.';
+    j.appendChild(mnote);
     this._slider(j, 'Touch sensitivity', '', 'touchSensitivity', { min: 0.5, max: 2, step: 0.05, format: (v) => `${v.toFixed(2)}×` });
 
     const k = this._group('Keyboard (desktop testing)');
     const note = document.createElement('div');
     note.className = 'settings__note';
-    note.innerHTML = 'Move <b>WASD / arrows</b> · Light <b>J</b> · Heavy <b>K</b> · Jutsu <b>U / I / Y</b> · Ultimate <b>O</b> · Guard <b>L</b> · Substitution <b>;</b> · Awaken <b>P</b> · Assist <b>H</b> · Jump <b>Space</b> · Dash <b>Shift</b> · Pause <b>Esc</b>. Gamepads are polled with the standard mapping.';
+    note.innerHTML = 'Move <b>WASD / arrows</b> · Punch <b>J</b> · Kick <b>K</b> · Jutsu <b>F</b> (or <b>U / I / Y</b> for a slot directly) · Ultimate <b>O</b> · Guard <b>L</b> · Chakra <b>C</b> · Substitution <b>;</b> · Awaken <b>P</b> · Assist <b>H</b> · Jump <b>Space</b> · Dash <b>Shift</b> · Pause <b>Esc</b>. Gamepads are polled with the standard mapping.';
     k.appendChild(note);
   }
 
