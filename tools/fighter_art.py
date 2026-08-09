@@ -580,6 +580,20 @@ def _torso(c, pal, d, cx, cy, hx, hy, lean, bulk, hs):
         a = at(1.5)
         b = at(alen - 1.0)
         c.capsule(a[0], a[1], b[0], b[1], 0.4, pal.trim)
+    elif style == "panel":
+        # A two-tone jumpsuit: a dark yoke across the shoulders and dark flanks
+        # down the sides, with the body colour left showing through the middle.
+        # `zip` puts a single thin line on a solid body, so a fighter whose
+        # design names two outfit colours only ever shows one of them — this
+        # style is for the ones whose whole read is the contrast.
+        band(1.4, 1.7, w * 0.95, pal.outfit2)
+        for side in (-1, 1):
+            a = at(2.6, side * w * 0.74)
+            b = at(alen - 1.2, side * w * 0.62)
+            c.capsule(a[0], a[1], b[0], b[1], 0.75, pal.outfit2)
+        a = at(2.2)
+        b = at(alen - 1.0)
+        c.capsule(a[0], a[1], b[0], b[1], 0.4, pal.trim)
     elif style == "vest":
         a = at(2.0)
         b = at(alen - 1.5)
@@ -664,9 +678,13 @@ def _head(c, pal, d, f, r, p, anim):
 
     marks = d.get("markings")
     if marks == "whiskers":
+        # Two pixels wide, not one. At a 64px cell a single-pixel mark on
+        # skin-dark against skin disappears the moment the head turns, and the
+        # cheek marks are half of why this silhouette is recognisable.
+        mc = hex_to_rgb(d["markColor"]) if d.get("markColor") else shade(pal.skin_dark, 0.82)
         for k in (-1, 0, 1):
-            dot(r * 0.62, eye_dy + 2 + k, pal.skin_dark, 1, 1)
-            dot(-r * 0.52, eye_dy + 2 + k, pal.skin_dark, 1, 1)
+            dot(r * 0.60, eye_dy + 2 + k, mc, 2, 1)
+            dot(-r * 0.58, eye_dy + 2 + k, mc, 2, 1)
     elif marks == "tearlines":
         dot(r * 0.36, eye_dy + 2, pal.skin_dark, 1, 2)
         dot(-r * 0.12, eye_dy + 2, pal.skin_dark, 1, 2)
@@ -826,6 +844,20 @@ def _back_accessory(c, pal, d, cx, cy, hy, lean, bulk):
     elif acc == "shoulder-pads":
         c.ellipse(cx - 4.5 * bulk, cy + 0.5, 2.6, 1.8, pal.trim)
         c.ellipse(cx + 4.0 * bulk, cy + 0.5, 2.6, 1.8, pal.trim)
+    elif acc == "orbs":
+        # A ring of small spheres hanging behind the shoulders. Gives a
+        # high-tier form a silhouette nothing else in the roster has — the
+        # outline changes, so it reads as a different form at thumbnail size
+        # rather than as the same body in another colour.
+        col = hex_to_rgb(d.get("accColor", "#2a2f42"))
+        rim = shade(col, 1.9)
+        for k, (ox, oy, rr) in enumerate((
+            (-9.0, -5.0, 1.7), (-10.2, 0.5, 2.0), (-8.6, 6.0, 1.6),
+            (8.6, -4.0, 1.5), (9.8, 2.0, 1.8),
+        )):
+            c.ellipse_ink(cx + ox * bulk, cy + oy, rr, rr, col, pal.ink)
+            c.ellipse(cx + ox * bulk - rr * 0.3, cy + oy - rr * 0.35,
+                      rr * 0.4, rr * 0.35, rim)
 
 
 def _cloak(c, pal, d, cx, cy, hy, ground, lean, bulk, p):

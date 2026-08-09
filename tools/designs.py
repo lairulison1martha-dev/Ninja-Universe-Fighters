@@ -24,9 +24,13 @@ import hashlib
 HAND = {
     "naruto": dict(
         skin="#f0c090", hair="#f5cf4a", hairStyle="spiky",
-        outfit="#e8722a", outfit2="#1f2740", trim="#2b3550", pants="#e8722a",
-        boots="#232a3c", eyes="#3f7fd0", torso="zip", sleeves="long",
+        # Orange body, dark yoke and flanks: the two-tone jumpsuit is the
+        # silhouette read at thumbnail size, so `panel` puts outfit2 where it
+        # can actually be seen instead of leaving it on an unused key.
+        outfit="#f07a26", outfit2="#232a44", trim="#2b3550", pants="#f07a26",
+        boots="#232a3c", eyes="#3f7fd0", torso="panel", sleeves="long",
         headband="leaf", bandColor="#2b4a86", markings="whiskers",
+        markColor="#c98a5e",
         aura="#ffb020", height=1.0, bulk=1.0,
     ),
     "sasuke": dict(
@@ -407,16 +411,29 @@ FORM_DESIGNS = ({
     # Naruto chakra modes
     "naruto_sage": dict(markings="sage", markColor="#c9603c", eyes="#e8a23c",
                         aura="#e8a23c", trim="#c9603c"),
-    "naruto_kcm1": dict(outfit="#f5c542", outfit2="#e08a20", trim="#2b3550",
+    # The three forms the MUGEN analysis found (see
+    # tools/mugen-import/mappings/naruto.mjs). Each has to read as a different
+    # FORM, not a different colour, so each changes the outline: KCM adds the
+    # flame shroud and marked body, Bijuu adds a mantle and mass on top of a
+    # far heavier shroud, and Ashura leaves the gold family entirely for a
+    # dark robe, horns and orbs.
+    "naruto_kcm1": dict(outfit="#f5c542", outfit2="#c96a12", trim="#2b3550",
                         pants="#f5c542", aura="#ffd45e", eyes="#f5e08a",
-                        markings="stripes"),
-    "naruto_kcm2": dict(outfit="#ffd45e", outfit2="#e8952a", trim="#1f2740",
-                        pants="#ffd45e", aura="#ffe08a", eyes="#fff0b0",
-                        markings="stripes", bulk=1.08),
-    "naruto_sixpaths": dict(outfit="#ffd45e", outfit2="#2b2f42", trim="#e8952a",
-                            pants="#ffd45e", aura="#fff0b0", eyes="#fff6d0",
-                            coat="cloak", coatColor="#f5c542",
-                            markings="sage", markColor="#c9603c", bulk=1.10),
+                        markings="stripes", torso="panel",
+                        shroud=0.58, bulk=1.02),
+    "naruto_kcm2": dict(outfit="#ffd45e", outfit2="#e07a18", trim="#1f2740",
+                        pants="#ffd45e", aura="#ffb02a", eyes="#fff0b0",
+                        markings="stripes", torso="panel",
+                        coat="cloak", coatColor="#f0a020", coatTrim="#2b2f42",
+                        accessory="shoulder-pads",
+                        shroud=0.92, bulk=1.14, height=1.03),
+    "naruto_sixpaths": dict(outfit="#2b2f42", outfit2="#171b2a", trim="#d8e4f0",
+                            pants="#2b2f42", aura="#cfe4ff", eyes="#eaf4ff",
+                            coat="robe", coatColor="#20263a", coatTrim="#d8e4f0",
+                            accessory="orbs", accColor="#20263a",
+                            markings="sage", markColor="#8fb4d8",
+                            horns=True, hornColor="#e8eef8",
+                            shroud=0.44, bulk=1.06, height=1.04),
     "naruto_baryon": dict(outfit="#e85a2a", outfit2="#8a2318", trim="#ffb84a",
                           pants="#e85a2a", aura="#ff6a2a", eyes="#ffd45e",
                           coat="cloak", coatColor="#c03a1a", bulk=1.06),
