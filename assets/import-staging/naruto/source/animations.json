@@ -1,0 +1,485 @@
+{
+ "count": 6,
+ "animations": [
+  {
+   "number": 0,
+   "frames": [
+    {
+     "group": 0,
+     "image": 0,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 8,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -40
+      },
+      {
+       "x1": -6,
+       "y1": -40,
+       "x2": 6,
+       "y2": -56
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 0,
+     "image": 1,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 8,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -40
+      },
+      {
+       "x1": -6,
+       "y1": -40,
+       "x2": 6,
+       "y2": -56
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 0,
+     "image": 2,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 8,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -40
+      },
+      {
+       "x1": -6,
+       "y1": -40,
+       "x2": 6,
+       "y2": -56
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 0,
+     "image": 1,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 8,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -40
+      },
+      {
+       "x1": -6,
+       "y1": -40,
+       "x2": 6,
+       "y2": -56
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    }
+   ],
+   "loopStart": 0,
+   "totalTicks": 32,
+   "durationSeconds": 0.5333,
+   "loops": true,
+   "hasAttackBoxes": false,
+   "hasHurtBoxes": true,
+   "line": 2
+  },
+  {
+   "number": 20,
+   "frames": [
+    {
+     "group": 20,
+     "image": 0,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 6,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -9,
+       "y1": 0,
+       "x2": 9,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 20,
+     "image": 1,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 6,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -9,
+       "y1": 0,
+       "x2": 9,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    }
+   ],
+   "loopStart": 0,
+   "totalTicks": 12,
+   "durationSeconds": 0.2,
+   "loops": true,
+   "hasAttackBoxes": false,
+   "hasHurtBoxes": true,
+   "line": 11
+  },
+  {
+   "number": 200,
+   "frames": [
+    {
+     "group": 200,
+     "image": 0,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 3,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 200,
+     "image": 1,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 4,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [
+      {
+       "x1": 8,
+       "y1": -46,
+       "x2": 30,
+       "y2": -28
+      }
+     ],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": false,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 200,
+     "image": 2,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 6,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    }
+   ],
+   "loopStart": 0,
+   "totalTicks": 13,
+   "durationSeconds": 0.2167,
+   "loops": true,
+   "hasAttackBoxes": true,
+   "hasHurtBoxes": true,
+   "line": 17
+  },
+  {
+   "number": 230,
+   "frames": [
+    {
+     "group": 230,
+     "image": 0,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 6,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -11,
+       "y1": 0,
+       "x2": 11,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 230,
+     "image": 1,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 5,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [
+      {
+       "x1": 10,
+       "y1": -50,
+       "x2": 38,
+       "y2": -24
+      },
+      {
+       "x1": 10,
+       "y1": -24,
+       "x2": 30,
+       "y2": -10
+      }
+     ],
+     "clsn2": [
+      {
+       "x1": -11,
+       "y1": 0,
+       "x2": 11,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": false,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 230,
+     "image": 2,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 10,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -11,
+       "y1": 0,
+       "x2": 11,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    }
+   ],
+   "loopStart": 0,
+   "totalTicks": 21,
+   "durationSeconds": 0.35,
+   "loops": true,
+   "hasAttackBoxes": true,
+   "hasHurtBoxes": true,
+   "line": 26
+  },
+  {
+   "number": 1000,
+   "frames": [
+    {
+     "group": 1000,
+     "image": 0,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 8,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 1000,
+     "image": 1,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 6,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [
+      {
+       "x1": 12,
+       "y1": -44,
+       "x2": 44,
+       "y2": -20
+      }
+     ],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": false,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 1000,
+     "image": 2,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 12,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -10,
+       "y1": 0,
+       "x2": 10,
+       "y2": -54
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    }
+   ],
+   "loopStart": 0,
+   "totalTicks": 26,
+   "durationSeconds": 0.4333,
+   "loops": true,
+   "hasAttackBoxes": true,
+   "hasHurtBoxes": true,
+   "line": 36
+  },
+  {
+   "number": 5000,
+   "frames": [
+    {
+     "group": 5000,
+     "image": 0,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 6,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -12,
+       "y1": 0,
+       "x2": 12,
+       "y2": -50
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    },
+    {
+     "group": 5000,
+     "image": 1,
+     "xOffset": 0,
+     "yOffset": 0,
+     "ticks": 10,
+     "flipH": false,
+     "flipV": false,
+     "blend": null,
+     "clsn1": [],
+     "clsn2": [
+      {
+       "x1": -12,
+       "y1": 0,
+       "x2": 12,
+       "y2": -50
+      }
+     ],
+     "clsn1Inherited": true,
+     "clsn2Inherited": true
+    }
+   ],
+   "loopStart": 0,
+   "totalTicks": 16,
+   "durationSeconds": 0.2667,
+   "loops": true,
+   "hasAttackBoxes": false,
+   "hasHurtBoxes": true,
+   "line": 45
+  }
+ ]
+}

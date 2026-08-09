@@ -1,0 +1,182 @@
+{
+ "moves": [
+  {
+   "state": 200,
+   "animation": 200,
+   "category": "light attack",
+   "confidence": "high",
+   "status": "MAPPED",
+   "command": "a",
+   "reasons": [
+    "standard MUGEN state 200 (standing light)",
+    "command \"a\" (button)"
+   ],
+   "ability": {
+    "damage": 28,
+    "guardDamage": 4,
+    "startup": 0.05,
+    "activeFrames": 0.0667,
+    "recovery": 0.1,
+    "hitStun": 0.2,
+    "blockStun": 0.15,
+    "knockbackX": 192,
+    "knockbackY": 0,
+    "launch": false,
+    "hits": 1,
+    "chakraCost": 0
+   },
+   "projectiles": [],
+   "helpers": [],
+   "timing": {
+    "startup": 0.05,
+    "active": 0.0667,
+    "recovery": 0.1,
+    "total": 0.2167,
+    "startupTicks": 3,
+    "activeTicks": 4,
+    "recoveryTicks": 6,
+    "source": "HitDef AnimElem"
+   }
+  },
+  {
+   "state": 230,
+   "animation": 230,
+   "category": "heavy attack",
+   "confidence": "high",
+   "status": "MAPPED",
+   "command": "b",
+   "reasons": [
+    "standard MUGEN state 230 (standing heavy)",
+    "command \"b\" (button)"
+   ],
+   "ability": {
+    "damage": 62,
+    "guardDamage": 10,
+    "startup": 0.1,
+    "activeFrames": 0.0833,
+    "recovery": 0.1667,
+    "hitStun": 0.3,
+    "blockStun": 0,
+    "knockbackX": 450,
+    "knockbackY": -240,
+    "launch": true,
+    "hits": 1,
+    "chakraCost": 0
+   },
+   "projectiles": [],
+   "helpers": [],
+   "timing": {
+    "startup": 0.1,
+    "active": 0.0833,
+    "recovery": 0.1667,
+    "total": 0.35,
+    "startupTicks": 6,
+    "activeTicks": 5,
+    "recoveryTicks": 10,
+    "source": "HitDef AnimElem"
+   }
+  },
+  {
+   "state": 1000,
+   "animation": 1000,
+   "category": "special",
+   "confidence": "medium",
+   "status": "MAPPED",
+   "command": "QCF_a",
+   "reasons": [
+    "state 1000 is in the special range",
+    "command \"QCF_a\" (qcf)"
+   ],
+   "ability": {
+    "damage": 85,
+    "guardDamage": 14,
+    "startup": 0.1333,
+    "activeFrames": 0.1,
+    "recovery": 0.2,
+    "hitStun": 0.3333,
+    "blockStun": 0,
+    "knockbackX": 540,
+    "knockbackY": 0,
+    "launch": false,
+    "hits": 1,
+    "chakraCost": 30
+   },
+   "projectiles": [],
+   "helpers": [],
+   "timing": {
+    "startup": 0.1333,
+    "active": 0.1,
+    "recovery": 0.2,
+    "total": 0.4333,
+    "startupTicks": 8,
+    "activeTicks": 6,
+    "recoveryTicks": 12,
+    "source": "HitDef AnimElem"
+   }
+  },
+  {
+   "state": 1100,
+   "animation": 1000,
+   "category": "projectile",
+   "confidence": "high",
+   "status": "MAPPED",
+   "command": null,
+   "reasons": [
+    "state spawns 1 projectile(s)"
+   ],
+   "ability": {
+    "damage": 40,
+    "guardDamage": 6,
+    "startup": 0.1333,
+    "activeFrames": 0.1,
+    "recovery": 0.2,
+    "hitStun": 0,
+    "blockStun": 0,
+    "knockbackX": 240,
+    "knockbackY": 0,
+    "launch": false,
+    "hits": 1,
+    "chakraCost": 0
+   },
+   "projectiles": [
+    {
+     "anim": 1000,
+     "velocity": [
+      6,
+      0
+     ],
+     "removeTicks": 90,
+     "removeSeconds": 1.5,
+     "hits": 1,
+     "damage": 40
+    }
+   ],
+   "helpers": [],
+   "timing": {
+    "startup": 0.1333,
+    "active": 0.1,
+    "recovery": 0.2,
+    "total": 0.4333,
+    "startupTicks": 8,
+    "activeTicks": 6,
+    "recoveryTicks": 12,
+    "source": "HitDef AnimElem"
+   }
+  }
+ ],
+ "manual": [],
+ "stats": {
+  "total": 4,
+  "mapped": 4,
+  "manualRequired": 0,
+  "byCategory": {
+   "light attack": 1,
+   "heavy attack": 1,
+   "special": 1,
+   "projectile": 1
+  },
+  "projectiles": 1,
+  "helpers": 0,
+  "withTiming": 4
+ }
+}

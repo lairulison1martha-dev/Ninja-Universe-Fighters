@@ -1,0 +1,312 @@
+{
+ "count": 4,
+ "constants": {
+  "data": {
+   "life": "1000",
+   "power": "3000",
+   "attack": "100",
+   "defence": "100"
+  },
+  "size": {
+   "xscale": "1",
+   "yscale": "1",
+   "ground.back": "15",
+   "ground.front": "16",
+   "height": "60"
+  },
+  "velocity": {
+   "walk.fwd": "2.4",
+   "walk.back": "-2.2",
+   "run.fwd": "4.6, 0"
+  }
+ },
+ "states": [
+  {
+   "number": 200,
+   "type": "S",
+   "moveType": "A",
+   "physics": "S",
+   "anim": 200,
+   "ctrl": 0,
+   "poweradd": 0,
+   "juggle": 0,
+   "velset": null,
+   "controllers": [
+    {
+     "type": "HitDef",
+     "typeLower": "hitdef",
+     "label": "1",
+     "triggers": [
+      "AnimElem = 2"
+     ],
+     "line": 27
+    }
+   ],
+   "hitDefs": [
+    {
+     "kind": "hitdef",
+     "damage": 28,
+     "guardDamage": 4,
+     "animType": "Light",
+     "guardFlag": "MH",
+     "attr": "S, NA",
+     "hitFlag": null,
+     "pauseTicks": 6,
+     "shakeTicks": 6,
+     "groundVelX": -3.2,
+     "groundVelY": 0,
+     "airVelX": 0,
+     "airVelY": 0,
+     "groundSlideTime": 0,
+     "groundHitTime": 12,
+     "guardSlideTime": 0,
+     "guardHitTime": 9,
+     "fall": false,
+     "getPower": null,
+     "givePower": null,
+     "priority": null,
+     "sparkNo": null,
+     "hitSound": null,
+     "guardSound": null,
+     "animElem": 2,
+     "timeTrigger": null,
+     "triggers": [
+      "AnimElem = 2"
+     ],
+     "line": 27
+    }
+   ],
+   "projectiles": [],
+   "helpers": [],
+   "changeAnims": [],
+   "line": 20
+  },
+  {
+   "number": 230,
+   "type": "S",
+   "moveType": "A",
+   "physics": "S",
+   "anim": 230,
+   "ctrl": 0,
+   "poweradd": 0,
+   "juggle": 0,
+   "velset": null,
+   "controllers": [
+    {
+     "type": "HitDef",
+     "typeLower": "hitdef",
+     "label": "1",
+     "triggers": [
+      "AnimElem = 2"
+     ],
+     "line": 46
+    }
+   ],
+   "hitDefs": [
+    {
+     "kind": "hitdef",
+     "damage": 62,
+     "guardDamage": 10,
+     "animType": "Hard",
+     "guardFlag": "MH",
+     "attr": "S, NA",
+     "hitFlag": null,
+     "pauseTicks": 12,
+     "shakeTicks": 12,
+     "groundVelX": -7.5,
+     "groundVelY": 0,
+     "airVelX": -3,
+     "airVelY": -4,
+     "groundSlideTime": 0,
+     "groundHitTime": 18,
+     "guardSlideTime": 0,
+     "guardHitTime": 0,
+     "fall": true,
+     "getPower": null,
+     "givePower": null,
+     "priority": null,
+     "sparkNo": null,
+     "hitSound": null,
+     "guardSound": null,
+     "animElem": 2,
+     "timeTrigger": null,
+     "triggers": [
+      "AnimElem = 2"
+     ],
+     "line": 46
+    }
+   ],
+   "projectiles": [],
+   "helpers": [],
+   "changeAnims": [],
+   "line": 39
+  },
+  {
+   "number": 1000,
+   "type": "S",
+   "moveType": "A",
+   "physics": "S",
+   "anim": 1000,
+   "ctrl": 0,
+   "poweradd": -300,
+   "juggle": 0,
+   "velset": null,
+   "controllers": [
+    {
+     "type": "HitDef",
+     "typeLower": "hitdef",
+     "label": "1",
+     "triggers": [
+      "AnimElem = 2"
+     ],
+     "line": 67
+    }
+   ],
+   "hitDefs": [
+    {
+     "kind": "hitdef",
+     "damage": 85,
+     "guardDamage": 14,
+     "animType": "Hard",
+     "guardFlag": "MH",
+     "attr": "S, SA",
+     "hitFlag": null,
+     "pauseTicks": 14,
+     "shakeTicks": 14,
+     "groundVelX": -9,
+     "groundVelY": 0,
+     "airVelX": 0,
+     "airVelY": 0,
+     "groundSlideTime": 0,
+     "groundHitTime": 20,
+     "guardSlideTime": 0,
+     "guardHitTime": 0,
+     "fall": false,
+     "getPower": null,
+     "givePower": null,
+     "priority": null,
+     "sparkNo": null,
+     "hitSound": null,
+     "guardSound": null,
+     "animElem": 2,
+     "timeTrigger": null,
+     "triggers": [
+      "AnimElem = 2"
+     ],
+     "line": 67
+    }
+   ],
+   "projectiles": [],
+   "helpers": [],
+   "changeAnims": [],
+   "line": 59
+  },
+  {
+   "number": 1100,
+   "type": "S",
+   "moveType": "A",
+   "physics": "S",
+   "anim": 1000,
+   "ctrl": 0,
+   "poweradd": 0,
+   "juggle": 0,
+   "velset": null,
+   "controllers": [
+    {
+     "type": "Projectile",
+     "typeLower": "projectile",
+     "label": "1",
+     "triggers": [
+      "AnimElem = 2"
+     ],
+     "line": 85
+    }
+   ],
+   "hitDefs": [
+    {
+     "kind": "projectile",
+     "damage": 40,
+     "guardDamage": 6,
+     "animType": null,
+     "guardFlag": "MH",
+     "attr": "S, SP",
+     "hitFlag": null,
+     "pauseTicks": 4,
+     "shakeTicks": 4,
+     "groundVelX": -4,
+     "groundVelY": 0,
+     "airVelX": 0,
+     "airVelY": 0,
+     "groundSlideTime": 0,
+     "groundHitTime": 0,
+     "guardSlideTime": 0,
+     "guardHitTime": 0,
+     "fall": false,
+     "getPower": null,
+     "givePower": null,
+     "priority": null,
+     "sparkNo": null,
+     "hitSound": null,
+     "guardSound": null,
+     "animElem": 2,
+     "timeTrigger": null,
+     "triggers": [
+      "AnimElem = 2"
+     ],
+     "line": 85,
+     "projAnim": 1000,
+     "projVel": [
+      6,
+      0
+     ],
+     "projRemoveTime": 90,
+     "projHits": 1
+    }
+   ],
+   "projectiles": [
+    {
+     "kind": "projectile",
+     "damage": 40,
+     "guardDamage": 6,
+     "animType": null,
+     "guardFlag": "MH",
+     "attr": "S, SP",
+     "hitFlag": null,
+     "pauseTicks": 4,
+     "shakeTicks": 4,
+     "groundVelX": -4,
+     "groundVelY": 0,
+     "airVelX": 0,
+     "airVelY": 0,
+     "groundSlideTime": 0,
+     "groundHitTime": 0,
+     "guardSlideTime": 0,
+     "guardHitTime": 0,
+     "fall": false,
+     "getPower": null,
+     "givePower": null,
+     "priority": null,
+     "sparkNo": null,
+     "hitSound": null,
+     "guardSound": null,
+     "animElem": 2,
+     "timeTrigger": null,
+     "triggers": [
+      "AnimElem = 2"
+     ],
+     "line": 85,
+     "projAnim": 1000,
+     "projVel": [
+      6,
+      0
+     ],
+     "projRemoveTime": 90,
+     "projHits": 1
+    }
+   ],
+   "helpers": [],
+   "changeAnims": [],
+   "line": 78
+  }
+ ]
+}

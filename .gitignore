@@ -9,3 +9,10 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.swp
+
+# MUGEN packages a human dropped in for the importer to inspect. These are
+# third-party archives whose rights are exactly what this pipeline exists to
+# establish, so none of them may ever be committed. The importer reads from
+# here; it writes only to assets/import-staging/.
+imports/mugen/*
+!imports/mugen/README.md

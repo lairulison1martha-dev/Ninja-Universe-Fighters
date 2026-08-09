@@ -19,6 +19,7 @@ to the Home Screen, and it runs like a native app, including with no connection.
 - [Controls](#controls)
 - [Project structure](#project-structure)
 - [Development](#development)
+- [MUGEN import and audit pipeline](#mugen-import-and-audit-pipeline)
 - [Assets and legal notes](#assets-and-legal-notes)
 - [Known limitations](#known-limitations)
 
@@ -428,6 +429,10 @@ Gamepads are polled with the standard mapping.
 ├── assets/icons/               generated PNG icon set + editable SVG master
 ├── assets/fighters/            one folder per fighter: sprite-sheet.png,
 │                               portrait.png, fighter.json, plus manifest.json
+├── assets/import-staging/      MUGEN import output — never the live art
+├── imports/mugen/              drop zone for packages to inspect (git-ignored)
+├── reports/                    generated audits, not read by the game
+├── tools/mugen-import/         MUGEN parsers, rights check, staging exporter
 ├── tools/generate-icons.py     procedural icon generator
 ├── tools/build-fighters.py     sprite-set builder (CLI)
 ├── tools/fighter_art.py        the pixel-art rig: poses, body, hair, gear
@@ -579,6 +584,80 @@ capped per quality level. Roster portraits render lazily via
 
 ---
 
+## MUGEN import and audit pipeline
+
+`tools/mugen-import/` is **offline tooling**. It is not loaded by the game, not
+precached by the service worker, and running it changes nothing about how the
+game plays. It exists to answer two questions about a MUGEN character package:
+*may we reuse this?* and *what, technically, is in it?*
+
+It does not replace the combat engine. MUGEN data is read as a **reference** for
+frame timing, hurtboxes, hitboxes and move startup/recovery, which the game's own
+engine then consumes.
+
+### Using it
+
+```bash
+# What is in this package, and may we use it? Writes nothing.
+node tools/mugen-import/index.mjs imports/mugen/<id> --analyse
+
+# Parse and convert into staging. Art is exported only if rights are APPROVED.
+node tools/mugen-import/index.mjs imports/mugen/<id> --fighter <roster-id>
+
+# Audit all 110 roster fighters → reports/mugen-roster-audit.{json,md}
+node tools/mugen-import/index.mjs --roster-audit
+
+# Generate the original CC0 test package used by the tests
+node tools/mugen-import/make-fixture.mjs <dir>
+```
+
+### What it parses
+
+| Format | Support |
+|---|---|
+| `.def` | manifest, `localcoord`, palettes, state-file lists, nested/renamed files |
+| `.sff` | v1 (PCX, RLE) and v2/v2.1 (raw, RLE8, RLE5, LZ5, PNG8/24/32), linked sprites |
+| `.air` | actions, per-frame ticks, offsets, flip/blend, `Clsn1`/`Clsn2` and the `Default` variants |
+| `.cmd` | command definitions, buffer windows, and the `[State -1]` command→state table |
+| `.cns` / `.st` | `StateDef`s, `HitDef`s, `Projectile`s, `ChangeState`/`SelfState` transitions |
+| `.snd` | indexed and reported only — never imported automatically |
+
+### The rules it enforces
+
+- **Rights first.** Nothing is called APPROVED because a readme sounds
+  permissive. A rip signal — sprites traceable to a commercial game — overrides
+  any permissive text in the package. Statuses are APPROVED / MANUAL_REVIEW /
+  REJECTED / NOT_FOUND, and artwork is exported only on APPROVED.
+- **Staging only.** All output goes to `assets/import-staging/<fighter-id>/`
+  (`source/`, `converted/`, `reports/`). Live art under `assets/fighters/` is
+  never written to. Approving a staged import into the live game is a separate,
+  manual decision.
+- **Untrusted input.** Packages are parsed, never executed. Executables and
+  archives are refused by extension, paths are resolved against the package root
+  so traversal and symlink escapes fail, and every limit — file size, package
+  size, file count, recursion depth, sprite count, pixel count, dimensions,
+  frame count, boxes per frame, state count, decompressed bytes, text lines —
+  lives in `tools/mugen-import/limits.mjs`.
+- **No new roster entries.** A fighter id outside the 110 is rejected. Alternate
+  forms map onto the existing transformation system; they never become roster
+  cards.
+- **Summons are not Assists.** MUGEN helpers are classified as projectile,
+  summon, temporary helper, effect or special-move component. They are never
+  turned into selectable Assist characters — `js/data/fighter-assists.js` and
+  `js/combat/assist-system.js` are untouched by this pipeline.
+- **Audio is opt-in.** `.snd` contents are identified and reported; importing
+  them requires explicit recorded permission.
+
+### The audit
+
+`reports/mugen-roster-audit.md` covers all 110 fighters and records its own
+blind spots. Every MUGEN distribution site is unreachable from the build
+environment's egress proxy, and the report says so per source rather than
+implying the search was exhaustive. No login wall, captcha, paywall or rate
+limit was bypassed.
+
+---
+
 ## Assets and legal notes
 
 **Nothing in this repository is downloaded, ripped or copied from any published
@@ -606,6 +685,13 @@ game, anime or third party.**
   with the Web Audio API. No downloaded music, no voice lines.
 - **Story** — "The Severed Accord" is written for this project and does not
   adapt or retell any published episode.
+- **MUGEN imports** — none. The importer in `tools/mugen-import/` can read
+  third-party packages, but nothing from one has been merged into the game, and
+  no third-party package is committed here. `imports/mugen/` is git-ignored, and
+  the only package the tests use is generated fresh by
+  `tools/mugen-import/make-fixture.mjs` under CC0. The 110-fighter audit in
+  `reports/mugen-roster-audit.md` returned **zero** packages approved for
+  automatic reuse.
 
 Character and technique **names** reference well-known series characters for a
 private prototype. All asset paths (`portrait`, `spriteSet`, `audioSet`) are
@@ -655,6 +741,13 @@ any other project.
 - **The game is deliberately single-player.** Every match is one human against
   one AI, asserted at match setup by `CombatEngine.assertPvE()`. There is no
   second human controller, no local versus, and no networking of any kind.
+- **The MUGEN audit could not reach any MUGEN distribution site.** MUGEN
+  Archive, Mugen Free For All, Elecbyte and Itch.io are all blocked by the build
+  environment's outbound proxy, so the 110-fighter audit is a rights assessment
+  and a record of what could not be checked — not an exhaustive search. The
+  importer itself is exercised end to end against an original generated package,
+  so the parsers are verified; the *search* is not complete, and the report says
+  which sources were unreachable rather than reporting them as empty.
 
 ---
 

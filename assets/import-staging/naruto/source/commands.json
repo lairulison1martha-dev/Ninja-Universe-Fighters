@@ -1,0 +1,96 @@
+{
+ "commands": [
+  {
+   "name": "QCF_a",
+   "command": "~D, DF, F, a",
+   "time": 15,
+   "bufferTime": 1,
+   "motion": "qcf",
+   "buttons": [
+    "a"
+   ],
+   "multiButton": false,
+   "tokenCount": 4,
+   "line": 6
+  },
+  {
+   "name": "a",
+   "command": "a",
+   "time": 1,
+   "bufferTime": 1,
+   "motion": "button",
+   "buttons": [
+    "a"
+   ],
+   "multiButton": false,
+   "tokenCount": 1,
+   "line": 11
+  },
+  {
+   "name": "b",
+   "command": "b",
+   "time": 1,
+   "bufferTime": 1,
+   "motion": "button",
+   "buttons": [
+    "b"
+   ],
+   "multiButton": false,
+   "tokenCount": 1,
+   "line": 16
+  }
+ ],
+ "stateEntries": [
+  {
+   "ownerState": -1,
+   "label": "Light",
+   "targetState": 200,
+   "commands": [
+    "a"
+   ],
+   "triggers": [
+    "command = \"a\"",
+    "statetype = S",
+    "ctrl"
+   ],
+   "requiresPower": false,
+   "requiresAir": false,
+   "requiresCrouch": false,
+   "line": 21
+  },
+  {
+   "ownerState": -1,
+   "label": "Heavy",
+   "targetState": 230,
+   "commands": [
+    "b"
+   ],
+   "triggers": [
+    "command = \"b\"",
+    "statetype = S",
+    "ctrl"
+   ],
+   "requiresPower": false,
+   "requiresAir": false,
+   "requiresCrouch": false,
+   "line": 28
+  },
+  {
+   "ownerState": -1,
+   "label": "Special",
+   "targetState": 1000,
+   "commands": [
+    "QCF_a"
+   ],
+   "triggers": [
+    "command = \"QCF_a\"",
+    "statetype = S",
+    "ctrl"
+   ],
+   "requiresPower": false,
+   "requiresAir": false,
+   "requiresCrouch": false,
+   "line": 35
+  }
+ ]
+}

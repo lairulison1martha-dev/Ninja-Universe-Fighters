@@ -21,6 +21,7 @@ const SUITES = [
   './roster-cleanup.js',
   './costume-validation.js',
   './assist-validation.js',
+  './mugen-import-validation.js',
   './github-pages-paths.js',
   './data-integrity.js',
 ];
