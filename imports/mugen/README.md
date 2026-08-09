@@ -11,8 +11,13 @@ imports/mugen/naruto/
   ...
 ```
 
-The folder name is free-form, but naming it after the roster fighter lets the
-listing match it for you.
+You can put as many as you like in here at once — the batch command below
+sorts them out in one run.
+
+The folder name is free-form, but it is the main clue the importer has, so
+name it after the character. `naruto`, `Uzumaki Naruto`, `sage naruto`,
+`EMS Sasuke v2` and `adult sasuke` all resolve correctly; `char_final_v3`
+does not.
 
 Then see what is here:
 
@@ -20,10 +25,34 @@ Then see what is here:
 node tools/mugen-import/index.mjs --list-local
 ```
 
+### Import everything in one run
+
+```
+node tools/mugen-import/index.mjs --batch imports/mugen --dry-run   # look first
+node tools/mugen-import/index.mjs --batch imports/mugen             # then import
+```
+
+The batch matches every folder against the 110-fighter roster, decides whether
+each is the base fighter, one of their transformations or one of their
+costumes, imports the ones whose rights allow it, skips the rest, and writes
+`reports/mugen-batch-import.json` and `.md`. A broken, rejected or ambiguous
+package is recorded and the run continues.
+
+Output lands under the fighter it belongs to — never as a new roster entry:
+
+```
+assets/import-staging/naruto/                          base fighter
+assets/import-staging/naruto/forms/naruto_sage/        a transformation
+assets/import-staging/sasuke/costumes/adult/           a costume
+assets/import-staging/itachi/candidates/<package-id>/  two packages, one target
+```
+
 For every folder that prints, this reports the character name and author from
 the `.def`, which data files are inside, the rights status and the documents
 behind it, the matching roster fighter if one is obvious, an import readiness,
 and the exact command to run next. It writes nothing.
+
+### One package at a time
 
 Look at one package in detail without writing anything:
 

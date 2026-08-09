@@ -607,10 +607,15 @@ reads local disk.
 node tools/mugen-import/index.mjs --list-local
 node tools/mugen-import/index.mjs --list-local --json    # same, machine-readable
 
-# What is in this package, and may we use it? Writes nothing.
+# Import everything in the folder in one run → reports/mugen-batch-import.{json,md}
+node tools/mugen-import/index.mjs --batch imports/mugen
+node tools/mugen-import/index.mjs --batch --dir imports/mugen
+node tools/mugen-import/index.mjs --batch imports/mugen --dry-run   # map + report only
+
+# What is in one package, and may we use it? Writes nothing.
 node tools/mugen-import/index.mjs imports/mugen/naruto --analyse
 
-# Parse and convert into staging. Art is exported only if rights are APPROVED.
+# Parse and convert one package into staging.
 node tools/mugen-import/index.mjs imports/mugen/naruto --fighter naruto
 
 # Audit all 110 roster fighters → reports/mugen-roster-audit.{json,md}
@@ -619,6 +624,44 @@ node tools/mugen-import/index.mjs --audit
 # Generate the original CC0 test package used by the tests
 node tools/mugen-import/make-fixture.mjs <dir>
 ```
+
+### Batch import
+
+`--batch` is the normal way to use this. Drop as many character folders into
+one directory as you like, run it once, and it sorts them out: it matches each
+package to the roster, works out whether it is the base fighter, one of their
+transformations or one of their costumes, checks the rights, imports the ones
+it can, skips the ones it cannot, and writes a single summary. **A package that
+is broken, rejected or ambiguous never stops the run** — it is recorded and the
+batch moves on.
+
+Matching uses the roster as the source of truth, weighted so a given name
+counts for more than a clan name (`uzumaki` alone belongs to five fighters):
+
+| Folder name | Resolves to |
+|---|---|
+| `naruto`, `naruto uzumaki`, `uzumaki naruto` | the fighter `naruto` |
+| `sage naruto`, `kcm naruto`, `baryon naruto` | Naruto's `naruto_sage` / `naruto_kcm1` / `naruto_baryon` transformations |
+| `ems sasuke`, `rinnegan sasuke` | Sasuke's `sasuke_ems` / `sasuke_rinnegan` transformations |
+| `adult sasuke`, `edo madara`, `anbu kakashi` | the `adult` / `edo` / `anbu` costumes |
+| `masked obito`, `white mask obito`, `juubito` | Obito's transformations |
+| `naruto-vs-sasuke` | nothing — `NEEDS_FIGHTER_ID`, with both candidates listed |
+
+**No alternate form ever becomes a roster entry.** Forms and costumes land in
+their own place under the fighter they belong to:
+
+```
+assets/import-staging/naruto/                          base fighter
+assets/import-staging/naruto/forms/naruto_sage/        a transformation
+assets/import-staging/sasuke/costumes/adult/           a costume
+assets/import-staging/itachi/candidates/<package-id>/  two packages, same target
+```
+
+When more than one package targets the same fighter, neither overwrites the
+other: each is staged under `candidates/`, scored on animation count, sprite
+count and resolution, hurtbox and attack-box coverage, moves with usable
+timing, rights status and parser confidence, and the strongest is *named* in
+the report. Nothing is promoted — a tie is reported as a tie.
 
 `--list-local` reports, per package: the folder, the character name and author
 read from the `.def`, which `.def` was chosen, what data files are inside,
@@ -661,9 +704,10 @@ The recommendation is advisory; nothing acts on it.
   permissive. A rip signal — sprites traceable to a commercial game — overrides
   any permissive text in the package. Statuses are APPROVED / MANUAL_REVIEW /
   REJECTED / NOT_FOUND, and artwork is exported only on APPROVED.
-- **Staging only.** All output goes to `assets/import-staging/<fighter-id>/`
-  (`source/`, `converted/`, `reports/`). Live art under `assets/fighters/` is
-  never written to. Approving a staged import into the live game is a separate,
+- **Staging only.** All output goes under `assets/import-staging/<fighter-id>/`
+  (`source/`, `converted/`, `reports/`, plus `forms/`, `costumes/` and
+  `candidates/` where they apply). Live art under `assets/fighters/` is never
+  written to. Approving a staged import into the live game is a separate,
   manual decision.
 - **Untrusted input.** Packages are parsed, never executed. Executables and
   archives are refused by extension, paths are resolved against the package root

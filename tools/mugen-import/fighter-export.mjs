@@ -28,13 +28,47 @@ export function assertFighterId(id) {
   return id;
 }
 
-/** Create the staging tree for one fighter. */
-export function prepareStaging(repoRoot, fighterId) {
+/**
+ * Where one import's output lives, relative to the staging root.
+ *
+ * A base import goes to `<fighter-id>/`. A transformation goes to
+ * `<fighter-id>/forms/<form-id>/` and a costume to
+ * `<fighter-id>/costumes/<costume-id>/`, so an alternate form never lands
+ * where the base fighter's import would and never looks like a roster entry
+ * of its own. A second package for the same target goes under
+ * `<fighter-id>/candidates/<package-id>/` rather than overwriting the first.
+ *
+ * Every segment is validated with the same rules as a fighter id, so a
+ * package cannot steer its own output anywhere via a crafted name.
+ */
+export function stagingSubpath(fighterId, { formId = null, costumeId = null, candidateId = null } = {}) {
   assertFighterId(fighterId);
-  const base = path.resolve(repoRoot, STAGING_ROOT, fighterId);
-  // Confirm the resolved path is genuinely under the staging root.
+  const parts = [fighterId];
+  if (formId) parts.push('forms', assertFighterId(formId));
+  else if (costumeId) parts.push('costumes', assertFighterId(costumeId));
+  if (candidateId) parts.push('candidates', assertFighterId(candidateId));
+  return parts.join('/');
+}
+
+/**
+ * Create the staging tree for one import.
+ *
+ * @param {string} repoRoot
+ * @param {string} fighterId
+ * @param {string|null} subpath a path under the staging root, from
+ *   `stagingSubpath()`. Defaults to the fighter id.
+ */
+export function prepareStaging(repoRoot, fighterId, subpath = null) {
+  assertFighterId(fighterId);
+  const rel = subpath || fighterId;
+  // Every segment must look like an id, and the result must resolve inside
+  // the staging root — belt and braces, because `subpath` can come from a
+  // package's own name.
+  for (const seg of rel.split('/')) {
+    if (!['forms', 'costumes', 'candidates'].includes(seg)) assertFighterId(seg);
+  }
   const stagingRoot = path.resolve(repoRoot, STAGING_ROOT);
-  safeStagingPath(stagingRoot, fighterId);
+  const base = safeStagingPath(stagingRoot, rel);
   for (const sub of ['source', 'converted', 'reports']) {
     fs.mkdirSync(path.join(base, sub), { recursive: true });
   }

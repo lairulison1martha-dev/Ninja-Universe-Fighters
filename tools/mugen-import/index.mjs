@@ -167,7 +167,7 @@ export function analysePackage(packagePath, { fighterId = null } = {}) {
 
 /** Run the full import: analyse, then write staging artefacts. */
 export async function importPackage(packagePath, fighterId, {
-  dryRun = false, force = false, repoRoot = REPO_ROOT,
+  dryRun = false, force = false, repoRoot = REPO_ROOT, stagingPath = null,
 } = {}) {
   assertFighterId(fighterId);
   const result = analysePackage(packagePath, { fighterId });
@@ -214,7 +214,7 @@ export async function importPackage(packagePath, fighterId, {
   if (dryRun) return { ...result, comparison, audit, staged: null };
 
   // ---- staging -----------------------------------------------------------
-  const base = prepareStaging(repoRoot, fighterId);
+  const base = prepareStaging(repoRoot, fighterId, stagingPath);
   const written = [];
 
   written.push(writeJson(base, 'reports/audit.json', audit));
@@ -307,7 +307,7 @@ export async function importPackage(packagePath, fighterId, {
   // the staged README has to name the character on its own terms — a bare path
   // would leave a committed folder whose provenance nobody can check.
   writeText(base, 'README.md',
-    `# Staged MUGEN import — ${fighterId}\n\n`
+    `# Staged MUGEN import — ${stagingPath || fighterId}\n\n`
     + `Character: **${result.def?.displayName || result.def?.name || 'unknown'}**`
     + ` by ${result.license.creator || result.def?.author || 'unknown'}\n\n`
     + `Licence: ${result.license.license || 'not stated'}\n\n`
@@ -328,27 +328,40 @@ function usage() {
   console.log(`MUGEN import pipeline
 
   node tools/mugen-import/index.mjs --list-local
+  node tools/mugen-import/index.mjs --batch [dir]
   node tools/mugen-import/index.mjs <package-dir> --fighter <id> [--dry-run] [--force]
   node tools/mugen-import/index.mjs --audit
 
 Options
   --list-local    list the packages sitting in imports/mugen/ and say what the
                   importer could do with each. Reads only; writes nothing.
+  --batch [dir]   import every package in a folder in one run. Matches each to
+                  the roster, sorts base fighters from transformations and
+                  costumes, imports the safe ones, skips the rest, and writes
+                  reports/mugen-batch-import.{json,md}. One bad package never
+                  stops the run.
   --fighter <id>  a fighter id from the existing 110-fighter roster (required
-                  for an import — this pipeline never creates roster entries)
-  --dry-run       analyse and report, write nothing (alias: --analyse)
+                  for a single import — this pipeline never creates roster
+                  entries)
+  --dry-run       analyse and report, write nothing (alias: --analyse). With
+                  --batch, produces the full mapping and report and stages
+                  nothing.
   --force         export art even when rights are not APPROVED (records why)
   --audit         run the roster-wide audit instead of an import
-  --json          machine-readable output, for --list-local
+  --json          machine-readable output, for --list-local and --batch
   --dir <path>    where to look for local packages (default imports/mugen)
 
 Typical use
 
-  1. drop a downloaded character folder into imports/mugen/<name>/
+  1. drop downloaded character folders into imports/mugen/, one each
   2. node tools/mugen-import/index.mjs --list-local
-  3. node tools/mugen-import/index.mjs imports/mugen/<name> --fighter <id>
+  3. node tools/mugen-import/index.mjs --batch imports/mugen --dry-run
+  4. node tools/mugen-import/index.mjs --batch imports/mugen
 
 Staging output: assets/import-staging/<fighter-id>/
+                assets/import-staging/<fighter-id>/forms/<form-id>/
+                assets/import-staging/<fighter-id>/costumes/<costume-id>/
+                assets/import-staging/<fighter-id>/candidates/<package-id>/
 Live assets in assets/fighters/ are never modified by this tool.
 Nothing here reaches the network — packages are read off local disk only.`);
 }
@@ -359,8 +372,29 @@ async function main(argv) {
 
   const flag = (name) => {
     const i = args.indexOf(name);
-    return i >= 0 ? args[i + 1] : null;
+    const v = i >= 0 ? args[i + 1] : null;
+    return v && !v.startsWith('--') ? v : null;
   };
+
+  const dryRunFlag = args.includes('--dry-run') || args.includes('--analyse') || args.includes('--analyze');
+
+  if (args.includes('--batch')) {
+    // `--batch imports/mugen` and `--batch --dir imports/mugen` both work.
+    const positional = args[args.indexOf('--batch') + 1];
+    const dir = flag('--dir')
+      || (positional && !positional.startsWith('--') ? positional : null)
+      || undefined;
+    const { runBatch, formatBatch } = await import('./batch.mjs');
+    const { report, jsonPath, mdPath } = await runBatch(REPO_ROOT, {
+      dir, dryRun: dryRunFlag, force: args.includes('--force'),
+    });
+    console.log(args.includes('--json') ? JSON.stringify(report, null, 1) : formatBatch(report));
+    if (!args.includes('--json')) {
+      console.log(`\nWrote ${path.relative(REPO_ROOT, jsonPath)}`);
+      console.log(`Wrote ${path.relative(REPO_ROOT, mdPath)}`);
+    }
+    return report.summary.failed > 0 ? 1 : 0;
+  }
 
   if (args.includes('--list-local') || args.includes('--list')) {
     const { listLocalPackages, formatListing } = await import('./list-local.mjs');
@@ -392,7 +426,7 @@ async function main(argv) {
   const pkg = pkgIdx >= 0 ? args[pkgIdx] : null;
   if (!pkg || !fighterId) { usage(); return 1; }
 
-  const dryRun = args.includes('--dry-run') || args.includes('--analyse') || args.includes('--analyze');
+  const dryRun = dryRunFlag;
   const force = args.includes('--force');
 
   try {

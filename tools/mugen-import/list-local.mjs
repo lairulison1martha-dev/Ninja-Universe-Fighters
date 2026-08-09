@@ -19,6 +19,7 @@ import path from 'node:path';
 import { inspectPackage } from './package-inspector.mjs';
 import { parseDef } from './parse-def.mjs';
 import { checkLicense, readDeclaredRights, STATUS } from './license-check.mjs';
+import { buildMatchIndex, matchFighterIn, matchPackage } from './roster-match.mjs';
 import { ImportError } from './limits.mjs';
 
 export const LOCAL_DIR = 'imports/mugen';
@@ -42,80 +43,26 @@ export const READINESS = Object.freeze([
   'BLOCKED', 'REJECTED', 'NEEDS_FIGHTER_ID', 'ANALYSIS_ONLY', 'READY_TO_IMPORT',
 ]);
 
-/** Words worth matching on. Drops "the", "of", and initials. */
-function tokens(text) {
-  return String(text || '')
-    .toLowerCase()
-    .split(/[^a-z0-9]+/)
-    .filter((t) => t.length >= 3);
-}
-
 /**
  * Which roster fighter is this package for?
  *
- * Whole-token matching only. Substring matching would have "sai" hit
- * "mosaic" and every folder called `naruto_shippuden_pack` claim four
- * different fighters, so a token has to match a fighter id or a whole word of
- * their display name.
- *
- * Two fighters matching is reported as ambiguous, not resolved by guessing —
- * picking one silently is how the wrong character ends up staged.
+ * Kept for callers that only have `FIGHTERS` to hand. The real work — and the
+ * transformation and costume detection — lives in roster-match.mjs.
  */
 export function matchFighter(folderName, characterName, FIGHTERS) {
-  const folderTokens = tokens(folderName);
-  const nameTokens = tokens(characterName);
-  const all = new Set([...folderTokens, ...nameTokens]);
-
-  const hits = [];
-  for (const [id, f] of Object.entries(FIGHTERS)) {
-    const own = new Set([id, ...tokens(f.displayName)]);
-    const matched = [...all].filter((t) => own.has(t));
-    if (matched.length) hits.push({ fighterId: id, displayName: f.displayName, matched });
-  }
-
-  const folderExact = Object.keys(FIGHTERS).find(
-    (id) => id === String(folderName || '').toLowerCase(),
-  );
-  if (folderExact) {
-    return {
-      fighterId: folderExact,
-      displayName: FIGHTERS[folderExact].displayName,
-      confidence: 'exact',
-      reason: 'the folder is named after the fighter id',
-      candidates: hits.map((h) => h.fighterId),
-    };
-  }
-  if (hits.length === 1) {
-    return {
-      fighterId: hits[0].fighterId,
-      displayName: hits[0].displayName,
-      confidence: 'likely',
-      reason: `matched on "${hits[0].matched.join('", "')}"`,
-      candidates: [hits[0].fighterId],
-    };
-  }
-  if (hits.length > 1) {
-    return {
-      fighterId: null,
-      displayName: null,
-      confidence: 'ambiguous',
-      reason: `${hits.length} fighters match; choose one with --fighter`,
-      candidates: hits.map((h) => h.fighterId),
-    };
-  }
-  return {
-    fighterId: null,
-    displayName: null,
-    confidence: 'none',
-    reason: 'no roster fighter matches this name',
-    candidates: [],
-  };
+  return matchFighterIn(buildMatchIndex({ FIGHTERS }), folderName, characterName);
 }
 
-/** Inspect one package folder. Reads only; never writes. */
-export function describePackage(rootAbs, folderName, gameData) {
-  const { FIGHTERS, TRANSFORMATIONS } = gameData;
-  const rel = path.join(LOCAL_DIR, folderName);
+/**
+ * Inspect one package folder. Reads only; never writes.
+ *
+ * @param {string} rootAbs absolute path to the package folder
+ * @param {string} folderName its name, which is usually the best clue to who it is
+ * @param {Object} index a roster-match index
+ * @param {{ dir?: string }} opts
+ */
+export function describePackage(rootAbs, folderName, index, { dir = LOCAL_DIR } = {}) {
+  const rel = path.join(dir, folderName);
   const base = {
     folder: folderName,
     path: rel,
@@ -130,7 +77,10 @@ export function describePackage(rootAbs, folderName, gameData) {
     contents: {},
     rights: null,
     target: null,
+    variantType: 'unknown',
     transformationId: null,
+    costumeId: null,
+    stagingSubpath: null,
     readiness: 'BLOCKED',
     blockers: [],
     command: null,
@@ -200,16 +150,20 @@ export function describePackage(rootAbs, folderName, gameData) {
     reasons: license.reasons,
   };
 
-  base.target = matchFighter(folderName, base.characterName, FIGHTERS);
-  if (base.target.fighterId) {
-    const forms = Object.values(TRANSFORMATIONS)
-      .filter((t) => t.fighterId === base.target.fighterId);
-    const name = String(base.characterName || folderName).toLowerCase();
-    const form = forms.find((t) => tokens(t.displayName)
-      .filter((w) => w.length > 3)
-      .every((w) => name.includes(w)));
-    if (form) base.transformationId = form.id;
-  }
+  const match = matchPackage(index, folderName, base.characterName);
+  base.target = {
+    fighterId: match.fighterId,
+    displayName: match.displayName,
+    confidence: match.confidence,
+    reason: match.reason,
+    candidates: match.candidates,
+    matchedTerms: match.matchedTerms,
+  };
+  base.variantType = match.type;
+  base.transformationId = match.formId || null;
+  base.costumeId = match.costumeId || null;
+  base.variantName = match.formName || match.costumeName || null;
+  base.stagingSubpath = match.stagingSubpath;
 
   // ---- readiness ---------------------------------------------------------
   if (!inspection.def) base.blockers.push('no character .def found');
@@ -233,11 +187,34 @@ export function describePackage(rootAbs, folderName, gameData) {
     base.readiness = 'READY_TO_IMPORT';
   }
 
+  /*
+   * The single-package command targets a fighter, so it can only express a
+   * base import. A form or a costume needs the sub-path under that fighter,
+   * and the batch runner is what works that out — so that is what is
+   * suggested for a variant.
+   */
   base.command = base.readiness === 'BLOCKED' ? null
-    : `node tools/mugen-import/index.mjs ${rel} --fighter `
-      + `${base.target.fighterId || '<fighter-id>'}`;
+    : base.variantType === 'transformation' || base.variantType === 'costume'
+      ? `node tools/mugen-import/index.mjs --batch ${dir}`
+      : `node tools/mugen-import/index.mjs ${rel} --fighter `
+        + `${base.target.fighterId || '<fighter-id>'}`;
 
   return base;
+}
+
+/**
+ * Load the game's roster data and build the match index.
+ *
+ * Shared by the listing and the batch runner so both agree on who a package
+ * belongs to, and so the roster is read exactly once per run.
+ */
+export async function loadMatchIndex() {
+  const { installBrowserStubs } = await import('../../tests/helpers.js');
+  installBrowserStubs();
+  const { FIGHTERS } = await import('../../js/data/fighters.js');
+  const { TRANSFORMATIONS } = await import('../../js/data/transformations.js');
+  const { costumesFor } = await import('../../js/data/costumes.js');
+  return buildMatchIndex({ FIGHTERS, TRANSFORMATIONS, costumesFor });
 }
 
 /**
@@ -259,18 +236,12 @@ export async function listLocalPackages(repoRoot, { dir = LOCAL_DIR } = {}) {
   };
   if (!out.exists) return out;
 
-  const { installBrowserStubs } = await import('../../tests/helpers.js');
-  installBrowserStubs();
-  const { FIGHTERS } = await import('../../js/data/fighters.js');
-  const { TRANSFORMATIONS } = await import('../../js/data/transformations.js');
-
+  const index = await loadMatchIndex();
   for (const entry of fs.readdirSync(root, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     // A loose file in the drop zone is not a package — the README lives here.
     if (!entry.isDirectory()) { out.ignored.push(entry.name); continue; }
     if (entry.name.startsWith('.')) { out.ignored.push(entry.name); continue; }
-    out.packages.push(describePackage(
-      path.join(root, entry.name), entry.name, { FIGHTERS, TRANSFORMATIONS },
-    ));
+    out.packages.push(describePackage(path.join(root, entry.name), entry.name, index, { dir }));
   }
 
   const n = (r) => out.packages.filter((p) => p.readiness === r).length;
@@ -328,8 +299,19 @@ export function formatListing(listing) {
     lines.push(`  target fighter   ${p.target?.fighterId
       ? `${p.target.fighterId} (${p.target.displayName}) — ${p.target.confidence}, ${p.target.reason}`
       : `none — ${p.target?.reason || 'unmatched'}`}`);
+    if (p.target?.confidence === 'ambiguous' && p.target.candidates?.length) {
+      lines.push(`  possible matches ${p.target.candidates.join(', ')}`);
+    }
     if (p.transformationId) {
-      lines.push(`  alternate form   ${p.transformationId} — import as a transformation, never a new roster card`);
+      lines.push(`  alternate form   ${p.transformationId}`
+        + `${p.variantName ? ` (${p.variantName})` : ''} — an existing transformation, never a new roster card`);
+    }
+    if (p.costumeId) {
+      lines.push(`  costume          ${p.costumeId}`
+        + `${p.variantName ? ` (${p.variantName})` : ''} — an existing costume slot`);
+    }
+    if (p.stagingSubpath) {
+      lines.push(`  would stage to   assets/import-staging/${p.stagingSubpath}/`);
     }
     lines.push(`  readiness        ${p.readiness}`);
     for (const b of p.blockers) lines.push(`                   · ${b}`);

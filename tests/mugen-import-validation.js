@@ -135,6 +135,64 @@ try {
 } catch (err) { PRE.listingError = err; }
 PRE.dropZoneFilesAfterListing = walkPackage(PRE.dropZone).files.length;
 
+/* ------------------------------------------------------------- batch --- */
+
+const { runBatch, scoreCandidate, packageId } = await import(`../${M}/batch.mjs`);
+const { buildMatchIndex, matchPackage } = await import(`../${M}/roster-match.mjs`);
+const { costumesFor } = await import('../js/data/costumes.js');
+
+PRE.matchIndex = buildMatchIndex({ FIGHTERS, TRANSFORMATIONS, costumesFor });
+
+/*
+ * A drop zone with one of everything the batch has to survive: a plain base
+ * fighter, a transformation, a costume, two packages fighting over the same
+ * target, a package with no stated rights, one that admits to ripped sprites,
+ * one that matches two fighters, one that matches none, and one that is not a
+ * MUGEN package at all. A single run has to handle all of them and finish.
+ */
+PRE.batchZone = tmpdir('batchzone');
+{
+  const zone = path.join(PRE.batchZone, 'packages');
+  fs.mkdirSync(zone, { recursive: true });
+  const mk = (name) => makeFixture(path.join(zone, name));
+  const strip = (name, files) => {
+    for (const f of files) fs.unlinkSync(path.join(zone, name, f));
+  };
+
+  mk('gaara');                    // base, clear rights
+  mk('sage naruto');              // transformation
+  mk('adult sasuke');             // costume
+  mk('itachi');                   // base, and a duplicate below
+  mk('itachi by someone else');   // same target as `itachi`
+
+  mk('kakashi');                  // no stated terms at all
+  strip('kakashi', ['readme.txt', 'nuf-rights.json']);
+
+  mk('hinata');                   // admits to ripped sprites
+  strip('hinata', ['nuf-rights.json']);
+  fs.writeFileSync(path.join(zone, 'hinata', 'readme.txt'),
+    'Sprites ripped from Naruto: Clash of Ninja. Free to use and edit.\n');
+
+  mk('naruto-vs-sasuke');         // two fighters, no way to choose
+  mk('kung-fu-man');              // nobody on the roster
+
+  fs.mkdirSync(path.join(zone, 'broken-pack'), { recursive: true });
+  fs.writeFileSync(path.join(zone, 'broken-pack', 'notes.txt'), 'not a package\n');
+  fs.writeFileSync(path.join(zone, 'README.md'), '# drop zone\n');
+}
+
+PRE.batchDir = path.join(PRE.batchZone, 'packages');
+PRE.batchDryRoot = tmpdir('batchdry');
+PRE.batchRoot = tmpdir('batchrun');
+try {
+  PRE.batchDry = await runBatch(PRE.batchDryRoot, { dir: PRE.batchDir, dryRun: true });
+} catch (err) { PRE.batchDryError = err; }
+try {
+  PRE.batch = await runBatch(PRE.batchRoot, { dir: PRE.batchDir });
+} catch (err) { PRE.batchError = err; }
+
+const batchRow = (folder) => PRE.batch?.report.packages.find((p) => p.package === folder);
+
 export function run() {
   suite('mugen-import');
 
@@ -1040,5 +1098,278 @@ damage = 20, 2
     assertEqual(m.fighterId, null, 'no fighter matched');
     assertEqual(m.confidence, 'none', 'confidence');
     assertEqual(Object.keys(FIGHTERS).length, 110, 'the roster is still 110');
+  });
+
+  /* ------------------------------------------------------- roster matching - */
+
+  test('a fighter is matched by id, full name and reversed name', () => {
+    const idx = PRE.matchIndex;
+    for (const name of ['naruto', 'naruto uzumaki', 'uzumaki naruto', 'Naruto_Uzumaki_by_someone']) {
+      const m = matchPackage(idx, name, null);
+      assertEqual(m.fighterId, 'naruto', `"${name}" should map to naruto`);
+      assertEqual(m.type, 'base', `"${name}" is the base fighter`);
+    }
+  });
+
+  test('a clan name shared by five fighters does not drown out the given name', () => {
+    // `uzumaki` belongs to Naruto, Kushina, Karin, Boruto and Menma. Weighting
+    // it the same as a given name would make every one of those ambiguous.
+    const m = matchPackage(PRE.matchIndex, 'uzumaki naruto', null);
+    assertEqual(m.fighterId, 'naruto', 'naruto wins over the other Uzumaki');
+    assertEqual(m.confidence, 'likely', 'confidence');
+    assertEqual(matchPackage(PRE.matchIndex, 'kushina uzumaki', null).fighterId, 'kushina',
+      'and Kushina still resolves to Kushina');
+  });
+
+  test('alternate forms map onto existing transformations, never new fighters', () => {
+    const cases = [
+      ['sage naruto', 'naruto', 'naruto_sage'],
+      ['naruto sage mode', 'naruto', 'naruto_sage'],
+      ['kcm naruto', 'naruto', 'naruto_kcm1'],
+      ['six paths naruto', 'naruto', 'naruto_sixpaths'],
+      ['baryon naruto', 'naruto', 'naruto_baryon'],
+      ['ems sasuke', 'sasuke', 'sasuke_ems'],
+      ['rinnegan sasuke', 'sasuke', 'sasuke_rinnegan'],
+      ['masked obito', 'obito', 'obito_masked'],
+      ['white mask obito', 'obito', 'obito_white_mask'],
+      ['juubito', 'obito', 'obito_obito'],
+      ['six paths madara', 'madara', 'madara_sixpaths'],
+      ['ten tails madara', 'madara', 'madara_obito'],
+    ];
+    for (const [name, fighterId, formId] of cases) {
+      const m = matchPackage(PRE.matchIndex, name, null);
+      assertEqual(m.fighterId, fighterId, `"${name}" fighter`);
+      assertEqual(m.type, 'transformation', `"${name}" type`);
+      assertEqual(m.formId, formId, `"${name}" form`);
+      assert(TRANSFORMATIONS[formId], `${formId} is a real transformation`);
+      assertEqual(m.stagingSubpath, `${fighterId}/forms/${formId}`, `"${name}" staging path`);
+    }
+    // And none of that added anything to the roster.
+    assertEqual(Object.keys(FIGHTERS).length, 110, 'the roster is still 110');
+  });
+
+  test('era and outfit terms map onto existing costumes', () => {
+    const cases = [
+      ['adult sasuke', 'sasuke', 'adult'],
+      ['edo madara', 'madara', 'edo'],
+      ['shippuden naruto', 'naruto', 'shippuden'],
+      ['hokage naruto', 'naruto', 'hokage'],
+      ['anbu kakashi', 'kakashi', 'anbu'],
+      ['young madara', 'madara', 'young'],
+    ];
+    for (const [name, fighterId, costumeId] of cases) {
+      const m = matchPackage(PRE.matchIndex, name, null);
+      assertEqual(m.fighterId, fighterId, `"${name}" fighter`);
+      assertEqual(m.type, 'costume', `"${name}" type`);
+      assertEqual(m.costumeId, costumeId, `"${name}" costume`);
+      assert(costumesFor(fighterId).some((c) => c.id === costumeId),
+        `${costumeId} is a real costume for ${fighterId}`);
+      assertEqual(m.stagingSubpath, `${fighterId}/costumes/${costumeId}`, `"${name}" staging path`);
+    }
+  });
+
+  test('a package naming two fighters is left unresolved, with both listed', () => {
+    const m = matchPackage(PRE.matchIndex, 'naruto-vs-sasuke', null);
+    assertEqual(m.fighterId, null, 'no fighter is chosen');
+    assertEqual(m.confidence, 'ambiguous', 'confidence');
+    assertEqual(m.candidates.sort().join(','), 'naruto,sasuke', 'both candidates listed');
+    // Zetsu is the same problem from the other direction: one clan name, two fighters.
+    assertEqual(matchPackage(PRE.matchIndex, 'zetsu', null).confidence, 'ambiguous',
+      'a name shared by two fighters stays ambiguous');
+  });
+
+  /* --------------------------------------------------------------- batch --- */
+
+  test('one batch run scans every package in the folder', () => {
+    assert(!PRE.batchError, `batch threw: ${PRE.batchError?.message}`);
+    const s = PRE.batch.report.summary;
+    assertEqual(s.packagesScanned, 10, 'packages scanned');
+    assertEqual(PRE.batch.report.packages.length, 10, 'rows in the report');
+  });
+
+  test('the batch sorts base fighters, transformations and costumes apart', () => {
+    const s = PRE.batch.report.summary;
+    assertEqual(batchRow('gaara').type, 'base', 'gaara is a base fighter');
+    assertEqual(batchRow('sage naruto').formId, 'naruto_sage', 'sage naruto is a form');
+    assertEqual(batchRow('adult sasuke').costumeId, 'adult', 'adult sasuke is a costume');
+    assertEqual(s.transformationsMatched, 1, 'transformations matched');
+    assertEqual(s.costumesMatched, 1, 'costumes matched');
+    assertAtLeast(s.baseFightersMatched, 3, 'base fighters matched');
+  });
+
+  test('a package with no stated rights stages analysis but exports no art', () => {
+    const row = batchRow('kakashi');
+    assertEqual(row.readiness, 'ANALYSIS_ONLY', 'readiness');
+    assertEqual(row.result, 'ANALYSIS_STAGED', 'result');
+    assertEqual(row.artExported, false, 'no artwork exported');
+    const dir = path.join(PRE.batchRoot, 'assets', 'import-staging', 'kakashi', 'converted');
+    assert(fs.existsSync(path.join(dir, 'hitbox-map.json')), 'hitboxes were staged');
+    assert(fs.existsSync(path.join(dir, 'ART-NOT-EXPORTED.txt')), 'the refusal is written down');
+    assert(!fs.existsSync(path.join(dir, 'sprite-sheet.png')), 'no sprite sheet was written');
+  });
+
+  test('a ready package exports to staging under its own fighter id', () => {
+    const row = batchRow('gaara');
+    assertEqual(row.result, 'IMPORTED', 'result');
+    assertEqual(row.artExported, true, 'artwork exported');
+    const sheet = path.join(PRE.batchRoot, 'assets', 'import-staging', 'gaara', 'converted', 'sprite-sheet.png');
+    assert(fs.existsSync(sheet), 'the sprite sheet is staged');
+  });
+
+  test('a form imports under forms/ and a costume under costumes/', () => {
+    const staging = path.join(PRE.batchRoot, 'assets', 'import-staging');
+    assert(fs.existsSync(path.join(staging, 'naruto', 'forms', 'naruto_sage', 'converted')),
+      'the form staged under forms/');
+    assert(fs.existsSync(path.join(staging, 'sasuke', 'costumes', 'adult', 'converted')),
+      'the costume staged under costumes/');
+    // Neither created a top-level folder that could be mistaken for a fighter.
+    assert(!fs.existsSync(path.join(staging, 'naruto_sage')), 'no roster-level form folder');
+    assert(!fs.existsSync(path.join(staging, 'adult')), 'no roster-level costume folder');
+  });
+
+  test('two packages for the same fighter are staged side by side, not overwritten', () => {
+    const dup = PRE.batch.report.duplicates.find((d) => d.fighterId === 'itachi');
+    assert(dup, 'the duplicate target was detected');
+    assertEqual(dup.ranked.length, 2, 'both candidates ranked');
+    assertEqual(dup.promoted, false, 'nothing was promoted');
+    const cands = path.join(PRE.batchRoot, 'assets', 'import-staging', 'itachi', 'candidates');
+    const dirs = fs.readdirSync(cands).sort();
+    assertEqual(dirs.length, 2, `candidate folders: ${dirs.join(', ')}`);
+    for (const d of dirs) {
+      assert(fs.existsSync(path.join(cands, d, 'converted')), `${d} has its own output`);
+    }
+    // Identical packages score identically, and the report says so rather than
+    // picking a winner.
+    if (dup.ranked[0].score.total === dup.ranked[1].score.total) {
+      assertEqual(dup.recommended, null, 'a tie makes no recommendation');
+      assertEqual(dup.tie.length, 2, 'the tie names both');
+    } else {
+      assertEqual(dup.recommended, dup.ranked[0].package, 'the strongest is recommended');
+    }
+  });
+
+  test('an ambiguous package is skipped with both candidates named', () => {
+    const row = batchRow('naruto-vs-sasuke');
+    assertEqual(row.readiness, 'NEEDS_FIGHTER_ID', 'readiness');
+    assertEqual(row.result, 'SKIPPED', 'result');
+    assertEqual(row.fighterId, null, 'no fighter was picked');
+    assert(/naruto/.test(row.reason) && /sasuke/.test(row.reason), `reason: ${row.reason}`);
+  });
+
+  test('a broken package does not stop the batch', () => {
+    const row = batchRow('broken-pack');
+    assertEqual(row.readiness, 'BLOCKED', 'readiness');
+    assertEqual(row.result, 'SKIPPED', 'result');
+    // Packages after it in the run still completed.
+    assertEqual(batchRow('sage naruto').result, 'IMPORTED', 'a later package still imported');
+    assertEqual(PRE.batch.report.summary.failed, 0, 'nothing failed mid-import');
+  });
+
+  test('a rejected package does not stop the batch and exports nothing', () => {
+    const row = batchRow('hinata');
+    assertEqual(row.rights, STATUS.REJECTED, 'rights');
+    assertEqual(row.result, 'SKIPPED', 'result');
+    assertEqual(row.staged, null, 'nothing was staged');
+    assert(!fs.existsSync(path.join(PRE.batchRoot, 'assets', 'import-staging', 'hinata')),
+      'no staging folder was created for it');
+    assertAtLeast(PRE.batch.report.summary.packagesImported, 4, 'other packages still imported');
+  });
+
+  test('a dry run maps and reports everything without writing any staging', () => {
+    assert(!PRE.batchDryError, `dry batch threw: ${PRE.batchDryError?.message}`);
+    const r = PRE.batchDry.report;
+    assertEqual(r.dryRun, true, 'marked as a dry run');
+    assertEqual(r.summary.packagesScanned, 10, 'still scanned everything');
+    assertAtLeast(r.summary.dryRun, 5, 'packages that would have been imported');
+    assertEqual(r.summary.packagesImported, 0, 'nothing was imported');
+    assertEqual(r.stagingPaths.length, 0, 'no staging paths');
+    assert(!fs.existsSync(path.join(PRE.batchDryRoot, 'assets')), 'no assets tree was created');
+    // The mapping is still complete — that is what a dry run is for.
+    const sage = r.packages.find((p) => p.package === 'sage naruto');
+    assertEqual(sage.formId, 'naruto_sage', 'the form was still worked out');
+    assertEqual(sage.stagingSubpath, 'naruto/forms/naruto_sage', 'and where it would go');
+  });
+
+  test('the batch summary counts add up', () => {
+    const r = PRE.batch.report;
+    const s = r.summary;
+    const accounted = s.packagesImported + s.analysisOnly + s.skipped + s.failed + s.dryRun;
+    assertEqual(accounted, s.packagesScanned, 'every package is in exactly one bucket');
+    assertEqual(s.rejected, 1, 'rejected');
+    assertEqual(s.blocked, 1, 'blocked');
+    assertEqual(s.ambiguous, 1, 'ambiguous');
+    assertEqual(s.duplicateTargets, 1, 'duplicate targets');
+    assertEqual(s.stagingPathsCreated, r.stagingPaths.length, 'staging paths counted');
+    assertEqual(
+      s.rosterFightersWithoutCandidate + s.distinctFightersMatched, 110,
+      'matched and unmatched fighters cover the whole roster',
+    );
+  });
+
+  test('the batch writes both report files and touches no live art', () => {
+    assert(fs.existsSync(PRE.batch.jsonPath), 'the JSON report exists');
+    assert(fs.existsSync(PRE.batch.mdPath), 'the markdown report exists');
+    const md = fs.readFileSync(PRE.batch.mdPath, 'utf8');
+    for (const heading of ['## Summary', '## Packages', '| Package | Fighter | Type | Rights | Readiness | Result |']) {
+      assert(md.includes(heading), `report is missing ${heading}`);
+    }
+    // Everything written by the batch lives under staging or reports.
+    const strays = walkPackage(PRE.batchRoot).files
+      .filter((f) => !f.startsWith('assets/import-staging/') && !f.startsWith('reports/'));
+    assertEmpty(strays, 'files written outside staging and reports');
+  });
+
+  test('a package folder name cannot steer output out of the staging root', () => {
+    // Candidate ids are derived from folder names, so they are sanitised.
+    assertEqual(packageId('../../etc/passwd'), 'etc_passwd', 'traversal is flattened');
+    assertEqual(packageId('Sage Naruto (final)'), 'sage_naruto_final', 'punctuation is flattened');
+    assertEqual(packageId(''), 'package', 'an empty name still yields a usable id');
+    let threw = null;
+    try { prepareStaging(tmpdir('escape'), 'naruto', 'naruto/../../escape'); }
+    catch (err) { threw = err; }
+    assert(threw, 'a traversing staging subpath is refused');
+  });
+
+  test('candidate scoring rewards the data this engine can actually use', () => {
+    const weak = scoreCandidate({
+      sff: { decodedCount: 10, spriteCount: 10, sprites: [{ width: 32, height: 32 }] },
+      air: { animations: [1, 2] },
+      animMap: { stats: { clipsCovered: 2 } },
+      hitboxes: { stats: { hurtCoverage: 0, attackCoverage: 0 } },
+      moves: { stats: { withTiming: 0 } },
+      license: { status: STATUS.MANUAL_REVIEW },
+      errors: [],
+    });
+    const strong = scoreCandidate({
+      sff: { decodedCount: 200, spriteCount: 200, sprites: [{ width: 128, height: 128 }] },
+      air: { animations: new Array(20).fill(0) },
+      animMap: { stats: { clipsCovered: 18 } },
+      hitboxes: { stats: { hurtCoverage: 1, attackCoverage: 0.5 } },
+      moves: { stats: { withTiming: 10 } },
+      license: { status: STATUS.APPROVED },
+      errors: [],
+    });
+    assert(strong.total > weak.total, `${strong.total} should beat ${weak.total}`);
+    // A package that fails to decode half its sprites is penalised for it.
+    const broken = scoreCandidate({
+      sff: { decodedCount: 100, spriteCount: 200, sprites: [{ width: 128, height: 128 }] },
+      air: { animations: new Array(20).fill(0) },
+      animMap: { stats: { clipsCovered: 18 } },
+      hitboxes: { stats: { hurtCoverage: 1, attackCoverage: 0.5 } },
+      moves: { stats: { withTiming: 10 } },
+      license: { status: STATUS.APPROVED },
+      errors: ['a', 'b'],
+    });
+    assert(broken.total < strong.total, 'decode failures and errors cost score');
+  });
+
+  test('the batch leaves the 110-fighter roster exactly as it found it', () => {
+    assertEqual(Object.keys(FIGHTERS).length, 110, 'roster size');
+    assertEqual(FIGHTER_ORDER.length, 110, 'roster order');
+    // No staging folder is named after anything that is not a roster fighter.
+    const staging = path.join(PRE.batchRoot, 'assets', 'import-staging');
+    for (const d of fs.readdirSync(staging)) {
+      assert(FIGHTERS[d], `staging folder "${d}" is not a roster fighter`);
+    }
   });
 }
