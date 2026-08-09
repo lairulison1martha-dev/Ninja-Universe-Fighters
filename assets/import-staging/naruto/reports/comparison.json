@@ -1,6 +1,6 @@
 {
  "fighterId": "naruto",
- "generatedAt": "2026-08-09T03:46:12.026Z",
+ "generatedAt": "2026-08-09T12:17:15.166Z",
  "current": {
   "fighterId": "naruto",
   "displayName": "Naruto Uzumaki",
@@ -55,8 +55,8 @@
   "uniqueKit": true
  },
  "imported": {
-  "characterName": "\"Blockfighter\"",
-  "author": "\"Ninja Universe Fighters test fixture\"",
+  "characterName": "Blockfighter",
+  "author": "Ninja Universe Fighters test fixture",
   "mugenVersion": "1.0",
   "resolution": "320x240",
   "sffVersion": 1,

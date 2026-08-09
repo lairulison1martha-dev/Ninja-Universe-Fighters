@@ -76,8 +76,8 @@
  },
  "source": {
   "kind": "mugen",
-  "characterName": "\"Blockfighter\"",
-  "author": "\"Ninja Universe Fighters test fixture\"",
+  "characterName": "Blockfighter",
+  "author": "Ninja Universe Fighters test fixture",
   "mugenVersion": "1.0",
   "versionDate": "1.0",
   "localcoord": {
@@ -94,7 +94,7 @@
   "audioImported": false
  },
  "approvedForLive": false,
- "generatedAt": "2026-08-09T03:46:12.047Z",
+ "generatedAt": "2026-08-09T12:17:15.183Z",
  "animationCount": 6,
  "note": "Staged MUGEN import. Not used by the game. See reports/ before considering any of this for assets/fighters/."
 }

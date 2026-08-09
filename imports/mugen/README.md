@@ -11,17 +11,46 @@ imports/mugen/naruto/
   ...
 ```
 
-Then inspect it:
+The folder name is free-form, but naming it after the roster fighter lets the
+listing match it for you.
+
+Then see what is here:
+
+```
+node tools/mugen-import/index.mjs --list-local
+```
+
+For every folder that prints, this reports the character name and author from
+the `.def`, which data files are inside, the rights status and the documents
+behind it, the matching roster fighter if one is obvious, an import readiness,
+and the exact command to run next. It writes nothing.
+
+Look at one package in detail without writing anything:
 
 ```
 node tools/mugen-import/index.mjs imports/mugen/naruto --analyse
 ```
 
-and, if the rights check comes back APPROVED, import it into staging:
+Import it into staging — analysis always, artwork only if the rights check
+came back APPROVED:
 
 ```
 node tools/mugen-import/index.mjs imports/mugen/naruto --fighter naruto
 ```
+
+### Readiness, as `--list-local` reports it
+
+| | |
+|---|---|
+| `READY_TO_IMPORT` | rights APPROVED and the target fighter is known |
+| `ANALYSIS_ONLY` | parseable and targeted, but the terms are not clear enough to approve artwork |
+| `NEEDS_FIGHTER_ID` | no roster fighter is obvious — choose one with `--fighter` |
+| `REJECTED` | rights say no |
+| `BLOCKED` | no character `.def`, or nothing readable |
+
+`ANALYSIS_ONLY` is the default for a package that says nothing about reuse. A
+folder with no readme has not granted permission; it has simply not mentioned
+the question.
 
 ## Nothing in here is committed
 

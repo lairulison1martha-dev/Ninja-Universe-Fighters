@@ -327,24 +327,51 @@ export async function importPackage(packagePath, fighterId, {
 function usage() {
   console.log(`MUGEN import pipeline
 
+  node tools/mugen-import/index.mjs --list-local
   node tools/mugen-import/index.mjs <package-dir> --fighter <id> [--dry-run] [--force]
-  node tools/mugen-import/index.mjs --audit [--out reports]
+  node tools/mugen-import/index.mjs --audit
 
 Options
-  --fighter <id>  a fighter id from the existing 110-fighter roster (required)
-  --dry-run       analyse and report, write nothing
+  --list-local    list the packages sitting in imports/mugen/ and say what the
+                  importer could do with each. Reads only; writes nothing.
+  --fighter <id>  a fighter id from the existing 110-fighter roster (required
+                  for an import — this pipeline never creates roster entries)
+  --dry-run       analyse and report, write nothing (alias: --analyse)
   --force         export art even when rights are not APPROVED (records why)
   --audit         run the roster-wide audit instead of an import
+  --json          machine-readable output, for --list-local
+  --dir <path>    where to look for local packages (default imports/mugen)
+
+Typical use
+
+  1. drop a downloaded character folder into imports/mugen/<name>/
+  2. node tools/mugen-import/index.mjs --list-local
+  3. node tools/mugen-import/index.mjs imports/mugen/<name> --fighter <id>
 
 Staging output: assets/import-staging/<fighter-id>/
-Live assets in assets/fighters/ are never modified by this tool.`);
+Live assets in assets/fighters/ are never modified by this tool.
+Nothing here reaches the network — packages are read off local disk only.`);
 }
 
 async function main(argv) {
   const args = argv.slice(2);
   if (!args.length || args.includes('--help') || args.includes('-h')) { usage(); return 0; }
 
-  if (args.includes('--audit')) {
+  const flag = (name) => {
+    const i = args.indexOf(name);
+    return i >= 0 ? args[i + 1] : null;
+  };
+
+  if (args.includes('--list-local') || args.includes('--list')) {
+    const { listLocalPackages, formatListing } = await import('./list-local.mjs');
+    const listing = await listLocalPackages(REPO_ROOT, { dir: flag('--dir') || undefined });
+    console.log(args.includes('--json')
+      ? JSON.stringify(listing, null, 1)
+      : formatListing(listing));
+    return 0;
+  }
+
+  if (args.includes('--audit') || args.includes('--roster-audit')) {
     const { runRosterAudit } = await import('./roster-audit.mjs');
     const out = await runRosterAudit(REPO_ROOT);
     console.log(`\nWrote ${out.jsonPath}\nWrote ${out.mdPath}`);
@@ -353,10 +380,19 @@ async function main(argv) {
 
   const fighterIdx = args.indexOf('--fighter');
   const fighterId = fighterIdx >= 0 ? args[fighterIdx + 1] : null;
-  const pkg = args.find((a) => !a.startsWith('--') && a !== fighterId);
+  // Skip flags and any value consumed by a flag — comparing against the
+  // fighter id by value would lose a package folder that is simply called
+  // `naruto`.
+  const consumed = new Set();
+  for (const name of ['--fighter', '--dir']) {
+    const i = args.indexOf(name);
+    if (i >= 0) { consumed.add(i); consumed.add(i + 1); }
+  }
+  const pkgIdx = args.findIndex((a, i) => !a.startsWith('--') && !consumed.has(i));
+  const pkg = pkgIdx >= 0 ? args[pkgIdx] : null;
   if (!pkg || !fighterId) { usage(); return 1; }
 
-  const dryRun = args.includes('--dry-run');
+  const dryRun = args.includes('--dry-run') || args.includes('--analyse') || args.includes('--analyze');
   const force = args.includes('--force');
 
   try {

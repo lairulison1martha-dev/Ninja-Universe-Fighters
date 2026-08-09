@@ -1,9 +1,9 @@
 {
  "defPath": "blockfighter.def",
  "defDir": "",
- "name": "\"Blockfighter\"",
- "displayName": "\"Blockfighter\"",
- "author": "\"Ninja Universe Fighters test fixture\"",
+ "name": "Blockfighter",
+ "displayName": "Blockfighter",
+ "author": "Ninja Universe Fighters test fixture",
  "versionDate": "1.0",
  "mugenVersion": "1.0",
  "pal_defaults": null,

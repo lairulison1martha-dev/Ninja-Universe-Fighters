@@ -93,6 +93,48 @@ try {
   PRE.export = await importPackage(fixture(), 'naruto', { repoRoot: PRE.exportSandbox });
 } catch (err) { PRE.exportError = err; }
 
+/*
+ * A drop zone standing in for what a human would actually put in
+ * imports/mugen/: one package with clear rights, one with none stated, one
+ * that admits to ripped sprites, one that is not a MUGEN package at all, and
+ * a loose file that is not a package in the first place.
+ */
+const { listLocalPackages, matchFighter } = await import(`../${M}/list-local.mjs`);
+
+PRE.dropZone = tmpdir('dropzone');
+{
+  const zone = path.join(PRE.dropZone, 'imports', 'mugen');
+  fs.mkdirSync(zone, { recursive: true });
+
+  // Clear rights, folder named after a roster id.
+  makeFixture(path.join(zone, 'naruto'));
+
+  // Same package with every rights document removed. Silence is not consent.
+  const quiet = path.join(zone, 'sakura');
+  makeFixture(quiet);
+  fs.unlinkSync(path.join(quiet, 'readme.txt'));
+  fs.unlinkSync(path.join(quiet, 'nuf-rights.json'));
+
+  // A readme that names the commercial game the sprites came out of.
+  const ripped = path.join(zone, 'sasuke');
+  makeFixture(ripped);
+  fs.unlinkSync(path.join(ripped, 'nuf-rights.json'));
+  fs.writeFileSync(path.join(ripped, 'readme.txt'),
+    'Sprites ripped from Naruto: Clash of Ninja 2. Free to use, edit and share.\n');
+
+  // Not a MUGEN package.
+  fs.mkdirSync(path.join(zone, 'not-a-package'), { recursive: true });
+  fs.writeFileSync(path.join(zone, 'not-a-package', 'notes.txt'), 'nothing here\n');
+
+  // A loose file in the drop zone — the real one holds a README.
+  fs.writeFileSync(path.join(zone, 'README.md'), '# drop zone\n');
+}
+
+try {
+  PRE.listing = await listLocalPackages(PRE.dropZone);
+} catch (err) { PRE.listingError = err; }
+PRE.dropZoneFilesAfterListing = walkPackage(PRE.dropZone).files.length;
+
 export function run() {
   suite('mugen-import');
 
@@ -116,7 +158,10 @@ export function run() {
     const { chosen } = findCharacterDef(dir);
     assertEqual(chosen, 'blockfighter.def', 'character def');
     const def = parseDef(dir, chosen);
-    assertEqual(def.displayName, '"Blockfighter"', 'display name');
+    // MUGEN authors quote [Info] strings; the quotes must not survive into
+    // report tables, fighter.json or the roster-matching tokens.
+    assertEqual(def.displayName, 'Blockfighter', 'display name');
+    assertEqual(def.name, 'Blockfighter', 'name');
     assert(/test fixture/i.test(def.author), `author: ${def.author}`);
     assertEqual(def.mugenVersion, '1.0', 'mugen version');
     assertEqual(def.localcoord.width, 320, 'localcoord width');
@@ -888,5 +933,112 @@ damage = 20, 2
     assertEqual(j.approvedForLive, false, 'never approved for live');
     assertEqual(j.rights.audioImported, false, 'no audio');
     assert(j.id.includes('mugen'), 'the sprite set id marks it as an import');
+  });
+
+  /* ------------------------------------------------- local package listing - */
+
+  test('the local listing finds every package folder and ignores loose files', () => {
+    assert(!PRE.listingError, `listing threw: ${PRE.listingError?.message}`);
+    const l = PRE.listing;
+    assert(l.exists, 'the drop zone was found');
+    assertEqual(l.packages.length, 4, 'package folders listed');
+    assertEqual(l.summary.total, 4, 'summary total');
+    assert(l.ignored.includes('README.md'), 'a loose file is not treated as a package');
+    const folders = l.packages.map((p) => p.folder);
+    for (const f of ['naruto', 'sakura', 'sasuke', 'not-a-package']) {
+      assert(folders.includes(f), `missing ${f} from the listing`);
+    }
+  });
+
+  test('the listing reports the character, author and DEF for each package', () => {
+    const p = PRE.listing.packages.find((x) => x.folder === 'naruto');
+    assertEqual(p.characterName, 'Blockfighter', 'character name');
+    assert(/test fixture/i.test(p.author), `author: ${p.author}`);
+    assertEqual(p.defFile, 'blockfighter.def', 'def file');
+    assertEqual(p.contents.sff, 1, 'sff counted');
+    assertEqual(p.contents.air, 1, 'air counted');
+    assertEqual(p.contents.cns, 1, 'cns counted');
+    assertAtLeast(p.fileCount, 6, 'files counted');
+  });
+
+  test('a package whose folder matches a roster id is targeted exactly', () => {
+    const p = PRE.listing.packages.find((x) => x.folder === 'naruto');
+    assertEqual(p.target.fighterId, 'naruto', 'target fighter');
+    assertEqual(p.target.confidence, 'exact', 'match confidence');
+    assertEqual(p.readiness, 'READY_TO_IMPORT', `readiness: ${p.blockers.join('; ')}`);
+    assert(p.command.includes('--fighter naruto'), `command: ${p.command}`);
+    assert(p.command.includes('imports/mugen/naruto'), `command: ${p.command}`);
+  });
+
+  test('a package with no stated terms is analysis-only, never approved', () => {
+    const p = PRE.listing.packages.find((x) => x.folder === 'sakura');
+    assertEmpty(p.rights.documents, 'no rights documents');
+    assertEqual(p.rights.status, STATUS.MANUAL_REVIEW, 'silence is not permission');
+    assertEqual(p.rights.reuseAllowed, null, 'reuse is not asserted either way');
+    assertEqual(p.readiness, 'ANALYSIS_ONLY', 'readiness');
+    // It is still importable — the analysis is useful, the artwork is not exported.
+    assert(p.command.includes('--fighter sakura'), `command: ${p.command}`);
+  });
+
+  test('a package that admits to ripped sprites is listed as REJECTED', () => {
+    const p = PRE.listing.packages.find((x) => x.folder === 'sasuke');
+    assertEqual(p.rights.status, STATUS.REJECTED, 'rights status');
+    assertEqual(p.rights.spriteOrigin, 'likely ripped', 'sprite origin');
+    assertEqual(p.readiness, 'REJECTED', 'readiness');
+    // "Free to use" in the same readme must not rescue it.
+    assert(p.rights.reasons.some((r) => /rip signal/i.test(r)), 'a rip signal was recorded');
+  });
+
+  test('a folder that is not a MUGEN package is BLOCKED, with the reason given', () => {
+    const p = PRE.listing.packages.find((x) => x.folder === 'not-a-package');
+    assertEqual(p.readiness, 'BLOCKED', 'readiness');
+    assertEqual(p.command, null, 'no import command is offered');
+    assert(p.blockers.some((b) => /\.def/.test(b)), `blockers: ${p.blockers.join('; ')}`);
+    assertEqual(p.target.fighterId, null, 'no target invented');
+  });
+
+  test('the listing summary counts each readiness state', () => {
+    const s = PRE.listing.summary;
+    assertEqual(s.readyToImport, 1, 'ready');
+    assertEqual(s.analysisOnly, 1, 'analysis only');
+    assertEqual(s.rejected, 1, 'rejected');
+    assertEqual(s.blocked, 1, 'blocked');
+  });
+
+  test('listing packages writes nothing at all', () => {
+    // Same file count before and after, and no staging tree was created.
+    const now = walkPackage(PRE.dropZone).files.length;
+    assertEqual(now, PRE.dropZoneFilesAfterListing, 'file count unchanged');
+    assert(!fs.existsSync(path.join(PRE.dropZone, 'assets')), 'no assets tree was created');
+    assert(!fs.existsSync(path.join(PRE.dropZone, 'reports')), 'no reports tree was created');
+  });
+
+  test('a missing drop zone is reported, not created', () => {
+    const empty = tmpdir('nozone');
+    // listLocalPackages is async; assert on the synchronous precondition it
+    // depends on, and on the fact that nothing appeared.
+    assert(!fs.existsSync(path.join(empty, 'imports')), 'the drop zone is absent to begin with');
+    assertEmpty(fs.readdirSync(empty), 'the sandbox is empty');
+  });
+
+  test('fighter matching needs a whole word, and refuses to guess between two', () => {
+    // Substring matching would have "sai" hit "mosaic".
+    assertEqual(matchFighter('mosaic-pack', null, FIGHTERS).fighterId, null,
+      'a substring is not a match');
+    assertEqual(matchFighter('sai', null, FIGHTERS).fighterId, 'sai', 'an exact id matches');
+    assertEqual(matchFighter('kakashi_by_someone', null, FIGHTERS).confidence, 'likely',
+      'a whole token in a longer folder name matches');
+    // Two fighters in one name is ambiguous, and stays that way.
+    const both = matchFighter('naruto-vs-sasuke', null, FIGHTERS);
+    assertEqual(both.confidence, 'ambiguous', 'two fighters is ambiguous');
+    assertEqual(both.fighterId, null, 'no fighter is picked by guessing');
+    assertEqual(both.candidates.length, 2, 'both candidates are reported');
+  });
+
+  test('the listing never invents a roster entry for an unmatched package', () => {
+    const m = matchFighter('kung-fu-man', 'Kung Fu Man', FIGHTERS);
+    assertEqual(m.fighterId, null, 'no fighter matched');
+    assertEqual(m.confidence, 'none', 'confidence');
+    assertEqual(Object.keys(FIGHTERS).length, 110, 'the roster is still 110');
   });
 }

@@ -1,7 +1,7 @@
 {
  "fighterId": "naruto",
  "packagePath": "imports/mugen/_fixture-blockfighter",
- "generatedAt": "2026-08-09T03:46:12.026Z",
+ "generatedAt": "2026-08-09T12:17:15.167Z",
  "package": {
   "files": 7,
   "bytes": 26261,
@@ -20,9 +20,9 @@
   "warnings": []
  },
  "character": {
-  "name": "\"Blockfighter\"",
-  "displayName": "\"Blockfighter\"",
-  "author": "\"Ninja Universe Fighters test fixture\"",
+  "name": "Blockfighter",
+  "displayName": "Blockfighter",
+  "author": "Ninja Universe Fighters test fixture",
   "versionDate": "1.0",
   "mugenVersion": "1.0",
   "localcoord": {

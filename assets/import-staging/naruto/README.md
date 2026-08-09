@@ -1,6 +1,6 @@
 # Staged MUGEN import — naruto
 
-Character: **"Blockfighter"** by Ninja Universe Fighters repository (tools/mugen-import/make-fixture.mjs)
+Character: **Blockfighter** by Ninja Universe Fighters repository (tools/mugen-import/make-fixture.mjs)
 
 Licence: CC0-1.0
 

@@ -432,7 +432,8 @@ Gamepads are polled with the standard mapping.
 ├── assets/import-staging/      MUGEN import output — never the live art
 ├── imports/mugen/              drop zone for packages to inspect (git-ignored)
 ├── reports/                    generated audits, not read by the game
-├── tools/mugen-import/         MUGEN parsers, rights check, staging exporter
+├── tools/mugen-import/         MUGEN parsers, rights check, local package
+│                               listing, staging exporter
 ├── tools/generate-icons.py     procedural icon generator
 ├── tools/build-fighters.py     sprite-set builder (CLI)
 ├── tools/fighter_art.py        the pixel-art rig: poses, body, hair, gear
@@ -597,19 +598,51 @@ engine then consumes.
 
 ### Using it
 
+Download MUGEN character folders yourself and drop them in `imports/mugen/`,
+one folder per package. Nothing is fetched for you — the importer only ever
+reads local disk.
+
 ```bash
+# What is sitting in imports/mugen/, and what can be done with each? No writes.
+node tools/mugen-import/index.mjs --list-local
+node tools/mugen-import/index.mjs --list-local --json    # same, machine-readable
+
 # What is in this package, and may we use it? Writes nothing.
-node tools/mugen-import/index.mjs imports/mugen/<id> --analyse
+node tools/mugen-import/index.mjs imports/mugen/naruto --analyse
 
 # Parse and convert into staging. Art is exported only if rights are APPROVED.
-node tools/mugen-import/index.mjs imports/mugen/<id> --fighter <roster-id>
+node tools/mugen-import/index.mjs imports/mugen/naruto --fighter naruto
 
 # Audit all 110 roster fighters → reports/mugen-roster-audit.{json,md}
-node tools/mugen-import/index.mjs --roster-audit
+node tools/mugen-import/index.mjs --audit
 
 # Generate the original CC0 test package used by the tests
 node tools/mugen-import/make-fixture.mjs <dir>
 ```
+
+`--list-local` reports, per package: the folder, the character name and author
+read from the `.def`, which `.def` was chosen, what data files are inside,
+the rights status and which documents produced it, the matching roster fighter
+if one is obvious, and an import readiness:
+
+| Readiness | Meaning |
+|---|---|
+| `READY_TO_IMPORT` | rights APPROVED and the target fighter is known |
+| `ANALYSIS_ONLY` | parseable and targeted, but the terms are not clear — timing, hitboxes and moves will be staged, sprites will not |
+| `NEEDS_FIGHTER_ID` | no roster fighter is obvious; pick one with `--fighter` |
+| `REJECTED` | rights say no |
+| `BLOCKED` | the importer cannot run — no character `.def`, or nothing readable |
+
+A package with no readme at all is `ANALYSIS_ONLY`, never approved. Missing
+terms are missing terms, not permission.
+
+An import then runs the same twelve steps every time: inspect files → read
+`.def` → parse SFF → parse AIR → parse CMD/CNS/ST → assess reuse text →
+convert sprites → convert animations → convert hitboxes → analyse move timing
+→ write the comparison report → recommend one of `KEEP_CURRENT`,
+`IMPORT_SPRITES_ONLY`, `IMPORT_ANIMATIONS_ONLY`, `IMPORT_HITBOXES_ONLY`,
+`IMPORT_MOVE_TIMING_ONLY`, `IMPORT_MULTIPLE`, `MANUAL_REVIEW` or `REJECT`.
+The recommendation is advisory; nothing acts on it.
 
 ### What it parses
 

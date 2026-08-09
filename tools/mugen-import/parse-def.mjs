@@ -16,6 +16,19 @@ import { parseIni, findSection, toInt, toFloat, splitTuple } from './ini.mjs';
 import { readText, walkPackage, safeResolve, ImportError } from './limits.mjs';
 
 /**
+ * Strip the quotes MUGEN authors put round `[Info]` strings.
+ *
+ * `name = "Blockfighter"` should read as Blockfighter everywhere downstream —
+ * carrying the quotes through means they end up in report tables, in
+ * `fighter.json`, and in the roster-matching tokens.
+ */
+export function unquote(value) {
+  if (value === null || value === undefined) return null;
+  const s = String(value).trim().replace(/^["'](.*)["']$/s, '$1').trim();
+  return s || null;
+}
+
+/**
  * Find a package file by the name a .def used, tolerating case and separator
  * differences and a missing subfolder.
  *
@@ -27,7 +40,7 @@ import { readText, walkPackage, safeResolve, ImportError } from './limits.mjs';
  */
 export function resolveReference(root, allFiles, ref, defDir = '') {
   if (!ref) return null;
-  const cleaned = String(ref).trim().replace(/\\/g, '/').replace(/^\.\//, '');
+  const cleaned = (unquote(ref) || '').replace(/\\/g, '/').replace(/^\.\//, '');
   if (!cleaned) return null;
 
   const candidates = [
@@ -132,11 +145,11 @@ export function parseDef(root, defRel, allFiles = null) {
   return {
     defPath: defRel,
     defDir,
-    name: info?.get('name') || null,
-    displayName: info?.get('displayname') || info?.get('name') || null,
-    author: info?.get('author') || null,
-    versionDate: info?.get('versiondate') || null,
-    mugenVersion: info?.get('mugenversion') || null,
+    name: unquote(info?.get('name')),
+    displayName: unquote(info?.get('displayname')) || unquote(info?.get('name')),
+    author: unquote(info?.get('author')),
+    versionDate: unquote(info?.get('versiondate')),
+    mugenVersion: unquote(info?.get('mugenversion')),
     pal_defaults: info?.get('pal.defaults') || null,
     localcoord,
     /** Scale from the character's coordinate space to 320x240 MUGEN units. */
