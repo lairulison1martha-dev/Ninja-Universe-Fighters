@@ -28,10 +28,12 @@ HAND = {
         # silhouette read at thumbnail size, so `panel` puts outfit2 where it
         # can actually be seen instead of leaving it on an unused key.
         outfit="#f07a26", outfit2="#232a44", trim="#2b3550", pants="#f07a26",
-        boots="#232a3c", eyes="#3f7fd0", torso="panel", sleeves="long",
+        boots="#3a4256", eyes="#3f7fd0", torso="panel", sleeves="long",
         headband="leaf", bandColor="#2b4a86", markings="whiskers",
         markColor="#c98a5e",
-        aura="#ffb020", height=1.0, bulk=1.0,
+        # Five-head fighting-game proportions rather than the 3.3-head default.
+        rig="fighter",
+        aura="#ffb020", height=1.0, bulk=1.06,
     ),
     "sasuke": dict(
         skin="#efc9a4", hair="#242a3a", hairStyle="ducktail",
@@ -409,8 +411,13 @@ COSTUME_DESIGNS = {
 # still come from the rules and a hand-authored key always wins where it is set.
 FORM_DESIGNS = ({
     # Naruto chakra modes
-    "naruto_sage": dict(markings="sage", markColor="#c9603c", eyes="#e8a23c",
-                        aura="#e8a23c", trim="#c9603c"),
+    # Sage is not a cloak form: no tails and only a faint shroud. It reads as
+    # focus rather than fire — a sleeveless haori over the base jumpsuit, a
+    # marked face and a calm amber palette.
+    "naruto_sage": dict(markings="sage", markColor="#b8562c", eyes="#e8a23c",
+                        aura="#e8a23c", trim="#c9603c", torso="panel",
+                        coat="cloak", coatColor="#d8c9a0", coatTrim="#b8562c",
+                        sleeves="short", shroud=0.16, bulk=1.04),
     # The three forms the MUGEN analysis found (see
     # tools/mugen-import/mappings/naruto.mjs). Each has to read as a different
     # FORM, not a different colour, so each changes the outline: KCM adds the
@@ -434,15 +441,25 @@ FORM_DESIGNS = ({
                             markings="sage", markColor="#8fb4d8",
                             horns=True, hornColor="#e8eef8",
                             shroud=0.44, bulk=1.06, height=1.04),
-    "naruto_baryon": dict(outfit="#e85a2a", outfit2="#8a2318", trim="#ffb84a",
-                          pants="#e85a2a", aura="#ff6a2a", eyes="#ffd45e",
-                          coat="cloak", coatColor="#c03a1a", bulk=1.06),
+    # Baryon is the burn-out form: darkest palette of the set, horns, a tight
+    # high-contrast shroud and no bulk. It reads as spent power rather than
+    # more of it, which keeps it apart from the gold forms and the red cloaks.
+    "naruto_baryon": dict(outfit="#2a1a24", outfit2="#160f18", trim="#ff8a3a",
+                          pants="#2a1a24", aura="#ff5a1a", eyes="#ffd45e",
+                          torso="panel", horns=True, hornColor="#ff8a3a",
+                          markings="stripes", markColor="#ff8a3a",
+                          shroud=0.50, bulk=0.98, height=1.02),
+    # The cloak forms are told apart by their tail count, which is the one
+    # thing about them that is countable in a silhouette. Without the tails
+    # these were the same body in two shades of red.
     "naruto_onetail": dict(outfit="#c8502a", outfit2="#7a2a18", trim="#e87a3a",
                            pants="#c8502a", aura="#e8602a", eyes="#f5e08a",
-                           markings="whiskers"),
+                           markings="whiskers", torso="panel",
+                           tails=1, shroud=0.34, bulk=1.02),
     "naruto_fourtail": dict(outfit="#9a2f1a", outfit2="#5a1a10", trim="#d0502a",
                             pants="#9a2f1a", aura="#d8401a", eyes="#ffffff",
-                            coat="cloak", coatColor="#8a2418", bulk=1.08),
+                            coat="cloak", coatColor="#8a2418",
+                            tails=4, shroud=0.70, bulk=1.10, height=1.02),
     # Sasuke eye stages and curse mark
     "sasuke_sharingan": dict(eyes="#c8303a", markings="sharingan"),
     "sasuke_mangekyo": dict(eyes="#d0303a", markings="sharingan", aura="#c8303a"),

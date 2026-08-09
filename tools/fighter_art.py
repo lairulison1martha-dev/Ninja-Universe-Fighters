@@ -36,6 +36,27 @@ HEAD_Y = 19
 HEAD_R = 8.4
 
 # ---------------------------------------------------------------------------
+# Body proportions.
+#
+# `chibi` is the original rig: a 56px body whose head is 17px of it, so it
+# stands about 3.3 heads tall. It reads as a small overworld sprite because
+# that is what those proportions are.
+#
+# `fighter` keeps the same 64px cell and the same ground line but rebalances
+# the skeleton to roughly five heads: a much smaller head, a longer torso and
+# noticeably longer legs. The body ends up slightly SHORTER in absolute pixels
+# (52 rather than 56) and reads considerably larger, because proportion is what
+# carries scale — upscaling the old pixels would just have made a bigger chibi.
+#
+# A design opts in with `rig="fighter"`. Every fighter without the key keeps
+# the original skeleton, so nobody else's art moves.
+# ---------------------------------------------------------------------------
+RIGS = {
+    "chibi": dict(head_r=HEAD_R, head_y=HEAD_Y, chest_y=CHEST_Y, hip_y=HIP_Y),
+    "fighter": dict(head_r=5.3, head_y=11.4, chest_y=21.0, hip_y=37.0),
+}
+
+# ---------------------------------------------------------------------------
 # animation tables
 # ---------------------------------------------------------------------------
 
@@ -401,13 +422,17 @@ def frame(design, anim, index):
     ox = p["shift"]
     oy = p["bob"] - p["crouch"]
 
+    rig = RIGS.get(design.get("rig") or "chibi", RIGS["chibi"])
+    r_head_r, r_head_y = rig["head_r"], rig["head_y"]
+    r_chest_y, r_hip_y = rig["chest_y"], rig["hip_y"]
+
     ground = GROUND
-    head_r = HEAD_R * (0.94 + 0.10 * bulk) * (0.96 + 0.06 * hs)
-    leg_span = (GROUND - HIP_Y) * hs
-    torso_span = (HIP_Y - CHEST_Y) * hs
-    hip_y = ground - (ground - HIP_Y) * hs + oy
-    chest_y = ground - (ground - CHEST_Y) * hs + oy
-    head_y = ground - (ground - HEAD_Y) * hs + oy
+    head_r = r_head_r * (0.94 + 0.10 * bulk) * (0.96 + 0.06 * hs)
+    leg_span = (GROUND - r_hip_y) * hs
+    torso_span = (r_hip_y - r_chest_y) * hs
+    hip_y = ground - (ground - r_hip_y) * hs + oy
+    chest_y = ground - (ground - r_chest_y) * hs + oy
+    head_y = ground - (ground - r_head_y) * hs + oy
     hip_x = ANCHOR_X + ox
 
     chest_x = hip_x + math.sin(lean) * (hip_y - chest_y)
@@ -464,8 +489,15 @@ def frame(design, anim, index):
     # Shroud flames go down first so they read as backlight rather than
     # covering the fighter's face.
     if design.get("shroud"):
+        # Scale the shroud off the BODY, not the head. Head radius used to be a
+        # fair proxy for size, but the `fighter` rig shrinks the head by a third
+        # while keeping the body the same height — measuring flames against it
+        # collapses a chakra cloak into a thin outline.
         _shroud_flames(c, pal, design, float(design["shroud"]),
-                       head_x, head_y, chest_y, head_r)
+                       head_x, head_y, chest_y, (ground - head_y) * 0.22)
+    if design.get("tails"):
+        _chakra_tails(c, pal, design, int(design["tails"]),
+                      chest_x, chest_y, hip_y, bulk)
     if p["fx"] and p["fxT"] > 0:
         _effect_back(c, pal, p["fx"], p["fxT"], chest_x, chest_y, head_y, design)
     if design.get("coat") in ("cloak", "akatsuki", "robe", "coat"):
@@ -515,6 +547,34 @@ def frame(design, anim, index):
             c.halo(shade(col, 0.72), 1)
 
     c.clear_below(ANCHOR_Y + 1)
+    return c
+
+
+def _chakra_tails(c, pal, d, count, cx, cy, hy, bulk):
+    """
+    Chakra tails sweeping out behind the fighter.
+
+    A cloak form's tail count is the one thing about it that is countable at a
+    glance, so drawing them is what separates a one-tail silhouette from a
+    four-tail one. Without this they are the same body in two shades of red.
+    """
+    col = pal.aura or hex_to_rgb(d.get("trim", "#e8602a"))
+    inner = shade(col, 1.35)
+    outer = shade(col, 0.7)
+    n = max(1, min(9, count))
+    root_x = cx - 3.0 * bulk
+    root_y = (cy + hy) / 2
+    for k in range(n):
+        # Fan them across the back: one tail sits level, more tails spread.
+        t = 0.5 if n == 1 else k / (n - 1)
+        ang = -0.85 + 1.5 * t
+        length = 11.0 + 2.2 * (1 - abs(t - 0.5) * 2)
+        ex = root_x - math.cos(ang) * length
+        ey = root_y - math.sin(ang) * length
+        mx = root_x - math.cos(ang) * length * 0.55
+        my = root_y - math.sin(ang) * length * 0.55 - 1.4
+        c.capsule(root_x, root_y, mx, my, 1.5, outer)
+        c.capsule(mx, my, ex, ey, 0.85, inner if k % 2 else outer)
     return c
 
 
