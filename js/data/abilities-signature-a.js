@@ -165,9 +165,69 @@ mk('naruto_baryon_barrage', {
   statusEffects: [{ id: 'lifedrain_enemy', duration: 4, magnitude: 6 }],
   description: 'Baryon Mode strikes drain the opponent’s lifespan on contact.',
 });
+/*
+ * Per-form ranged techniques.
+ *
+ * Only moves that genuinely travel, extend or detonate at range get a
+ * projectile spec. The close Rasengan variants, Frog Kata and the Baryon
+ * melee barrage stay melee: they are body-scoped attacks, and dressing them
+ * as projectiles would give them reach the balance never accounted for.
+ *
+ * Higher forms hit harder but pay for it in startup, chakra and recovery
+ * rather than simply outclassing the earlier ones.
+ */
+mk('naruto_chakra_claw', {
+  displayName: 'Chakra Claw', category: 'ranged-jutsu', chakraCost: 16, cooldown: 3.2,
+  damage: 68, guardDamage: 24, startup: 0.12, activeFrames: 0.10, recovery: 0.24,
+  hitStun: 0.5, knockbackX: 560,
+  // Short and fast: an extension of the cloak's reach, not a thrown shot.
+  // Low life and modest speed keep it a mid-range poke.
+  projectile: projectile({
+    shape: 'shard', color: '#e8602a', color2: '#ffd0a0',
+    speed: 900, life: 0.26, radius: 26, explodeRadius: 0,
+    spawnOffset: { x: 52, y: -78 }, destroyOnHit: true,
+  }),
+  effectId: 'impact_default', soundId: 'sfx_jutsu_melee',
+  description: 'The cloak lashes out well past your reach. Heavy knockback.',
+});
+mk('naruto_kcm_rasenshuriken', {
+  displayName: 'Chakra Mode: Rasenshuriken', category: 'ranged-jutsu', chakraCost: 34, cooldown: 8.0,
+  damage: 112, guardDamage: 46, startup: 0.22, activeFrames: 0.10, recovery: 0.40,
+  hitStun: 0.7, knockbackX: 440,
+  // KCM trades Bijuu's mass for speed: fastest shot in the set, smallest
+  // blast, shortest startup, and less damage per hit than the heavy forms.
+  projectile: projectile({
+    shape: 'ring', color: '#ffd45e', color2: '#fffbe8',
+    speed: 980, life: 1.3, radius: 34, explodeRadius: 150, homing: 0.08,
+  }),
+  effectId: 'rasenshuriken', soundId: 'sfx_jutsu_ranged',
+  description: 'A leaner, far faster shuriken. Cheap enough to throw often.',
+});
+mk('naruto_baryon_burst', {
+  displayName: 'Baryon Burst', category: 'ranged-jutsu', chakraCost: 14, cooldown: 4.5,
+  damage: 92, guardDamage: 38, startup: 0.09, activeFrames: 0.08, recovery: 0.22,
+  hitStun: 0.55, knockbackX: 500,
+  // Compact and violently quick, and gone almost immediately — Baryon's
+  // pressure comes from tempo, and its cost is paid by the form's own drain.
+  projectile: projectile({
+    shape: 'orb', color: '#ff3a1a', color2: '#1a0d12',
+    speed: 1180, life: 0.34, radius: 22, explodeRadius: 90,
+    spawnOffset: { x: 56, y: -74 },
+  }),
+  effectId: 'baryon', soundId: 'sfx_jutsu_ranged',
+  statusEffects: [{ id: 'lifedrain_enemy', duration: 3, magnitude: 4 }],
+  description: 'A compressed burst fired point-blank. Short range, no wind-up.',
+});
 mk('naruto_sixpaths_ultimate', {
   displayName: 'Six Paths: Massive Rasenshuriken', category: 'ultimate', chakraCost: 65, cooldown: 22,
   damage: 320, guardDamage: 90, startup: 0.30, activeFrames: 0.36, recovery: 0.80,
+  // It is a thrown shuriken, so it travels. The largest blast in the set,
+  // paid for with the longest startup and the highest chakra cost.
+  projectile: projectile({
+    shape: 'ring', color: '#cfe4ff', color2: '#ffffff',
+    speed: 700, life: 1.9, radius: 64, explodeRadius: 380, homing: 0.14,
+    spawnOffset: { x: 64, y: -84 },
+  }),
   range: 300, hits: 9, hitInterval: 0.05, hitStun: 1.0, knockbackX: 780, knockbackY: -380,
   wallBounce: true, cutIn: true, slowMoFinish: true, soundId: 'sfx_ultimate',
   effectId: 'ultimate_sixpaths', invulnerability: { start: 0, end: 0.30 },

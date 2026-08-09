@@ -16,6 +16,7 @@ const { ComboTracker } = await import('../js/combat/combo-system.js');
 const { canTransform } = await import('../js/combat/transformation-system.js');
 const { COMBAT, SIM_DT } = await import('../js/constants.js');
 const { getAbility } = await import('../js/data/abilities.js');
+const { TRANSFORMATIONS } = await import('../js/data/transformations.js');
 
 function makeEngine(overrides = {}) {
   const e = new CombatEngine();
@@ -364,6 +365,100 @@ export function run() {
     advance(e, 0.2);
     assert(Math.abs(shot.x - f.x) > 40,
       `the shot separated from its owner (${Math.round(Math.abs(shot.x - f.x))})`);
+    e.destroy();
+  });
+
+  test('every Naruto ranged technique has a tuned projectile spec', () => {
+    // Each is authored for its form, not copied from one generic sphere.
+    const specs = [
+      ['naruto_chakra_claw', 26, 900, 0],
+      ['naruto_kcm_rasenshuriken', 34, 980, 150],
+      ['naruto_baryon_burst', 22, 1180, 90],
+      ['naruto_rasenshuriken', 40, 660, 200],
+      ['naruto_tailed_beast_bomb', 56, 560, 260],
+      ['naruto_planetary_rasenshuriken', 56, 620, 320],
+      ['naruto_sixpaths_ultimate', 64, 700, 380],
+    ];
+    const seen = new Set();
+    for (const [id, radius, speed, explode] of specs) {
+      const a = getAbility(id);
+      assert(a, `${id} exists`);
+      assert(a.projectile, `${id} has a projectile spec`);
+      assertEqual(a.projectile.radius, radius, `${id} radius`);
+      assertEqual(a.projectile.speed, speed, `${id} speed`);
+      assertEqual(a.projectile.explodeRadius, explode, `${id} explode radius`);
+      assert(a.projectile.life > 0, `${id} has a lifespan`);
+      assert(a.guardDamage > 0, `${id} does guard damage`);
+      seen.add(`${radius}/${speed}/${explode}`);
+    }
+    assertEqual(seen.size, specs.length, 'no two techniques share one generic spec');
+  });
+
+  test('projectile power is paid for in startup and chakra', () => {
+    // A heavier shot must cost more to throw, or the higher forms are a
+    // straight upgrade rather than a trade.
+    const fast = getAbility('naruto_kcm_rasenshuriken');
+    const heavy = getAbility('naruto_tailed_beast_bomb');
+    assert(fast.projectile.speed > heavy.projectile.speed, 'KCM is the faster shot');
+    assert(heavy.damage > fast.damage, 'Bijuu hits harder');
+    assert(heavy.startup > fast.startup, 'and takes longer to get out');
+    assert(heavy.chakraCost > fast.chakraCost, 'and costs more chakra');
+    const burst = getAbility('naruto_baryon_burst');
+    assert(burst.projectile.life < 0.5, 'the Baryon burst is short-lived');
+    assert(burst.projectile.speed > fast.projectile.speed, 'and the fastest of all');
+    const ult = getAbility('naruto_sixpaths_ultimate');
+    assert(ult.projectile.explodeRadius > heavy.projectile.explodeRadius,
+      'the ultimate has the largest blast');
+    assert(ult.chakraCost > heavy.chakraCost, 'and the highest cost');
+  });
+
+  test('close-range techniques are deliberately left as melee', () => {
+    // Body-scoped attacks stay body-scoped: giving them projectiles would
+    // hand them reach the balance never accounted for.
+    for (const id of ['naruto_rasengan', 'naruto_sage_rasengan',
+      'naruto_tailed_beast_rasengan', 'naruto_frog_kata', 'naruto_baryon_barrage']) {
+      const a = getAbility(id);
+      assert(a, `${id} exists`);
+      assert(!a.projectile, `${id} stays melee`);
+      assert(a.range > 0, `${id} still has melee reach`);
+    }
+  });
+
+  test('each form reaches its own ranged technique', () => {
+    const wired = {
+      naruto_onetail: 'naruto_chakra_claw',
+      naruto_fourtail: 'naruto_tailed_beast_bomb',
+      naruto_kcm1: 'naruto_kcm_rasenshuriken',
+      naruto_kcm2: 'naruto_tailed_beast_bomb',
+      naruto_sixpaths: 'naruto_planetary_rasenshuriken',
+      naruto_baryon: 'naruto_baryon_burst',
+    };
+    for (const [form, abilityId] of Object.entries(wired)) {
+      const t = TRANSFORMATIONS[form];
+      assert(t, `${form} exists`);
+      const ids = Object.values(t.abilityOverrides || {});
+      assert(ids.includes(abilityId), `${form} reaches ${abilityId} (has ${ids.join(', ')})`);
+      assert(getAbility(abilityId).projectile, `${abilityId} is a real projectile`);
+    }
+    // Baryon's two slots were both the same melee barrage; they are not now.
+    const baryon = Object.values(TRANSFORMATIONS.naruto_baryon.abilityOverrides);
+    assertEqual(new Set(baryon).size, baryon.length, 'Baryon has no duplicate slot');
+  });
+
+  test('a form-specific shot spawns on its release frame and carries its look', () => {
+    const e = makeEngine();
+    advance(e, 2);
+    const f = readyToCast(e);
+    const a = getAbility('naruto_kcm_rasenshuriken');
+    f.form = 'naruto_kcm1';
+    f.use(a);
+    assertEqual(e.projectiles.activeCount, 0, 'nothing on the press');
+    let t = 0;
+    while (t < a.startup + 0.05) { e.step(1 / 60); t += 1 / 60; }
+    assertAtLeast(e.projectiles.activeCount, 1, 'out after the release frame');
+    const shot = [...e.projectiles.live()][0];
+    assertEqual(shot.radius, a.projectile.radius * (a.projectile.size || 1),
+      'it uses its own radius');
     e.destroy();
   });
 
