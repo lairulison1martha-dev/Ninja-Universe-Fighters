@@ -71,6 +71,27 @@ FRAMES = {
     "victory": 5, "defeat": 4, "transformation": 6,
 }
 
+# Richer frame counts for designs on the `fighter` rig. Heavies and ultimates
+# get room for real phases — anticipation, wind-up, contact, follow-through,
+# recovery — rather than cutting from wind-up straight to recovery. Light
+# attacks stay at 4: a jab that takes eight frames stops being a jab.
+#
+# Opt-in per design, like the rig itself, so no other fighter's atlas changes.
+FRAMES_FIGHTER = {
+    **FRAMES,
+    "heavyAttack": 7,
+    "jutsu1": 6, "jutsu2": 6, "jutsu3": 6,
+    "ultimate": 10,
+    "transformation": 8,
+}
+
+
+def frames_for(design):
+    """The frame table a design uses."""
+    if (design or {}).get("rig") == "fighter":
+        return FRAMES_FIGHTER
+    return FRAMES
+
 # fps / looping / the frame an attack connects on.
 PLAYBACK = {
     "idle":        (7, True, None, None),
@@ -122,6 +143,21 @@ def _p(**kw):
     p = dict(NEUTRAL)
     p.update(kw)
     return p
+
+
+def _phase(table, i, n):
+    """
+    Pick frame `i` of `n` from an authored key-pose table.
+
+    The tables below are written at the richer frame count. A rig that asks for
+    fewer frames samples the same poses proportionally rather than needing a
+    second table — so the phases stay in the same order and nothing is padded
+    with a duplicate.
+    """
+    if n == len(table):
+        return table[i]
+    k = round(i * (len(table) - 1) / max(1, n - 1))
+    return table[max(0, min(len(table) - 1, k))]
 
 
 def pose(anim, i, n):
@@ -230,31 +266,46 @@ def pose(anim, i, n):
         ][i]
 
     if anim == "heavyAttack":
-        return [
-            _p(lean=-0.16, armF=1.15, elbowF=1.0, armB=-0.9, legF=0.15, legB=-0.3, crouch=1.0),
-            _p(lean=-0.26, armF=1.5, elbowF=1.4, armB=-1.2, legF=0.1, legB=-0.45, crouch=2.0),
-            _p(lean=0.42, armF=-1.75, elbowF=0.0, armB=1.0, elbowB=0.4,
-               legF=0.7, legB=-0.7, shift=2.0, fx="impact", fxT=1.0),
-            _p(lean=0.46, armF=-1.5, elbowF=0.1, armB=0.9, legF=0.6, legB=-0.6,
-               shift=2.5, fx="impact", fxT=0.6),
-            _p(lean=0.24, armF=-0.9, elbowF=0.5, armB=0.5, legF=0.35, legB=-0.35, shift=1.0),
-        ][i]
+        return _phase([
+            # anticipation — weight drops back before anything moves forward
+            _p(lean=-0.10, armF=0.95, elbowF=0.85, armB=-0.7, legF=0.15, legB=-0.25,
+               crouch=0.6),
+            _p(lean=-0.22, armF=1.30, elbowF=1.15, armB=-1.05, legF=0.12, legB=-0.38,
+               crouch=1.6),
+            # wind-up — fully coiled, the frame that sells the weight
+            _p(lean=-0.34, armF=1.62, elbowF=1.5, armB=-1.3, legF=0.08, legB=-0.5,
+               crouch=2.4, head=-0.1),
+            # contact
+            _p(lean=0.44, armF=-1.78, elbowF=0.0, armB=1.05, elbowB=0.4,
+               legF=0.72, legB=-0.72, shift=2.2, fx="impact", fxT=1.0),
+            # follow-through — the body keeps travelling past the hit
+            _p(lean=0.50, armF=-1.58, elbowF=0.06, armB=0.98, legF=0.66, legB=-0.66,
+               shift=3.0, fx="impact", fxT=0.7),
+            _p(lean=0.40, armF=-1.25, elbowF=0.28, armB=0.75, legF=0.5, legB=-0.5,
+               shift=2.2, fx="impact", fxT=0.3),
+            # recovery
+            _p(lean=0.18, armF=-0.8, elbowF=0.55, armB=0.4, legF=0.3, legB=-0.3,
+               shift=0.8),
+        ], i, n)
 
     if anim in ("jutsu1", "jutsu2", "jutsu3"):
         # Three distinct casts so the three ability slots do not look identical:
         # a forward palm thrust, a two-handed seal, and an overhead call.
         if anim == "jutsu1":
-            return [
+            return _phase([
                 _p(lean=-0.10, armF=0.75, elbowF=1.2, armB=-0.55, elbowB=0.9),
                 _p(lean=-0.18, armF=0.30, elbowF=1.5, armB=-0.30, elbowB=1.3, crouch=1.0),
+                # the sphere forms in the palm before it goes anywhere
+                _p(lean=-0.22, armF=-0.15, elbowF=1.6, armB=-0.55, elbowB=1.35,
+                   crouch=1.4, fx="orb", fxT=0.55),
                 _p(lean=0.30, armF=-1.60, elbowF=0.05, armB=-1.2, elbowB=0.7,
                    shift=1.0, fx="orb", fxT=1.0),
-                _p(lean=0.34, armF=-1.62, elbowF=0.05, armB=-1.1, shift=1.5,
+                _p(lean=0.34, armF=-1.62, elbowF=0.05, armB=-1.1, shift=1.8,
                    fx="orb", fxT=0.85),
                 _p(lean=0.16, armF=-1.25, elbowF=0.35, armB=-0.7, fx="orb", fxT=0.35),
-            ][i]
+            ], i, n)
         if anim == "jutsu2":
-            return [
+            return _phase([
                 _p(lean=-0.06, armF=-0.5, elbowF=1.5, armB=-0.5, elbowB=1.5),
                 _p(lean=-0.10, armF=-0.75, elbowF=1.75, armB=-0.75, elbowB=1.75,
                    fx="seal", fxT=0.5),
@@ -262,32 +313,49 @@ def pose(anim, i, n):
                    fx="seal", fxT=1.0),
                 _p(lean=0.24, armF=-1.45, elbowF=0.2, armB=-1.35, elbowB=0.25,
                    fx="wave", fxT=1.0),
+                _p(lean=0.20, armF=-1.35, elbowF=0.32, armB=-1.2, shift=1.0,
+                   fx="wave", fxT=0.75),
                 _p(lean=0.12, armF=-1.15, elbowF=0.5, armB=-1.05, fx="wave", fxT=0.4),
-            ][i]
-        return [
+            ], i, n)
+        return _phase([
             _p(lean=0.06, armF=0.4, elbowF=0.9, armB=0.4, elbowB=0.9, crouch=1.0),
             _p(lean=-0.20, armF=-2.1, elbowF=0.4, armB=-2.0, elbowB=0.4, crouch=-1.0),
             _p(lean=-0.30, armF=-2.5, elbowF=0.15, armB=-2.45, elbowB=0.15,
                bob=-1.5, fx="pillar", fxT=1.0),
+            _p(lean=-0.28, armF=-2.48, elbowF=0.18, armB=-2.42, bob=-1.4,
+               fx="pillar", fxT=0.95),
             _p(lean=-0.24, armF=-2.45, elbowF=0.2, armB=-2.4, bob=-1.0,
                fx="pillar", fxT=0.8),
             _p(lean=-0.05, armF=-1.6, elbowF=0.6, armB=-1.5, fx="pillar", fxT=0.3),
-        ][i]
+        ], i, n)
 
     if anim == "ultimate":
-        return [
-            _p(lean=-0.12, armF=-0.55, elbowF=1.6, armB=-0.55, elbowB=1.6, crouch=1.0),
-            _p(lean=-0.22, armF=-0.9, elbowF=1.9, armB=-0.9, elbowB=1.9, crouch=2.0,
-               fx="charge", fxT=0.5),
-            _p(lean=-0.30, armF=-1.4, elbowF=1.4, armB=-1.4, elbowB=1.4, bob=-1.0,
-               fx="charge", fxT=1.0),
-            _p(lean=0.30, armF=-1.68, elbowF=0.0, armB=-1.55, elbowB=0.1, shift=2.0,
+        return _phase([
+            # anticipation
+            _p(lean=-0.10, armF=-0.45, elbowF=1.5, armB=-0.45, elbowB=1.5, crouch=0.8),
+            # charge — the sphere grows between the hands over four frames
+            _p(lean=-0.20, armF=-0.80, elbowF=1.8, armB=-0.80, elbowB=1.8, crouch=1.8,
+               fx="charge", fxT=0.35),
+            _p(lean=-0.28, armF=-1.10, elbowF=1.9, armB=-1.10, elbowB=1.9, crouch=2.4,
+               fx="charge", fxT=0.65, bob=-0.5),
+            _p(lean=-0.34, armF=-1.35, elbowF=1.7, armB=-1.35, elbowB=1.7, crouch=2.6,
+               fx="charge", fxT=0.9, bob=-1.0, head=-0.12),
+            _p(lean=-0.36, armF=-1.45, elbowF=1.5, armB=-1.45, elbowB=1.5,
+               fx="charge", fxT=1.0, bob=-1.6, head=-0.16),
+            # release
+            _p(lean=0.32, armF=-1.70, elbowF=0.0, armB=-1.58, elbowB=0.1, shift=2.2,
                fx="beam", fxT=1.0),
-            _p(lean=0.34, armF=-1.70, elbowF=0.0, armB=-1.5, shift=2.5,
-               fx="beam", fxT=0.9),
-            _p(lean=0.18, armF=-1.3, elbowF=0.4, armB=-1.1, shift=1.0,
-               fx="beam", fxT=0.3),
-        ][i]
+            _p(lean=0.38, armF=-1.72, elbowF=0.0, armB=-1.52, shift=3.0,
+               fx="beam", fxT=1.0),
+            # sustain and fade
+            _p(lean=0.34, armF=-1.68, elbowF=0.02, armB=-1.45, shift=3.0,
+               fx="beam", fxT=0.8),
+            _p(lean=0.24, armF=-1.45, elbowF=0.25, armB=-1.25, shift=1.8,
+               fx="beam", fxT=0.45),
+            # recovery
+            _p(lean=0.12, armF=-1.05, elbowF=0.55, armB=-0.9, shift=0.6,
+               fx="beam", fxT=0.15),
+        ], i, n)
 
     if anim == "hurt":
         return [
@@ -337,7 +405,8 @@ def pose(anim, i, n):
         ][i]
 
     if anim == "transformation":
-        s = [0.0, 0.35, 0.7, 1.0, 1.0, 0.9][i]
+        ramp = [0.0, 0.2, 0.45, 0.7, 0.9, 1.0, 1.0, 0.85]
+        s = _phase(ramp, i, n)
         return _p(lean=-0.10 - s * 0.14, bob=-s * 2.0, crouch=1.0,
                   armF=0.5 - s * 1.1, armB=-0.5 - s * 1.1,
                   elbowF=0.9 - s * 0.5, elbowB=0.9 - s * 0.5,
@@ -407,7 +476,7 @@ def _joint(x, y, angle, length):
 
 def frame(design, anim, index):
     """Render one animation frame. Returns a Canvas."""
-    n = FRAMES[anim]
+    n = frames_for(design)[anim]
     p = pose(anim, index, n)
     pal = Palette(design)
 
@@ -1009,6 +1078,110 @@ def _effect_back(c, pal, kind, t, cx, cy, head_y, d):
             c.put(int(cx + 8), int(cy + k * 2), col)
 
 
+
+# ---------------------------------------------------------------------------
+# Signature technique effects.
+#
+# `fxStyle` gives a form its own effect SHAPE, not just its own colour: a
+# Baryon burst and a Bijuu blast should not be the same circle in two hues.
+# Everything here is drawn from circles, rings and line fans — original
+# geometry, no sampled art.
+# ---------------------------------------------------------------------------
+
+def _ring(c, cx, cy, rr, col, step=0.42):
+    a = 0.0
+    while a < math.pi * 2:
+        c.put(int(cx + math.cos(a) * rr), int(cy + math.sin(a) * rr), col)
+        a += step / max(0.6, rr / 6)
+
+
+def _orb_fx(c, col, hot, hx, hy, t, d):
+    """The charged sphere in the hand. Bigger and layered, with a shaped rim."""
+    style = (d or {}).get("fxStyle", "sphere")
+    core = 1.6 + 5.2 * t
+    halo = core + 2.4 + 2.0 * t
+    c.ellipse(hx, hy, halo, halo, shade(col, 0.55))
+    c.ellipse(hx, hy, core, core, col)
+    c.ellipse(hx, hy, core * 0.55, core * 0.55, hot)
+
+    if style == "sharp":            # KCM — narrow blades off the sphere
+        for k in range(4):
+            a = k * math.pi / 2 + t * 1.4
+            c.capsule(hx + math.cos(a) * core, hy + math.sin(a) * core,
+                      hx + math.cos(a) * (halo + 4.5 * t),
+                      hy + math.sin(a) * (halo + 4.5 * t), 0.5, hot)
+    elif style == "blast":          # Bijuu — concentric shockwave rings
+        for k in range(2):
+            _ring(c, hx, hy, halo + 2.0 + k * 2.6 * t, shade(col, 1.15 - k * 0.25))
+    elif style == "claw":           # cloak forms — three raking arcs
+        for k in (-1, 0, 1):
+            a = -0.55 + k * 0.55
+            rr = halo + 3.0 * t
+            c.capsule(hx + math.cos(a) * core, hy + math.sin(a) * core,
+                      hx + math.cos(a) * rr, hy + math.sin(a) * rr, 0.9, hot)
+    elif style == "orbital":        # Ashura — a dark core inside a pale halo
+        c.ellipse(hx, hy, core * 0.8, core * 0.8, shade(col, 0.25))
+        _ring(c, hx, hy, halo + 1.5, hot)
+    elif style == "compressed":     # Baryon — tight, violent, high contrast
+        c.ellipse(hx, hy, core * 0.7, core * 0.7, hot)
+        for k in range(6):
+            a = k * math.pi / 3 + t
+            c.capsule(hx, hy, hx + math.cos(a) * (core + 3.5 * t),
+                      hy + math.sin(a) * (core + 3.5 * t), 0.45, shade(col, 1.3))
+    else:                           # base / sage — clean sphere and one ring
+        _ring(c, hx, hy, halo + 1.2, shade(col, 1.1))
+    return c
+
+
+def _beam_fx(c, col, hot, hx, hy, t, d):
+    """
+    The released technique. Long, layered, and shaped by the form.
+
+    Clamped to the frame. A beam that runs off the edge of the 64px cell is
+    not a longer beam, it is a beam with its head cut off — the travelling
+    part of a technique belongs to a projectile entity, not to the body
+    atlas, so what is drawn here is only the muzzle end.
+    """
+    style = (d or {}).get("fxStyle", "sphere")
+    # Leave room for the head decorations too — the ring and the muzzle ball
+    # are drawn AT head_x, so clamping only the bar still pushes them off.
+    head_room = 9.0 + 5.0 * t
+    max_len = max(4.0, FRAME - 2 - hx - head_room)
+    length = min(10 + t * 34, max_len)
+    half = 2.0 + t * 4.0
+    c.rect(int(hx), int(hy - half - 1), int(length), int(half * 2 + 3), shade(col, 0.5))
+    c.rect(int(hx), int(hy - half), int(length), int(half * 2), col)
+    c.rect(int(hx), int(hy - half * 0.45), int(length), max(1, int(half)), hot)
+
+    head_x = hx + length
+    if style == "blast":            # a rolling sphere at the head of the beam
+        c.ellipse(head_x, hy, 4.0 + 4.0 * t, 4.0 + 4.0 * t, col)
+        c.ellipse(head_x, hy, 2.0 + 2.0 * t, 2.0 + 2.0 * t, hot)
+        _ring(c, head_x, hy, 7.0 + 5.0 * t, shade(col, 1.2))
+    elif style == "sharp":          # a lance: tapering, with trailing streaks
+        for k in (-1, 1):
+            c.capsule(hx + 4, hy + k * half, head_x, hy, 0.5, hot)
+        for k in range(3):
+            yy = hy + (k - 1) * (half + 2)
+            c.rect(int(hx - 6 - k * 3), int(yy), int(5 + t * 6), 1, shade(col, 1.2))
+    elif style == "orbital":        # a pale corona around a dark spine
+        c.rect(int(hx), int(hy - 1), int(length), 2, shade(col, 0.2))
+        _ring(c, head_x, hy, 5.5 + 4.5 * t, hot)
+    elif style == "compressed":     # short, wide, and violently bright
+        c.ellipse(head_x - 2, hy, 5.0 + 3.0 * t, 3.0 + 2.5 * t, hot)
+        for k in range(5):
+            a = -0.7 + k * 0.35
+            c.capsule(head_x, hy, head_x + math.cos(a) * (6 + 6 * t),
+                      hy + math.sin(a) * (6 + 6 * t), 0.5, col)
+    elif style == "claw":           # three parallel rakes rather than one bar
+        for k in (-1, 0, 1):
+            yy = hy + k * (half + 1.5)
+            c.rect(int(hx), int(yy), int(length * (1 - abs(k) * 0.18)), 1, hot)
+    else:
+        c.ellipse(head_x, hy, 3.0 + 2.5 * t, 3.0 + 2.5 * t, hot)
+    return c
+
+
 def _effect_front(c, pal, kind, t, hx, hy, cx, cy, head_y, d):
     col = _fx_colour(pal, d)
     hot = shade(col, 1.45)
@@ -1026,8 +1199,7 @@ def _effect_front(c, pal, kind, t, hx, hy, cx, cy, head_y, d):
             c.capsule(hx + math.sin(a) * rr * 0.4, hy + math.cos(a) * rr * 0.4,
                       hx + math.sin(a) * rr, hy + math.cos(a) * rr, 0.6, hot)
     elif kind == "orb":
-        c.ellipse(hx + 2, hy, 3.4 * t + 1.2, 3.4 * t + 1.2, col)
-        c.ellipse(hx + 2, hy, 2.0 * t, 2.0 * t, hot)
+        _orb_fx(c, col, hot, hx + 3, hy, t, d)
     elif kind == "seal":
         c.ellipse(hx, hy, 2.2, 2.2, hot)
     elif kind == "wave":
@@ -1035,8 +1207,7 @@ def _effect_front(c, pal, kind, t, hx, hy, cx, cy, head_y, d):
             yy = int(hy - 4 + k * 2)
             c.rect(int(hx + 2 + k * 0.5), yy, int(3 + t * 5), 1, col if k % 2 else hot)
     elif kind == "beam":
-        c.rect(int(hx), int(hy - 2), int(4 + t * 22), 5, col)
-        c.rect(int(hx), int(hy - 1), int(4 + t * 22), 3, hot)
+        _beam_fx(c, col, hot, hx, hy, t, d)
     elif kind == "speed":
         for k in range(4):
             yy = int(cy + k * 4 - 4)

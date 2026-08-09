@@ -62,7 +62,8 @@ def build_one(entry, out_root=OUT_ROOT):
     design = dz.for_fighter(entry)
     fid = entry["id"]
 
-    cols = max(art.FRAMES[a] for a in ORDER)
+    table = art.frames_for(design)
+    cols = max(table[a] for a in ORDER)
     rows = len(ORDER)
     atlas = Image(cols * art.FRAME, rows * art.FRAME)
 
@@ -72,7 +73,7 @@ def build_one(entry, out_root=OUT_ROOT):
     idle0 = None
 
     for r, name in enumerate(ORDER):
-        n = art.FRAMES[name]
+        n = table[name]
         fps, loop, hit, event = art.PLAYBACK[name]
         for i in range(n):
             canvas = art.frame(design, name, i)
@@ -164,7 +165,8 @@ def build_variant(entry, kind, variant_id, override, out_root=OUT_ROOT):
     # looks them up by exactly that id, so they are not namespaced again.
     set_id = f"{fid}__{variant_id}" if kind == "costume" else variant_id
 
-    cols = max(art.FRAMES[a] for a in ORDER)
+    table = art.frames_for(design)
+    cols = max(table[a] for a in ORDER)
     atlas = Image(cols * art.FRAME, len(ORDER) * art.FRAME)
     animations = {}
     body_tops = []
@@ -172,7 +174,7 @@ def build_variant(entry, kind, variant_id, override, out_root=OUT_ROOT):
     total = 0
 
     for r, name in enumerate(ORDER):
-        n = art.FRAMES[name]
+        n = table[name]
         fps, loop, hit, event = art.PLAYBACK[name]
         for i in range(n):
             canvas = art.frame(design, name, i)

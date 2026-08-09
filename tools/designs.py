@@ -414,7 +414,7 @@ FORM_DESIGNS = ({
     # Sage is not a cloak form: no tails and only a faint shroud. It reads as
     # focus rather than fire — a sleeveless haori over the base jumpsuit, a
     # marked face and a calm amber palette.
-    "naruto_sage": dict(markings="sage", markColor="#b8562c", eyes="#e8a23c",
+    "naruto_sage": dict(fxStyle="sphere", markings="sage", markColor="#b8562c", eyes="#e8a23c",
                         aura="#e8a23c", trim="#c9603c", torso="panel",
                         coat="cloak", coatColor="#d8c9a0", coatTrim="#b8562c",
                         sleeves="short", shroud=0.16, bulk=1.04),
@@ -424,17 +424,23 @@ FORM_DESIGNS = ({
     # flame shroud and marked body, Bijuu adds a mantle and mass on top of a
     # far heavier shroud, and Ashura leaves the gold family entirely for a
     # dark robe, horns and orbs.
-    "naruto_kcm1": dict(outfit="#f5c542", outfit2="#c96a12", trim="#2b3550",
+    # KCM is the SPEED form: lean, tight aura, sharp marks, small shoulder mass.
+    "naruto_kcm1": dict(outfit="#f5c542", outfit2="#b8560c", trim="#2b3550",
                         pants="#f5c542", aura="#ffd45e", eyes="#f5e08a",
-                        markings="stripes", torso="panel",
-                        shroud=0.58, bulk=1.02),
-    "naruto_kcm2": dict(outfit="#ffd45e", outfit2="#e07a18", trim="#1f2740",
+                        markings="stripes", markColor="#8a3c06", torso="panel",
+                        sleeves="short", fxStyle="sharp",
+                        shroud=0.40, bulk=0.94, height=1.01),
+    # Bijuu is the WEIGHT form: broad, heavy mantle, big shoulders, thick cloak
+    # and a much larger aura footprint. Against KCM the difference is mass and
+    # outline, not hue — they are close in colour on purpose.
+    "naruto_kcm2": dict(outfit="#ffd45e", outfit2="#c25a08", trim="#1f2740",
                         pants="#ffd45e", aura="#ffb02a", eyes="#fff0b0",
-                        markings="stripes", torso="panel",
+                        markings="stripes", markColor="#7a3a04", torso="wrap",
                         coat="cloak", coatColor="#f0a020", coatTrim="#2b2f42",
-                        accessory="shoulder-pads",
-                        shroud=0.92, bulk=1.14, height=1.03),
-    "naruto_sixpaths": dict(outfit="#2b2f42", outfit2="#171b2a", trim="#d8e4f0",
+                        accessory="shoulder-pads", sleeves="long",
+                        fxStyle="blast",
+                        shroud=0.82, bulk=1.18, height=1.05),
+    "naruto_sixpaths": dict(fxStyle="orbital", outfit="#2b2f42", outfit2="#171b2a", trim="#d8e4f0",
                             pants="#2b2f42", aura="#cfe4ff", eyes="#eaf4ff",
                             coat="robe", coatColor="#20263a", coatTrim="#d8e4f0",
                             accessory="orbs", accColor="#20263a",
@@ -444,7 +450,7 @@ FORM_DESIGNS = ({
     # Baryon is the burn-out form: darkest palette of the set, horns, a tight
     # high-contrast shroud and no bulk. It reads as spent power rather than
     # more of it, which keeps it apart from the gold forms and the red cloaks.
-    "naruto_baryon": dict(outfit="#2a1a24", outfit2="#160f18", trim="#ff8a3a",
+    "naruto_baryon": dict(fxStyle="compressed", outfit="#2a1a24", outfit2="#160f18", trim="#ff8a3a",
                           pants="#2a1a24", aura="#ff5a1a", eyes="#ffd45e",
                           torso="panel", horns=True, hornColor="#ff8a3a",
                           markings="stripes", markColor="#ff8a3a",
@@ -452,11 +458,11 @@ FORM_DESIGNS = ({
     # The cloak forms are told apart by their tail count, which is the one
     # thing about them that is countable in a silhouette. Without the tails
     # these were the same body in two shades of red.
-    "naruto_onetail": dict(outfit="#c8502a", outfit2="#7a2a18", trim="#e87a3a",
+    "naruto_onetail": dict(fxStyle="claw", outfit="#c8502a", outfit2="#7a2a18", trim="#e87a3a",
                            pants="#c8502a", aura="#e8602a", eyes="#f5e08a",
                            markings="whiskers", torso="panel",
                            tails=1, shroud=0.34, bulk=1.02),
-    "naruto_fourtail": dict(outfit="#9a2f1a", outfit2="#5a1a10", trim="#d0502a",
+    "naruto_fourtail": dict(fxStyle="claw", outfit="#9a2f1a", outfit2="#5a1a10", trim="#d0502a",
                             pants="#9a2f1a", aura="#d8401a", eyes="#ffffff",
                             coat="cloak", coatColor="#8a2418",
                             tails=4, shroud=0.70, bulk=1.10, height=1.02),
