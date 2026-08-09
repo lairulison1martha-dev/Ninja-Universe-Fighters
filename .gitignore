@@ -25,3 +25,18 @@ imports/mugen/*
 # in reports/.
 assets/import-staging/*
 !assets/import-staging/README.md
+
+# MUGEN binary formats, anywhere in the tree.
+#
+# Belt and braces on top of the two directory rules above. A sprite archive is
+# the single largest and most rights-encumbered thing a package carries — the
+# Naruto one is 84 MB of third-party pixels — and the way it gets committed by
+# accident is a stray copy outside imports/mugen/. These extensions have no
+# legitimate home in this repository: the game ships PNG atlases built by
+# tools/build-fighters.py, and the importer reads MUGEN files from a temporary
+# working directory.
+*.sff
+*.snd
+*.act
+*.air
+*.cns

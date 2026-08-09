@@ -46,7 +46,11 @@ const { scanModes, findModeFlags, referencedVars, classifyState: modeClassifySta
 const {
   MODES: NARUTO_MODES, GAME_FORMS_WITHOUT_SOURCE: NARUTO_UNSOURCED,
   SHADOW_CLONES: NARUTO_CLONES, PALETTES: NARUTO_PALETTES,
+  JUTSU_CANDIDATES: NARUTO_JUTSU, ULTIMATE_CANDIDATES: NARUTO_ULTIMATES,
 } = await import(`../${M}/mappings/naruto.mjs`);
+
+/** Repository root, for the checks that look at the tree itself. */
+const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const { checkLicense, STATUS } = await import(`../${M}/license-check.mjs`);
 const { inspectPackage } = await import(`../${M}/package-inspector.mjs`);
 const { assertFighterId, prepareStaging } = await import(`../${M}/fighter-export.mjs`);
@@ -1648,6 +1652,186 @@ trigger1 = ctrl
     }
     assertEqual(Object.keys(FIGHTERS).length, 110, 'the roster is still 110');
     assertEqual(FIGHTERS.naruto.transformations.length, 7, 'Naruto still has seven forms');
+  });
+
+  test('a sprite archive may be large, but every other file stays capped', () => {
+    // Real character archives pass 64 MB — the Naruto one is 84.3 MB — so the
+    // archive ceiling has to clear that while the general file ceiling does not.
+    const NARUTO_SFF_BYTES = 84.3 * 1000 * 1000;
+    assert(LIMITS.maxSpriteArchiveBytes > NARUTO_SFF_BYTES,
+      `archive ceiling ${LIMITS.maxSpriteArchiveBytes} must clear an 84.3 MB SFF`);
+    assert(LIMITS.maxFileBytes < NARUTO_SFF_BYTES,
+      'the general file ceiling stays tight — a ID MB "readme" is still refused');
+    assert(LIMITS.maxSpriteArchiveBytes < 1024 * 1024 * 1024, 'and it is still a limit');
+
+    const dir = tmpdir('bigfile');
+    const file = path.join(dir, 'Naruto.sff');
+    const fd = fs.openSync(file, 'w');
+    fs.ftruncateSync(fd, Math.ceil(NARUTO_SFF_BYTES));
+    fs.closeSync(fd);
+
+    const big = readCapped(dir, 'Naruto.sff', LIMITS.maxSpriteArchiveBytes);
+    assertEqual(big.length, Math.ceil(NARUTO_SFF_BYTES), 'the archive was read whole');
+
+    let refused = null;
+    try { readCapped(dir, 'Naruto.sff'); } catch (err) { refused = err; }
+    assert(refused, 'the same file is refused at the default ceiling');
+    assertEqual(refused.code, 'FILE_TOO_LARGE', 'refusal code');
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+
+  test('total decoded area is capped, not just the sprite count', () => {
+    // 24,000 sprites is a lot of sprites; what actually exhausts memory is
+    // total decoded area, which a few hundred large sprites reach just as fast.
+    assertAtLeast(LIMITS.maxSprites, 6000, 'a real character needs room');
+    assert(LIMITS.maxTotalSpritePixels > 0, 'a total-area cap exists');
+    assert(LIMITS.maxSprites * LIMITS.maxSpritePixels > LIMITS.maxTotalSpritePixels,
+      'the total cap binds before the per-sprite cap times the count');
+  });
+
+  test('a character-scale sprite archive decodes', () => {
+    // 6,000 sprites — the order of magnitude a full character with four
+    // transformation modes reaches. Built from original block art.
+    const sprites = [];
+    for (let i = 0; i < 6000; i++) {
+      sprites.push({
+        group: Math.floor(i / 40), image: i % 40, w: 32, h: 48,
+        axisX: 16, axisY: 47, pixels: drawFigure(32, 48, i % 8),
+      });
+    }
+    const sff = parseSffBuffer(buildSffV2(sprites, 'rle8'), 'big.sff');
+    assertEqual(sff.version, 2, 'version');
+    assertEqual(sff.sprites.length, 6000, 'every sprite header read');
+    assertEqual(sff.sprites.filter((s) => s.pixels).length, 6000, 'every sprite decoded');
+    assertEmpty(sff.errors, 'no errors on a large archive');
+  });
+
+  /* ---------------------------------------------------- Naruto PASS 1/2 --- */
+
+  test('the raw MUGEN sprite archive can never be committed', () => {
+    const ignore = fs.readFileSync(path.join(REPO, '.gitignore'), 'utf8');
+    for (const pattern of ['*.sff', '*.snd', 'imports/mugen/*', 'assets/import-staging/*']) {
+      assert(ignore.includes(pattern), `.gitignore is missing "${pattern}"`);
+    }
+    // And nothing of that shape is sitting in the tree already.
+    const offenders = [];
+    const walk = (dir, depth = 0) => {
+      if (depth > 6) return;
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (['.git', 'node_modules', 'imports'].includes(e.name)) continue;
+        const full = path.join(dir, e.name);
+        if (e.isDirectory()) walk(full, depth + 1);
+        else if (/\.(sff|snd)$/i.test(e.name)) offenders.push(path.relative(REPO, full));
+      }
+    };
+    walk(REPO);
+    assertEmpty(offenders, 'MUGEN binaries found inside the repository');
+  });
+
+  test('Naruto is exactly one roster fighter, with every form beneath him', () => {
+    assertEqual(FIGHTER_ORDER.filter((id) => id === 'naruto').length, 1, 'one Naruto');
+    assertEqual(Object.keys(FIGHTERS).length, 110, 'roster size');
+    for (const formId of FIGHTERS.naruto.transformations) {
+      assert(TRANSFORMATIONS[formId], `${formId} is a transformation`);
+      assertEqual(TRANSFORMATIONS[formId].fighterId, 'naruto', `${formId} belongs to naruto`);
+      assert(!FIGHTERS[formId], `${formId} must not be a roster fighter`);
+    }
+    // No roster id anywhere carries a mode name from the package.
+    for (const banned of ['kcm', 'bijuu', 'ashura', 'kurama']) {
+      assert(!Object.keys(FIGHTERS).some((id) => id.includes(banned)),
+        `no roster fighter is named after the "${banned}" mode`);
+    }
+  });
+
+  test('the package supports Base to KCM to Bijuu, and Base to Ashura separately', () => {
+    const byForm = Object.fromEntries(NARUTO_MODES.map((m) => [m.gameForm, m]));
+    const kcm = byForm.naruto_kcm1;
+    const bijuu = byForm.naruto_kcm2;
+    const ashura = byForm.naruto_sixpaths;
+    assert(kcm && bijuu && ashura, 'all three modes are recorded');
+
+    // KCM is entered from base: it demands every mode flag clear.
+    assert(kcm.activation.requires.some((r) => /var\(2\) = 0.*var\(3\) = 0.*var\(4\) = 0/.test(r)),
+      'KCM requires no other mode active');
+    // Bijuu is entered FROM KCM — it demands var(2) = 1.
+    assert(bijuu.activation.requires.some((r) => /var\(2\) = 1/.test(r)),
+      'Bijuu follows KCM');
+    // Ashura is a separate branch from base, not downstream of Bijuu.
+    assert(ashura.activation.requires.some((r) => /var\(2\) = 0.*var\(3\) = 0.*var\(4\) = 0/.test(r)),
+      'Ashura is reached from base, not from Bijuu');
+    assertEqual(ashura.activation.power, 9000, 'Ashura costs full power');
+    // Each mode is a real transformation with its own state file and block.
+    for (const m of NARUTO_MODES) {
+      assertEqual(m.kind, 'TRUE TRANSFORMATION', `${m.mugenName} kind`);
+      assert(m.activationState > 0 && m.deactivationState > 0, `${m.mugenName} has both states`);
+      assert(m.markerHelperOn > 0 && m.markerHelperOff > 0, `${m.mugenName} has both markers`);
+      assertAtLeast(m.stateCount, 50, `${m.mugenName} has its own state block`);
+      assertAtLeast(m.airActions, 60, `${m.mugenName} has its own animation band`);
+    }
+  });
+
+  test('no tail-cloak or sage form is invented from the package', () => {
+    const sourced = new Set(NARUTO_MODES.map((m) => m.gameForm));
+    // The four forms the package does not implement keep their own data.
+    for (const g of NARUTO_UNSOURCED) {
+      assert(!sourced.has(g.gameForm), `${g.gameForm} has no MUGEN source and claims none`);
+      assert(TRANSFORMATIONS[g.gameForm], `${g.gameForm} still exists in the game`);
+    }
+    assertEqual(NARUTO_UNSOURCED.length, 4, 'four forms are unsourced');
+    // Naruto's chain is unchanged: still seven stages, no eight tail cloaks.
+    assertEqual(FIGHTERS.naruto.transformations.length, 7, 'seven forms, as before');
+    const cloakish = Object.keys(TRANSFORMATIONS)
+      .filter((id) => TRANSFORMATIONS[id].fighterId === 'naruto')
+      .filter((id) => /two|three|five|six_?tail|seven|eight/i.test(id));
+    assertEmpty(cloakish, 'no new tail-cloak forms were created');
+  });
+
+  test('each Naruto form gets its own jutsu set and its own ultimate', () => {
+    const forms = Object.keys(NARUTO_JUTSU);
+    assertAtLeast(forms.length, 4, 'base plus three modes');
+    const seen = new Map();
+    for (const [form, kit] of Object.entries(NARUTO_JUTSU)) {
+      assertEqual(kit.length, 3, `${form} has three jutsu slots`);
+      assertEqual(new Set(kit.map((k) => k.slot)).size, 3, `${form} slots are distinct`);
+      for (const move of kit) {
+        assert(!seen.has(move.state), `state ${move.state} is used by both ${seen.get(move.state)} and ${form}`);
+        seen.set(move.state, form);
+        assertAtLeast(move.powerCost, 500, `${move.name} spends meter`);
+      }
+    }
+    // Ultimates: one per form, all different states.
+    const ults = NARUTO_ULTIMATES.filter((u) => u.state);
+    assertEqual(new Set(ults.map((u) => u.state)).size, ults.length, 'no ultimate is reused');
+    for (const u of ults) assertAtLeast(u.powerCost, 1500, `${u.name} costs meter`);
+    for (const gameForm of ['naruto_kcm1', 'naruto_kcm2', 'naruto_sixpaths']) {
+      assert(ults.some((u) => u.gameForm === gameForm), `${gameForm} has an ultimate candidate`);
+    }
+  });
+
+  test('a screen-wide collision box is rejected at Naruto\'s scale', () => {
+    // Action 1355 declares a 1352x47 attack box — wider than the stage. It was
+    // rejected in PASS 1 and must stay rejected.
+    const broken = mapHitboxes([{
+      action: 1355,
+      frames: [{
+        group: 1355, image: 0, ticks: 4,
+        clsn1: [{ x1: -676, y1: -47, x2: 676, y2: 0 }],
+        clsn2: [{ x1: -14, y1: -70, x2: 14, y2: 0 }],
+      }],
+    }], { coordScale: 1 });
+    const check = validateBoxes(broken);
+    assertEqual(check.ok, false, 'the box is rejected');
+    assert(check.errors.some((e) => /implausibly large/i.test(e)), `errors: ${check.errors.join('; ')}`);
+    // A sane box at the same scale still passes.
+    const sane = mapHitboxes([{
+      action: 200,
+      frames: [{
+        group: 200, image: 0, ticks: 4,
+        clsn1: [{ x1: 10, y1: -60, x2: 46, y2: -40 }],
+        clsn2: [{ x1: -14, y1: -70, x2: 14, y2: 0 }],
+      }],
+    }], { coordScale: 1 });
+    assertEqual(validateBoxes(sane).ok, true, 'a normal attack box still passes');
   });
 
   test('shadow clones stay an ability, not an assist and not a summon', () => {

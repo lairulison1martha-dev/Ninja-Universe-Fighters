@@ -20,16 +20,49 @@ import path from 'node:path';
 
 /** Hard caps. Chosen to be generous for real characters and fatal for bombs. */
 export const LIMITS = Object.freeze({
-  /** Any single file inside a package. */
+  /**
+   * Any single file inside a package.
+   *
+   * This is the cap for arbitrary files, and it stays tight: a 200 MB
+   * "readme.txt" is not a readme. Sprite archives get their own, larger
+   * allowance below, because they are the one file type that is legitimately
+   * enormous.
+   */
   maxFileBytes: 64 * 1024 * 1024,
+  /**
+   * A `.sff` sprite archive specifically.
+   *
+   * Real character archives routinely pass 64 MB — the Naruto package this
+   * importer was built against ships an 84.3 MB SFF, and larger ones exist.
+   * Refusing those would mean the importer only ever worked on small
+   * characters, so the archive gets its own ceiling. The protection that
+   * actually matters for a decompression bomb is `maxTotalSpritePixels`
+   * below: what hurts is decoded bytes in memory, not bytes on disk.
+   */
+  maxSpriteArchiveBytes: 320 * 1024 * 1024,
   /** Whole package on disk. */
   maxPackageBytes: 512 * 1024 * 1024,
   /** Files walked while inspecting a package. */
   maxFiles: 5000,
   /** Directory recursion depth. */
   maxDepth: 12,
-  /** Sprites decoded from one SFF. */
-  maxSprites: 4000,
+  /**
+   * Sprites decoded from one SFF.
+   *
+   * 4000 was too low for a real character: this package's 793 AIR actions
+   * span 3,912 frames across 222 sprite groups, and a full character with
+   * four transformation modes runs well past that before it has finished its
+   * base move set.
+   */
+  maxSprites: 24000,
+  /**
+   * Total decoded pixels across every sprite in one archive.
+   *
+   * The real memory guard. 24,000 sprites at the per-sprite ceiling would be
+   * absurd; this caps the whole archive at roughly 1.6 GB of RGBA, and the
+   * decoder stops and reports rather than growing without bound.
+   */
+  maxTotalSpritePixels: 400 * 1000 * 1000,
   /** Pixels in one decoded sprite (guards a 60000x60000 header). */
   maxSpritePixels: 4096 * 4096,
   /** Either dimension of one sprite. */

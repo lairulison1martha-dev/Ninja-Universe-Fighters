@@ -231,6 +231,7 @@ function parseSffV1(buf, report) {
 
   const sprites = [];
   let lastPalette = null;
+  let totalPixels = 0;
   const count = Math.min(numImages, LIMITS.maxSprites);
   if (numImages > LIMITS.maxSprites) {
     report.warnings.push(`SFF declares ${numImages} sprites; stopped at ${LIMITS.maxSprites}`);
@@ -275,6 +276,14 @@ function parseSffV1(buf, report) {
 
     try {
       const pcx = decodePcx(buf.subarray(dataStart, dataStart + length));
+      totalPixels += pcx.width * pcx.height;
+      if (totalPixels > LIMITS.maxTotalSpritePixels) {
+        report.warnings.push(
+          `Stopped after ${sprites.length} sprites: the archive passed `
+          + `${LIMITS.maxTotalSpritePixels} total decoded pixels`,
+        );
+        break;
+      }
       entry.width = pcx.width;
       entry.height = pcx.height;
       entry.pixels = pcx.pixels;
@@ -353,6 +362,12 @@ function parseSffV2(buf, report) {
   if (numSprites > LIMITS.maxSprites) {
     report.warnings.push(`SFF declares ${numSprites} sprites; stopped at ${LIMITS.maxSprites}`);
   }
+  /*
+   * Running total of decoded pixels. A sprite count alone is a weak guard —
+   * what exhausts memory is total decoded area, and an archive can reach it
+   * with a few hundred large sprites or twenty thousand small ones.
+   */
+  let totalPixels = 0;
 
   for (let n = 0; n < count; n++) {
     const p = spriteOffset + n * 28;
@@ -388,6 +403,14 @@ function parseSffV2(buf, report) {
 
     try {
       checkSpriteSize(width, height, `sprite ${n} (${group},${image})`);
+      totalPixels += width * height;
+      if (totalPixels > LIMITS.maxTotalSpritePixels) {
+        report.warnings.push(
+          `Stopped after ${sprites.length} sprites: the archive passed `
+          + `${LIMITS.maxTotalSpritePixels} total decoded pixels`,
+        );
+        break;
+      }
       const base = (flags & 1) ? tdataOffset : ldataOffset;
       const start = base + dataOff;
       if (start + dataLen > buf.length) {
@@ -440,7 +463,9 @@ function parseSffV2(buf, report) {
  * @returns {Object} { version, sprites, byKey, errors, warnings, ... }
  */
 export function parseSff(root, relPath) {
-  const buf = readCapped(root, relPath);
+  // A sprite archive gets the larger of the two size ceilings — see the note
+  // on maxSpriteArchiveBytes. Every other file type keeps the tight one.
+  const buf = readCapped(root, relPath, LIMITS.maxSpriteArchiveBytes);
   return parseSffBuffer(buf, relPath);
 }
 
