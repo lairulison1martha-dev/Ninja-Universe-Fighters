@@ -150,10 +150,24 @@ export function classifyState(state, ctx = {}) {
     confidence = 'high';
     reasons.push(`standard MUGEN state ${n} (${STANDARD_MOVES[n].label})`);
   } else if (n >= 3000) {
-    category = 'ultimate';
-    confidence = cmdRequiresPower || power < 0 ? 'high' : 'medium';
-    reasons.push(`state ${n} is in the super range`);
-    if (cmdRequiresPower) reasons.push('its command requires power');
+    /*
+     * A high state number is a hint, not proof. Characters with several
+     * transformation modes park each mode's ordinary attacks in its own high
+     * band — this package puts Bijuu Mode's light punch at state 11200 — so
+     * treating "≥ 3000" as a super on its own turns a whole move set into
+     * ultimates. Meter is the real evidence: MUGEN supers cost power.
+     */
+    if (cmdRequiresPower || power < 0) {
+      category = 'ultimate';
+      confidence = 'high';
+      reasons.push(`state ${n} is in the super range and spends meter`);
+      if (cmdRequiresPower) reasons.push('its command requires power');
+    } else {
+      category = 'special';
+      confidence = 'low';
+      reasons.push(`state ${n} is in the super range but spends no meter — `
+        + 'reads as a mode-specific normal, not a super');
+    }
   } else if (n >= 1000) {
     // A special. Whether it is a jutsu slot or an ultimate depends on meter.
     if (cmdRequiresPower || power <= -1000) {

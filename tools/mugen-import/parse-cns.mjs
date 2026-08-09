@@ -121,6 +121,12 @@ export function parseCnsText(text, label = '<cns>') {
         projectiles: [],
         helpers: [],
         changeAnims: [],
+        /** Variable writes — how a MUGEN character remembers which mode it is in. */
+        varSets: [],
+        /** Where this state can send the character next. */
+        changeStates: [],
+        /** Palette and colour effects, which is how modes usually recolour. */
+        palFx: [],
         line: sec.line,
       };
       states.push(current);
@@ -132,19 +138,45 @@ export function parseCnsText(text, label = '<cns>') {
     if (!st) continue;
     const type = (sec.get('type') || '').trim();
     const typeLower = type.toLowerCase();
-    const owner = toInt(st[1]);
-    // Controllers in .cmd-style [State -1] blocks have no StateDef; skip them
-    // here, parse-cmd.mjs owns those.
-    const target = current && current.number === owner ? current
-      : states.find((s) => s.number === owner) || null;
+    /*
+     * The number in `[State 3000, VarSet]` is documentation, not ownership.
+     * MUGEN binds a controller to the StateDef it appears under, and authors
+     * routinely leave a stale number there after copying a block between
+     * states — this package has VarSets labelled 3000 sitting inside
+     * Statedef 2190. Binding by the label instead of the enclosing StateDef
+     * scatters controllers across unrelated states and silently drops the
+     * ones whose label matches nothing.
+     */
+    const target = current;
+    // A `[State -1]` block belongs to the .cmd; parse-cmd.mjs owns those.
     if (!target) continue;
+    const labelNumber = toInt(st[1]);
 
     const triggers = sec.entries
       .filter((e) => /^trigger(all|\d+)$/i.test(e.key))
       .map((e) => e.value);
 
+    /*
+     * Keep every non-trigger parameter verbatim. Nothing here is evaluated —
+     * these are strings for the reports — but a mode scan needs to see the
+     * VarSet, PalFX and ChangeState values, not just the controller's type.
+     */
+    const params = {};
+    let kept = 0;
+    for (const e of sec.entries) {
+      if (/^trigger(all|\d+)$/i.test(e.key)) continue;
+      if (kept++ >= 40) break;
+      params[e.key.toLowerCase()] = e.value;
+    }
+
     const controller = {
-      type, typeLower, label: (st[2] || '').trim(), triggers, line: sec.line,
+      type,
+      typeLower,
+      label: (st[2] || '').trim(),
+      labelNumber,
+      triggers,
+      params,
+      line: sec.line,
     };
     target.controllers.push(controller);
 
@@ -202,6 +234,33 @@ export function parseCnsText(text, label = '<cns>') {
       });
     } else if (typeLower === 'changeanim') {
       target.changeAnims.push(toInt(sec.get('value'), -1));
+    } else if (typeLower === 'varset' || typeLower === 'varadd') {
+      // Two spellings exist: `v = 5 / value = 1`, and `var(5) = 1` as a
+      // single parameter. Both mean the same thing.
+      let index = sec.has('v') ? toInt(sec.get('v'), null) : null;
+      let value = sec.has('value') ? sec.get('value') : null;
+      if (index === null) {
+        for (const [k, v] of Object.entries(params)) {
+          const m = /^(?:var|fvar|sysvar)\((\d+)\)$/i.exec(k);
+          if (m) { index = toInt(m[1], null); value = v; break; }
+        }
+      }
+      if (index !== null) {
+        target.varSets.push({
+          index, value, add: typeLower === 'varadd', triggers, line: sec.line,
+        });
+      }
+    } else if (typeLower === 'changestate' || typeLower === 'selfstate') {
+      target.changeStates.push({
+        value: sec.get('value') ?? null,
+        self: typeLower === 'selfstate',
+        ctrl: sec.has('ctrl') ? sec.get('ctrl') : null,
+        triggers,
+        line: sec.line,
+      });
+    } else if (typeLower === 'palfx' || typeLower === 'allpalfx' || typeLower === 'remappal'
+      || typeLower === 'bgpalfx') {
+      target.palFx.push({ kind: typeLower, params, triggers, line: sec.line });
     }
   }
 

@@ -70,6 +70,13 @@ export function prepareStaging(repoRoot, fighterId, subpath = null) {
   const stagingRoot = path.resolve(repoRoot, STAGING_ROOT);
   const base = safeStagingPath(stagingRoot, rel);
   for (const sub of ['source', 'converted', 'reports']) {
+    /*
+     * Clear before writing. Importing a second package over the same target
+     * otherwise leaves the previous one's sprite sheet sitting in
+     * `converted/`, where it reads as output of the new import — which is
+     * how the wrong character's artwork gets promoted into the game.
+     */
+    fs.rmSync(path.join(base, sub), { recursive: true, force: true });
     fs.mkdirSync(path.join(base, sub), { recursive: true });
   }
   return base;

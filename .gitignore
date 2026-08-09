@@ -16,3 +16,12 @@ Thumbs.db
 # here; it writes only to assets/import-staging/.
 imports/mugen/*
 !imports/mugen/README.md
+
+# Import staging. This is the importer's output, and for a third-party package
+# it is largely a re-encoding of that package's own data — the AIR actions, the
+# state blocks, the per-frame collision boxes. Committing it would redistribute
+# the package in a different file format, before the rights question it exists
+# to answer has been answered. Staging is a working area; the conclusions live
+# in reports/.
+assets/import-staging/*
+!assets/import-staging/README.md

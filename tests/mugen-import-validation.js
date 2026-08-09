@@ -41,6 +41,12 @@ const {
   mapHitboxes, convertBox, validateBoxes, validateFrameReferences, deriveScale,
 } = await import(`../${M}/hitbox-map.mjs`);
 const { mapMoves, classifyState, ticksToSeconds, MANUAL } = await import(`../${M}/move-map.mjs`);
+const { scanModes, findModeFlags, referencedVars, classifyState: modeClassifyState } =
+  await import(`../${M}/mode-scan.mjs`);
+const {
+  MODES: NARUTO_MODES, GAME_FORMS_WITHOUT_SOURCE: NARUTO_UNSOURCED,
+  SHADOW_CLONES: NARUTO_CLONES, PALETTES: NARUTO_PALETTES,
+} = await import(`../${M}/mappings/naruto.mjs`);
 const { checkLicense, STATUS } = await import(`../${M}/license-check.mjs`);
 const { inspectPackage } = await import(`../${M}/package-inspector.mjs`);
 const { assertFighterId, prepareStaging } = await import(`../${M}/fighter-export.mjs`);
@@ -447,6 +453,88 @@ Clsn1: 1
     assertEqual(heavy.hitDefs[0].guardDamage, 10, 'guard damage');
     assertEqual(heavy.hitDefs[0].animElem, 2, 'AnimElem trigger');
     assert(heavy.hitDefs[0].fall, 'fall = 1 read');
+  });
+
+  test('a controller belongs to the state it sits in, not to its label number', () => {
+    /*
+     * MUGEN binds a controller to the enclosing StateDef. The number in
+     * `[State 3000, VarSet]` is documentation, and authors leave it stale when
+     * they copy a block between states. Binding by the label scatters
+     * controllers across unrelated states and drops the ones whose label
+     * matches nothing — which is how a 150-move character reads as a 2-move one.
+     */
+    const cns = parseCnsText(`
+[Statedef 2190]
+type = S
+anim = 2190
+[State 3000, VarSet]
+type = VarSet
+trigger1 = time = 0
+v = 12
+value = -100
+[State 9999, HitDef]
+type = HitDef
+trigger1 = AnimElem = 2
+damage = 40, 4
+`);
+    const state = cns.byNumber.get(2190);
+    assertEqual(cns.states.length, 1, 'one state was defined');
+    assertEqual(state.varSets.length, 1, 'the VarSet stayed in state 2190');
+    assertEqual(state.varSets[0].index, 12, 'variable index');
+    assertEqual(state.hitDefs.length, 1, 'the HitDef stayed in state 2190');
+    assertEqual(state.controllers[0].labelNumber, 3000, 'the stale label is still reported');
+    assert(!cns.byNumber.has(3000), 'no phantom state was created from the label');
+  });
+
+  test('the CNS parser reads variable writes, state changes and palette effects', () => {
+    const cns = parseCnsText(`
+[Statedef 2191]
+type = S
+anim = 2191
+[State 0, VarSet]
+type = VarSet
+trigger1 = time = 0
+v = 13
+value = 1
+[State 0, VarAdd]
+type = VarAdd
+trigger1 = time >= 50
+v = 12
+value = 15
+[State 0, PalFX]
+type = PalFX
+trigger1 = time = 0
+add = 80, 40, 0
+[State 200, End]
+type = ChangeState
+trigger1 = animtime = 0
+value = 0
+ctrl = 1
+`);
+    const s = cns.byNumber.get(2191);
+    assertEqual(s.varSets.length, 2, 'both variable writes');
+    assertEqual(s.varSets[0].add, false, 'VarSet is not additive');
+    assertEqual(s.varSets[1].add, true, 'VarAdd is additive');
+    assertEqual(s.changeStates.length, 1, 'one ChangeState');
+    assertEqual(s.changeStates[0].value, '0', 'its target');
+    assertEqual(s.palFx.length, 1, 'one palette effect');
+    assertEqual(s.controllers[2].params.add, '80, 40, 0', 'parameters are kept verbatim');
+  });
+
+  test('a high state number alone is not proof of a super', () => {
+    // A character with several modes parks each mode's normals in its own high
+    // band. Without meter evidence, "state >= 3000" turns a move set into
+    // ultimates — 83 of them, on the character that found this.
+    const normal = classifyState(
+      { number: 11200, poweradd: 0, hitDefs: [{ attr: 'S, NA' }], controllers: [] },
+      {},
+    );
+    assertEqual(normal.category, 'special', `mode normal: ${normal.reasons.join('; ')}`);
+    const superMove = classifyState(
+      { number: 11201, poweradd: -1000, hitDefs: [{ attr: 'S, NA' }], controllers: [] },
+      {},
+    );
+    assertEqual(superMove.category, 'ultimate', 'a state that spends meter is a super');
   });
 
   test('the ST parser is the CNS parser, and merging de-duplicates states', () => {
@@ -1361,6 +1449,218 @@ damage = 20, 2
       errors: ['a', 'b'],
     });
     assert(broken.total < strong.total, 'decode failures and errors cost score');
+  });
+
+  /* ---------------------------------------------- transformation modes --- */
+
+  test('a transformation mode is found from its marker helper and flag variable', () => {
+    /*
+     * The pattern real MUGEN characters use: an activation state spawns a
+     * long-lived helper, a global state watches numhelper() and keeps a
+     * variable in sync, and every other command is gated on that variable.
+     */
+    const cns = mergeCns([parseCnsText(`
+[Statedef -3]
+type = S
+[State 0, VarSet]
+type = VarSet
+trigger1 = numhelper(2195) = 1
+v = 2
+value = 1
+[State 0, VarSet]
+type = VarSet
+trigger1 = numhelper(2196) = 1
+v = 2
+value = 0
+
+[Statedef 2190]
+type = S
+movetype = I
+anim = 2190
+[State 0, Helper]
+type = Helper
+trigger1 = time = 11
+name = "KCM Mode"
+stateno = 2195
+helpertype = normal
+
+[Statedef 2191]
+type = S
+anim = 2191
+[State 0, Helper]
+type = Helper
+trigger1 = time = 11
+name = "KCM Mode End"
+stateno = 2196
+helpertype = normal
+`)]);
+    const cmd = parseCmdText(`
+[Command]
+name = "s"
+command = s
+time = 1
+
+[State -1, KCM Mode]
+type = ChangeState
+triggerall = var(5) >= 250
+triggerall = var(2) = 0
+value = 2190
+triggerall = command = "s"
+trigger1 = ctrl
+
+[State -1, KCM Mode Fin]
+type = ChangeState
+triggerall = var(2) = 1
+value = 2191
+triggerall = command = "s"
+trigger1 = ctrl
+`);
+    const fileOf = new Map([[2190, 'KCM_Mode.cns'], [2191, 'KCM_Mode.cns']]);
+    const scan = scanModes({ cmd, cns, air: { byNumber: new Map() }, fileOf });
+
+    assertEqual(scan.modes.length, 1, 'one mode found');
+    const m = scan.modes[0];
+    assertEqual(m.flagVar, 2, 'flag variable');
+    assertEqual(m.activationState, 2190, 'activation state');
+    assertEqual(m.deactivationState, 2191, 'deactivation state');
+    assertEqual(m.markerHelperOn, 2195, 'marker helper on');
+    assertEqual(m.markerHelperOff, 2196, 'marker helper off');
+    assertEqual(m.classification, 'TRUE TRANSFORMATION', 'classification');
+    assertEqual(m.activationCommand.meterRequirement.value, 250, 'meter requirement');
+    assertEqual(m.confidence, 'high', 'confidence');
+    assertEqual(m.file, 'KCM_Mode.cns', 'the mode owns its state file');
+  });
+
+  test('a state that only flashes the screen is not reported as a transformation', () => {
+    const explod = parseCnsText(`
+[Statedef 900]
+type = S
+anim = 900
+[State 0, Explod]
+type = Explod
+trigger1 = time = 0
+anim = 9020
+postype = p1
+[State 0, PlaySnd]
+type = PlaySnd
+trigger1 = time = 0
+value = S0,1
+`);
+    assertEqual(modeClassifyState(explod.byNumber.get(900)), 'VISUAL EFFECT', 'visual effect');
+
+    const superMove = parseCnsText(`
+[Statedef 3000]
+type = S
+movetype = A
+anim = 3000
+poweradd = -2000
+[State 0, HitDef]
+type = HitDef
+trigger1 = AnimElem = 3
+damage = 120, 12
+attr = S, SA
+`);
+    assertEqual(modeClassifyState(superMove.byNumber.get(3000)), 'SUPER/HYPER ATTACK', 'super');
+
+    const helperOnly = parseCnsText(`
+[Statedef 1300]
+type = S
+anim = 1300
+[State 0, Helper]
+type = Helper
+trigger1 = time = 4
+name = "Gamakichi"
+stateno = 1310
+`);
+    assertEqual(modeClassifyState(helperOnly.byNumber.get(1300)), 'HELPER', 'helper');
+  });
+
+  test('a mode needing another mode already active is a sub-mode, not a form', () => {
+    const cns = mergeCns([parseCnsText(`
+[Statedef -3]
+type = S
+[State 0, VarSet]
+type = VarSet
+trigger1 = numhelper(11195) = 1
+v = 3
+value = 1
+
+[Statedef 11190]
+type = S
+[State 0, Helper]
+type = Helper
+trigger1 = time = 1
+name = "Bijuu"
+stateno = 11195
+
+[Statedef 3400]
+type = S
+anim = 3400
+[State 0, PalFX]
+type = PalFX
+trigger1 = time = 0
+add = 40, 0, 0
+`)]);
+    const cmd = parseCmdText(`
+[Command]
+name = "s"
+command = s
+time = 1
+
+[State -1, Bijuu Mode]
+type = ChangeState
+value = 11190
+triggerall = command = "s"
+trigger1 = ctrl
+
+[State -1, Kurama Mode]
+type = ChangeState
+triggerall = var(3) = 1
+value = 3400
+triggerall = command = "s"
+trigger1 = ctrl
+`);
+    const scan = scanModes({
+      cmd, cns, air: { byNumber: new Map() },
+      fileOf: new Map([[11190, 'Bijuu_Mode.cns'], [3400, 'Supers.cns']]),
+    });
+    assertEqual(scan.modes.length, 1, 'only the real mode is a mode');
+    const sub = scan.subModes.find((s) => s.targetState === 3400);
+    assert(sub, 'the sub-mode was found');
+    assertEqual(sub.requiresModeVars.join(','), '3', 'it requires the other mode');
+    assertEqual(sub.classification, 'PALETTE CHANGE', 'and it is not a transformation');
+  });
+
+  test('the Naruto mapping maps every mode onto an existing transformation', async () => {
+    // The record of what PASS 1 decided. Every target must already exist, and
+    // none of them may be a roster id.
+    for (const m of NARUTO_MODES) {
+      assert(TRANSFORMATIONS[m.gameForm], `${m.gameForm} is a real transformation`);
+      assertEqual(TRANSFORMATIONS[m.gameForm].fighterId, 'naruto',
+        `${m.gameForm} belongs to naruto`);
+      assert(!FIGHTERS[m.gameForm], `${m.gameForm} must not be a roster fighter`);
+    }
+    assertEqual(NARUTO_MODES.length, 3, 'three modes were found in the package');
+    // Forms the package does not implement keep what they have.
+    for (const g of NARUTO_UNSOURCED) {
+      assert(TRANSFORMATIONS[g.gameForm], `${g.gameForm} still exists`);
+      assert(/MISSING_FROM_PACKAGE/.test(g.reason), `${g.gameForm} is recorded as missing`);
+    }
+    assertEqual(Object.keys(FIGHTERS).length, 110, 'the roster is still 110');
+    assertEqual(FIGHTERS.naruto.transformations.length, 7, 'Naruto still has seven forms');
+  });
+
+  test('shadow clones stay an ability, not an assist and not a summon', () => {
+    assert(/helper/i.test(NARUTO_CLONES.classification), 'classified as a helper');
+    assert(!/assist/i.test(NARUTO_CLONES.mapsTo.replace(/NOT [^,]+/g, '')),
+      'not mapped to the assist system');
+    // The live systems are untouched, and no clone leaked into either.
+    assertEqual(Object.keys(FIGHTER_ASSISTS).length, 110, 'one assist record per fighter');
+    assert(FIGHTER_ASSISTS.naruto, 'Naruto is still a selectable assist');
+    for (const id of NARUTO_CLONES.helperNames) {
+      assert(!FIGHTER_ASSISTS[id], `${id} did not become an assist`);
+      assert(!SUMMONS[id], `${id} did not become a summon`);
+    }
   });
 
   test('the batch leaves the 110-fighter roster exactly as it found it', () => {

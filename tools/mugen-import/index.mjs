@@ -28,6 +28,7 @@ import { parseSnd } from './parse-snd.mjs';
 import { mapAnimations, GAME_CLIPS } from './animation-map.mjs';
 import { mapHitboxes, validateBoxes, validateFrameReferences } from './hitbox-map.mjs';
 import { mapMoves } from './move-map.mjs';
+import { scanModes } from './mode-scan.mjs';
 import { checkLicense, readDeclaredRights, STATUS } from './license-check.mjs';
 import {
   buildSpriteSheet, buildPortrait, exportRawSprites, deriveSpriteScale,
@@ -119,11 +120,17 @@ export function analysePackage(packagePath, { fighterId = null } = {}) {
     def?.cns?.path,
     ...(def?.stateFiles || []).map((s) => s.path),
   ].filter(Boolean))];
+  // Which file each state came from. A MUGEN character keeps one file per
+  // mode, so this is what ties a transformation to its own state block.
+  const fileOf = new Map();
   if (cnsPaths.length) {
     const parts = [];
     for (const p of cnsPaths) {
-      try { parts.push(parseCns(root, p)); }
-      catch (err) { warnings.push(`CNS ${p}: ${err.message}`); }
+      try {
+        const parsed = parseCns(root, p);
+        for (const s of parsed.states) if (!fileOf.has(s.number)) fileOf.set(s.number, p);
+        parts.push(parsed);
+      } catch (err) { warnings.push(`CNS ${p}: ${err.message}`); }
     }
     cns = mergeCns(parts);
     warnings.push(...cns.warnings);
@@ -149,6 +156,11 @@ export function analysePackage(packagePath, { fighterId = null } = {}) {
     })
     : null;
 
+  // Transformation modes. Character packages that change form do it with a
+  // marker helper and a variable, which is a pattern worth reading out
+  // explicitly rather than leaving buried in 400 states.
+  const modes = cns ? scanModes({ cmd, cns, air, fileOf }) : null;
+
   if (frameRefs && !frameRefs.ok) {
     warnings.push(`${frameRefs.missingCount} animation frame(s) reference a sprite that is not in the SFF`);
   }
@@ -158,8 +170,8 @@ export function analysePackage(packagePath, { fighterId = null } = {}) {
 
   return {
     root, fighterId, inspection, def, license,
-    sff, air, cmd, cns, snd,
-    animMap, hitboxes, boxValidation, frameRefs, moves,
+    sff, air, cmd, cns, snd, fileOf,
+    animMap, hitboxes, boxValidation, frameRefs, moves, modes,
     referencedSprites: air ? referencedSprites(air.animations) : [],
     errors, warnings,
   };
@@ -263,6 +275,7 @@ export async function importPackage(packagePath, fighterId, {
     }));
   }
   if (result.moves) written.push(writeJson(base, 'converted/move-map.json', result.moves));
+  if (result.modes) written.push(writeJson(base, 'converted/mode-scan.json', result.modes));
 
   // Art is only written when rights allow it. Analysis is always written.
   let sheetMeta = null;
