@@ -29,6 +29,14 @@ class Projectile {
     this.hitIds = null;
     this.damageScale = 1;
     this.trailTimer = 0;
+    /**
+     * Visual language, captured at spawn from the owner's current form.
+     * A projectile outlives the frame that fired it, and the fighter can
+     * transform while it is still in flight — reading the form at draw time
+     * would recolour a shot that is already halfway across the arena.
+     */
+    this.style = 'sphere';
+    this.tint = null;
   }
 
   spawn(owner, ability, spec, opts = {}) {
@@ -51,6 +59,8 @@ class Projectile {
     this.age = 0;
     this.pierceLeft = spec.pierce;
     this.damageScale = opts.damageScale ?? 1;
+    this.style = opts.style || spec.style || 'sphere';
+    this.tint = opts.tint || null;
     if (!this.hitIds) this.hitIds = new Set(); else this.hitIds.clear();
     this.trailTimer = 0;
     return this;
@@ -118,7 +128,7 @@ export class ProjectilePool {
    * Fire an ability's projectile spec. Multi-shot bursts are queued as pending
    * spawns so `count`/`interval` work without allocating timers.
    */
-  fire(owner, ability, pending) {
+  fire(owner, ability, pending, look = null) {
     const spec = ability.projectile;
     if (!spec) return;
     if (spec.count > 1 && spec.interval > 0) {
@@ -127,19 +137,25 @@ export class ProjectilePool {
           at: i * spec.interval,
           owner, ability, spec,
           angle: (i - (spec.count - 1) / 2) * spec.spread,
+          style: look?.style, tint: look?.tint,
         });
       }
       return;
     }
     for (let i = 0; i < spec.count; i++) {
       const p = this.acquire();
-      p.spawn(owner, ability, spec, { angle: (i - (spec.count - 1) / 2) * spec.spread });
+      p.spawn(owner, ability, spec, {
+        angle: (i - (spec.count - 1) / 2) * spec.spread,
+        style: look?.style, tint: look?.tint,
+      });
     }
   }
 
-  spawnOne(owner, ability, spec, angle, damageScale = 1) {
+  spawnOne(owner, ability, spec, angle, damageScale = 1, look = null) {
     const p = this.acquire();
-    p.spawn(owner, ability, spec, { angle, damageScale });
+    p.spawn(owner, ability, spec, {
+      angle, damageScale, style: look?.style, tint: look?.tint,
+    });
     return p;
   }
 

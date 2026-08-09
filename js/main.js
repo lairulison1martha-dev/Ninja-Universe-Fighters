@@ -867,9 +867,13 @@ export class Game {
       ctx.save();
       ctx.translate(p.x, -p.y);
       ctx.rotate(Math.atan2(-p.vy, p.vx));
+      // The form's aura tints the shot, so a KCM Rasenshuriken is gold and a
+      // Bijuu one is heavier — captured at spawn, so a transformation mid-flight
+      // does not recolour a shot already travelling.
+      const body = p.tint || spec.color;
       const g = ctx.createRadialGradient(0, 0, 1, 0, 0, p.radius * 2);
       g.addColorStop(0, spec.color2 || '#fff');
-      g.addColorStop(0.5, spec.color);
+      g.addColorStop(0.5, body);
       g.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = g;
       if (spec.shape === 'beam') {
@@ -896,6 +900,60 @@ export class Game {
         ctx.arc(0, 0, p.radius * 1.6, 0, Math.PI * 2);
         ctx.fill();
       }
+
+      /*
+       * Per-form overlay. The base shape above stays as the ability authored
+       * it; this adds the language the form fights in, drawn in world space so
+       * it is free to exceed the 64px body cell.
+       */
+      const R = p.radius;
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.strokeStyle = body;
+      if (p.style === 'sharp') {
+        ctx.lineWidth = Math.max(1, R * 0.16);
+        for (let k = 0; k < 4; k++) {
+          const a = k * Math.PI / 2 + p.age * 6;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(a) * R * 0.6, Math.sin(a) * R * 0.6);
+          ctx.lineTo(Math.cos(a) * R * 2.1, Math.sin(a) * R * 2.1);
+          ctx.stroke();
+        }
+      } else if (p.style === 'blast') {
+        for (let k = 1; k <= 2; k++) {
+          ctx.lineWidth = Math.max(1, R * 0.14);
+          ctx.globalAlpha = 0.55 / k;
+          ctx.beginPath();
+          ctx.arc(0, 0, R * (1.5 + k * 0.55 + (p.age * 2 % 0.5)), 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      } else if (p.style === 'claw') {
+        ctx.lineWidth = Math.max(1, R * 0.2);
+        for (let k = -1; k <= 1; k++) {
+          ctx.beginPath();
+          ctx.arc(0, k * R * 0.7, R * 1.5, -0.7, 0.7);
+          ctx.stroke();
+        }
+      } else if (p.style === 'orbital') {
+        ctx.fillStyle = 'rgba(10,8,18,0.85)';
+        ctx.beginPath();
+        ctx.arc(0, 0, R * 0.75, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.lineWidth = Math.max(1, R * 0.12);
+        ctx.beginPath();
+        ctx.arc(0, 0, R * 1.9, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (p.style === 'compressed') {
+        ctx.lineWidth = Math.max(1, R * 0.14);
+        for (let k = 0; k < 6; k++) {
+          const a = k * Math.PI / 3 - p.age * 9;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(a) * R * 1.7, Math.sin(a) * R * 1.7);
+          ctx.stroke();
+        }
+      }
+      ctx.globalCompositeOperation = 'source-over';
       ctx.restore();
     }
 

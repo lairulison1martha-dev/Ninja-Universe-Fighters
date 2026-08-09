@@ -24,6 +24,24 @@ import { SCRATCH, overlaps } from './hitbox.js';
 import { canBlock, applyBlock } from './guard-system.js';
 import { substitute } from './substitution-system.js';
 import { transform, endOfRoundReset } from './transformation-system.js';
+import { TRANSFORMATIONS } from '../data/transformations.js';
+
+/**
+ * Which effect language each Naruto form shoots with.
+ *
+ * Mirrors the `fxStyle` values the sprite rig draws with (tools/designs.py),
+ * so the projectile and the body art speak the same visual language. A form
+ * that is not listed falls back to a clean sphere.
+ */
+const PROJECTILE_STYLES = Object.freeze({
+  naruto_onetail: 'claw',
+  naruto_fourtail: 'claw',
+  naruto_sage: 'sphere',
+  naruto_kcm1: 'sharp',
+  naruto_kcm2: 'blast',
+  naruto_sixpaths: 'orbital',
+  naruto_baryon: 'compressed',
+});
 import { applyStatusEffects } from './status-effects.js';
 
 export const PHASE = {
@@ -237,8 +255,25 @@ export class CombatEngine extends EventTarget {
     audio.play(id, { pan });
   }
 
+  /**
+   * The effect language a fighter's current form shoots with.
+   *
+   * Keyed off the transformation, so a KCM shot reads as a sharp gold lance
+   * and a Bijuu shot as a heavy blast — the same distinction the sprite art
+   * already draws, carried into the projectile so a technique does not change
+   * character the moment it leaves the hand.
+   */
+  projectileLook(owner) {
+    const form = owner.form ? TRANSFORMATIONS[owner.form] : null;
+    return {
+      style: PROJECTILE_STYLES[owner.form] || 'sphere',
+      tint: form?.auraColor || null,
+    };
+  }
+
   fireProjectile(owner, ability) {
-    this.projectiles.fire(owner, ability, this.pendingProjectiles);
+    this.projectiles.fire(owner, ability, this.pendingProjectiles,
+      this.projectileLook(owner));
   }
 
   requestTransform(fighter) {
@@ -378,7 +413,11 @@ export class CombatEngine extends EventTarget {
       const p = this.pendingProjectiles[i];
       p.at -= dt;
       if (p.at <= 0) {
-        this.projectiles.spawnOne(p.owner, p.ability, p.spec, p.angle);
+        // Carry the look recorded when the burst was queued, not the owner's
+        // form now — a transformation mid-burst must not restyle shots that
+        // were already committed.
+        this.projectiles.spawnOne(p.owner, p.ability, p.spec, p.angle, 1,
+          { style: p.style, tint: p.tint });
         this.pendingProjectiles.splice(i, 1);
       }
     }
