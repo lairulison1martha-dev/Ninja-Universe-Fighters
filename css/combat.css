@@ -308,3 +308,81 @@
 
 /* Damage numbers are drawn on the canvas; this is the flash layer. */
 .screen--combat.is-hitstop .combat__canvas { filter: brightness(1.35) contrast(1.1); }
+
+/* ---------------------------------------------------------------------------
+   Transformation choice
+   ---------------------------------------------------------------------------
+   Shown only when a fighter's chain branches and more than one destination is
+   legal. Sized to sit inside an iPhone-landscape safe area without covering
+   the fight: a short row of cards low on the screen, dismissible, never a
+   permanent HUD control.
+   ------------------------------------------------------------------------ */
+.overlay--choice {
+  align-items: flex-end;
+  background: linear-gradient(to top, rgba(6, 8, 14, 0.86), rgba(6, 8, 14, 0.15));
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
+
+.overlay__panel--choice {
+  width: min(560px, 92vw);
+  padding: 10px 12px 12px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.overlay__panel--choice h2 {
+  font-size: clamp(0.75rem, 2.4vh, 1rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  opacity: 0.85;
+}
+
+.transform-choice {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.transform-choice__item {
+  flex: 1 1 0;
+  min-width: 120px;
+  max-width: 200px;
+  min-height: 56px;               /* comfortably tappable */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 2px solid var(--form-tint, #6cf);
+  background: rgba(12, 16, 26, 0.92);
+  color: #eef3fb;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.transform-choice__item:active { transform: scale(0.97); }
+
+.transform-choice__name {
+  font-size: clamp(0.72rem, 2.2vh, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.transform-choice__note {
+  font-size: clamp(0.6rem, 1.7vh, 0.75rem);
+  opacity: 0.72;
+}
+
+/* A branch that is legal but costly reads differently from the safe path. */
+.transform-choice__item--risk { border-style: dashed; }
+
+.transform-choice__cancel {
+  margin-top: 8px;
+  min-height: 34px;
+  font-size: 0.75rem;
+}

@@ -15,6 +15,22 @@ const DEFAULTS = {
   displayName: '',
   previousForm: null,
   nextForm: null,
+  /**
+   * Branching.
+   *
+   * A chain is linear by default: form N follows form N-1. `branchFrom` takes
+   * a form OFF that line and hangs it from one or more other forms instead, so
+   * a high-risk optional stage can be reachable without sitting between two
+   * stages that should follow each other directly.
+   *
+   * `previousForms` and `nextForms` are the computed graph edges — always
+   * arrays, always populated, and what the transformation system reads.
+   * `previousForm`/`nextForm` stay as the single-value view for the linear
+   * spine, so existing callers keep working.
+   */
+  branchFrom: null,
+  previousForms: [],
+  nextForms: [],
   /** All of these must pass. See combat/transformation-system.js. */
   activationRequirement: {
     awakening: 100,      // required awakening meter (0..100)
@@ -22,6 +38,7 @@ const DEFAULTS = {
     healthBelow: null,   // e.g. 0.35 → only under 35% health
     healthAbove: null,
     previousForm: null,  // auto-filled from the chain
+    previousForms: [],   // auto-filled; branches can have several
     oncePerMatch: false,
     roundAtLeast: 0,
   },
@@ -140,12 +157,25 @@ export function chain(fighterId, forms) {
     merged.id = id;
     merged.fighterId = fighterId;
     merged.displayName = f.displayName || f.id;
-    merged.previousForm = i > 0 ? ids[i - 1] : null;
-    merged.nextForm = i < ids.length - 1 ? ids[i + 1] : null;
+    // A branching form is lifted out of the linear spine entirely: it does not
+    // sit between its neighbours, so the stage before it links straight to the
+    // stage after it.
+    const branch = f.branchFrom
+      ? f.branchFrom.map((b) => (b.includes('_') ? b : `${fighterId}_${b}`))
+      : null;
+    const spine = ids.filter((x, k) => !(forms[k].branchFrom));
+    const spineIdx = spine.indexOf(id);
+    merged.previousForm = branch ? branch[0]
+      : (spineIdx > 0 ? spine[spineIdx - 1] : null);
+    merged.nextForm = branch ? null
+      : (spineIdx >= 0 && spineIdx < spine.length - 1 ? spine[spineIdx + 1] : null);
+    merged.branchFrom = branch;
+    merged.previousForms = branch || (merged.previousForm ? [merged.previousForm] : []);
     merged.activationRequirement = {
       ...DEFAULTS.activationRequirement,
       ...(f.activationRequirement || {}),
       previousForm: merged.previousForm,
+      previousForms: merged.previousForms,
     };
     if (merged.permanent) merged.duration = Infinity;
 
@@ -163,6 +193,13 @@ export function chain(fighterId, forms) {
 
     TRANSFORMATIONS[id] = merged;
   });
+
+  // Second pass: every form's outgoing edges are the forms that name it.
+  for (const id of ids) {
+    TRANSFORMATIONS[id].nextForms = ids.filter(
+      (other) => TRANSFORMATIONS[other].previousForms.includes(id),
+    );
+  }
   return ids;
 }
 
@@ -247,6 +284,10 @@ export const NARUTO_CHAIN = chain('naruto', [
   },
   {
     id: 'baryon', displayName: 'Baryon Mode',
+    // A high-risk optional branch, not the end of the line. Reachable once
+    // Kurama's chakra is flowing — from KCM or from the Avatar — and never a
+    // prerequisite for Six Paths, which stays the conventional end stage.
+    branchFrom: ['kcm1', 'kcm2'],
     activationRequirement: { awakening: 100, healthBelow: 0.30, oncePerMatch: true },
     awakeningCost: 100, duration: 12, healthDrain: 6.0,
     statModifiers: { attack: 1.85, defense: 1.15, speed: 1.45, chakraRegen: 2.2 },

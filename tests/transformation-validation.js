@@ -17,12 +17,17 @@ export function run() {
   });
 
   test('previousForm / nextForm links are consistent both ways', () => {
+    // A chain is a graph, not necessarily a line: a branching form hangs off
+    // several predecessors, so the edge has to point back through the
+    // `nextForms` list rather than the single-value `nextForm` view.
     const bad = [];
     for (const [id, t] of Object.entries(TRANSFORMATIONS)) {
       if (t.previousForm) {
         const p = TRANSFORMATIONS[t.previousForm];
         if (!p) bad.push(`${id}: previousForm ${t.previousForm} missing`);
-        else if (p.nextForm !== id) bad.push(`${id}: previous form does not point back`);
+        else if (!(p.nextForms || []).includes(id) && p.nextForm !== id) {
+          bad.push(`${id}: previous form does not point back`);
+        }
       }
       if (t.nextForm) {
         const n = TRANSFORMATIONS[t.nextForm];
@@ -100,9 +105,22 @@ export function run() {
       if (!list.length) continue;
       const first = TRANSFORMATIONS[list[0]];
       if (first.previousForm) bad.push(`${id}: chain does not start at a root form`);
+      // Walking the spine reaches every non-branching form in order; a
+      // branch is reachable from its own predecessors instead.
       const walked = chainFrom(list[0]).map((t) => t.id);
-      if (walked.join(',') !== list.join(',')) {
-        bad.push(`${id}: declared chain does not match the linked chain`);
+      const branches = list.filter((f) => (TRANSFORMATIONS[f].branchFrom || []).length);
+      const spine = list.filter((f) => !branches.includes(f));
+      if (walked.join(',') !== spine.join(',')) {
+        bad.push(`${id}: declared spine does not match the linked chain`);
+      }
+      for (const b of branches) {
+        const from = TRANSFORMATIONS[b].previousForms || [];
+        if (!from.length) bad.push(`${id}: branch ${b} hangs off nothing`);
+        for (const f of from) {
+          if (!(TRANSFORMATIONS[f]?.nextForms || []).includes(b)) {
+            bad.push(`${id}: ${f} does not offer branch ${b}`);
+          }
+        }
       }
     }
     assertEmpty(bad, 'Chain mismatch');

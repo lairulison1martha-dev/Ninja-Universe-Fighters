@@ -13,7 +13,7 @@ import { DIFFICULTY_TUNING } from '../constants.js';
 import { getAIProfile } from '../data/ai-profiles.js';
 import { getAbility } from '../data/abilities.js';
 import { STATE, HIT_STATES } from './fighter-state.js';
-import { canTransform } from './transformation-system.js';
+import { canTransform, legalNextForms } from './transformation-system.js';
 import { canSubstitute } from './substitution-system.js';
 
 const PLAN = {
@@ -68,6 +68,45 @@ export class AIController {
    * @param {number} dt
    * @param {Object} ctx { opponent, projectiles, engine }
    */
+  /**
+   * Choose between branching transformations.
+   *
+   * Deterministic scoring, not a coin flip: a form that drains health is only
+   * worth it when the fight is nearly won or nearly lost, and a long, cheap
+   * form is worth more when there is a lot of match left. Reads the form's own
+   * declared numbers rather than a hard-coded table, so a data change to a
+   * form's cost or drain moves the AI with it.
+   *
+   * @returns {string|null} the chosen transformation id
+   */
+  pickForm(me, opp, options) {
+    const hp = me.health / me.maxHealth;
+    const oppHp = opp ? opp.health / opp.maxHealth : 1;
+    let best = null;
+    let bestScore = -Infinity;
+    for (const { id, form } of options) {
+      if (!form) continue;
+      const req = form.activationRequirement || {};
+      let score = 0;
+      // Raw power is the point of transforming.
+      const mods = form.statModifiers || {};
+      score += ((mods.attack || 1) - 1) * 100;
+      score += ((mods.speed || 1) - 1) * 40;
+      score += ((mods.defense || 1) - 1) * 30;
+      // Health drain is a real cost, and a bad one when the fight is long.
+      const drain = form.healthDrain || 0;
+      score -= drain * (6 + oppHp * 14);
+      // A once-per-match form is worth saving for a finish.
+      if (req.oncePerMatch) score += oppHp < 0.35 ? 35 : -45;
+      // Do not burn a high-risk form while healthy and even.
+      if (drain > 0 && hp > 0.5 && oppHp > 0.5) score -= 40;
+      // Longer forms are worth more, but only up to a point.
+      score += Math.min(20, (form.duration || 0) * 0.8);
+      if (score > bestScore) { bestScore = score; best = id; }
+    }
+    return best;
+  }
+
   update(dt, ctx) {
     const me = this.fighter;
     const opp = ctx.opponent;
@@ -165,10 +204,16 @@ export class AIController {
     const t = this.tuning;
     const dir = Math.sign(opp.x - me.x) || 1;
 
-    // Transformations: transform when legal and the profile wants to.
+    // Transformations: transform when legal and the profile wants to. Where
+    // the chain branches, the choice is scored rather than left to the order
+    // the forms happen to be declared in.
     if (me.awakening >= p.transformAt && !me.act && this.rand() < 0.05) {
-      const check = canTransform(me);
-      if (check.ok) { ctx.engine?.requestTransform(me); return; }
+      const options = legalNextForms(me);
+      if (options.length === 1) { ctx.engine?.requestTransform(me, options[0].id); return; }
+      if (options.length > 1) {
+        const pick = this.pickForm(me, opp, options);
+        if (pick) { ctx.engine?.requestTransform(me, pick); return; }
+      }
     }
 
     // Ultimate: only when it will land — close, and they are not blocking, or

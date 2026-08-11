@@ -276,8 +276,8 @@ export class CombatEngine extends EventTarget {
       this.projectileLook(owner));
   }
 
-  requestTransform(fighter) {
-    const form = transform(fighter, null, this.effects);
+  requestTransform(fighter, formId = null) {
+    const form = transform(fighter, formId, this.effects);
     if (!form) return false;
     fighter.setState(STATE.TRANSFORM, 0.7);
     this.playSound('sfx_transform', fighter);

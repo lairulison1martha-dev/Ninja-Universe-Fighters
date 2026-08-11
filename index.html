@@ -327,6 +327,20 @@
     </div>
   </div>
 
+  <!--
+    Transformation choice. Only shown when the Awakening button has more than
+    one legal destination — a single option transforms immediately, so this
+    never appears for a linear chain.
+  -->
+  <div class="overlay overlay--choice" id="overlay-transform" hidden>
+    <div class="overlay__panel overlay__panel--choice">
+      <h2 id="transform-title">Awaken</h2>
+      <div class="transform-choice" id="transform-options"></div>
+      <button class="btn btn--ghost transform-choice__cancel" id="transform-cancel"
+              type="button">Cancel</button>
+    </div>
+  </div>
+
   <div class="overlay" id="overlay-results" hidden>
     <div class="overlay__panel overlay__panel--wide">
       <h2 id="results-title">Victory</h2>

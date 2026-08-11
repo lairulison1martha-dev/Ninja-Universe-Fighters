@@ -13,7 +13,8 @@ installBrowserStubs();
 
 const { CombatEngine, PHASE } = await import('../js/combat/combat-engine.js');
 const { ComboTracker } = await import('../js/combat/combo-system.js');
-const { canTransform } = await import('../js/combat/transformation-system.js');
+const { canTransform, legalNextForms, nextFormOptions } = await import('../js/combat/transformation-system.js');
+const FIGHTER_DATA = await import('../js/data/fighters.js');
 const { COMBAT, SIM_DT } = await import('../js/constants.js');
 const { getAbility } = await import('../js/data/abilities.js');
 const { TRANSFORMATIONS } = await import('../js/data/transformations.js');
@@ -126,13 +127,168 @@ export function run() {
     advance(e, 2);
     const f = e.player;
     f.ignoreUnlocks = true;
-    f.form = 'naruto_sixpaths';
+    // Baryon branches off the Kurama stages, so stand in one of them.
+    f.form = 'naruto_kcm2';
     f.awakening = 100;
     f.health = f.maxHealth * 0.2;
     f.usedForms.add('naruto_baryon');
     const res = canTransform(f, 'naruto_baryon');
     assert(!res.ok && /once per match/i.test(res.reason), `Expected once-per-match refusal, got: ${res.reason}`);
     e.destroy();
+  });
+
+  /* ------------------------------------------- the branching form graph --- */
+
+  test('every Naruto form survives the graph change', () => {
+    const expected = ['naruto_onetail', 'naruto_fourtail', 'naruto_sage',
+      'naruto_kcm1', 'naruto_kcm2', 'naruto_sixpaths', 'naruto_baryon'];
+    const { FIGHTERS } = FIGHTER_DATA;
+    assertEqual(FIGHTERS.naruto.transformations.length, 7, 'seven forms');
+    for (const id of expected) {
+      assert(TRANSFORMATIONS[id], `${id} still exists`);
+      assert(FIGHTERS.naruto.transformations.includes(id), `${id} is still Naruto's`);
+      assert(!FIGHTERS[id], `${id} is not a roster fighter`);
+    }
+    assertEqual(Object.keys(FIGHTERS).length, 110, 'roster is still 110');
+  });
+
+  test('the main progression runs Base to Ashura without Baryon', () => {
+    const spine = [
+      [null, 'naruto_onetail'],
+      ['naruto_onetail', 'naruto_fourtail'],
+      ['naruto_fourtail', 'naruto_sage'],
+      ['naruto_sage', 'naruto_kcm1'],
+      ['naruto_kcm1', 'naruto_kcm2'],
+      ['naruto_kcm2', 'naruto_sixpaths'],
+    ];
+    for (const [from, to] of spine) {
+      const opts = from === null
+        ? nextFormOptions({ form: null, data: FIGHTER_DATA.FIGHTERS.naruto })
+        : (TRANSFORMATIONS[from].nextForms || []);
+      assert(opts.includes(to), `${from || 'base'} leads to ${to} (got ${opts.join(', ')})`);
+    }
+    // Ashura must be reachable without ever taking Baryon.
+    const toAshura = TRANSFORMATIONS.naruto_sixpaths.previousForms;
+    assert(!toAshura.includes('naruto_baryon'), 'Ashura does not require Baryon');
+    assertEqual(TRANSFORMATIONS.naruto_sixpaths.nextForms.length, 0,
+      'Ashura ends the conventional chain');
+  });
+
+  test('Baryon is an optional branch off the Kurama stages', () => {
+    const b = TRANSFORMATIONS.naruto_baryon;
+    assertEqual(b.previousForms.sort().join(','), 'naruto_kcm1,naruto_kcm2',
+      'it hangs off both Kurama forms');
+    assert(TRANSFORMATIONS.naruto_kcm1.nextForms.includes('naruto_baryon'), 'KCM offers it');
+    assert(TRANSFORMATIONS.naruto_kcm2.nextForms.includes('naruto_baryon'), 'Bijuu offers it');
+    // High risk, and it reverts rather than stranding the fighter.
+    assert(b.activationRequirement.oncePerMatch, 'once per match');
+    assert(b.healthDrain > 0, 'it drains health');
+    assert(Number.isFinite(b.duration) && b.duration > 0, 'it has a finite duration');
+    assert(!b.permanent, 'and it is not permanent');
+  });
+
+  test('one legal form transforms directly, several offer a choice', () => {
+    const e = makeEngine();
+    advance(e, 2);
+    const f = e.player;
+    f.ignoreUnlocks = true;
+    f.awakening = 100;
+    f.chakra = 100;
+
+    // From Sage there is exactly one way forward.
+    f.form = 'naruto_sage';
+    f.health = f.maxHealth;
+    assertEqual(legalNextForms(f).length, 1, 'Sage has a single destination');
+
+    // From KCM, with the health that Baryon demands, there are two.
+    f.form = 'naruto_kcm1';
+    f.health = f.maxHealth * 0.2;
+    const branched = legalNextForms(f).map((o) => o.id).sort();
+    assertEqual(branched.join(','), 'naruto_baryon,naruto_kcm2', 'KCM branches');
+
+    // Healthy, Baryon's own requirement excludes it and the branch collapses.
+    f.health = f.maxHealth;
+    assertEqual(legalNextForms(f).map((o) => o.id).join(','), 'naruto_kcm2',
+      'Baryon is not offered at full health');
+    e.destroy();
+  });
+
+  test('a locked form cannot be activated', () => {
+    const e = makeEngine();
+    advance(e, 2);
+    const f = e.player;
+    f.ignoreUnlocks = false;
+    f.awakening = 100;
+    f.chakra = 100;
+    f.health = f.maxHealth * 0.2;
+    f.form = 'naruto_kcm2';
+    // Baryon is gated behind story progress on a fresh save.
+    const res = canTransform(f, 'naruto_baryon');
+    assert(!res.ok, `a locked form is refused (got: ${res.reason})`);
+    e.destroy();
+  });
+
+  test('transforming preserves the fighter, the match and the round', () => {
+    const e = makeEngine();
+    advance(e, 2);
+    const f = e.player;
+    f.ignoreUnlocks = true;
+    f.form = 'naruto_kcm1';
+    f.awakening = 100;
+    f.chakra = 100;
+    const before = {
+      x: f.x, facing: f.facing, id: f.id, round: e.round,
+      fighters: e.fighters.length, hpFrac: f.health / f.maxHealth,
+    };
+    assert(e.requestTransform(f, 'naruto_kcm2'), 'the transform was accepted');
+    assertEqual(f.form, 'naruto_kcm2', 'the form changed');
+    assertEqual(f.x, before.x, 'position held');
+    assertEqual(f.facing, before.facing, 'facing held');
+    assertEqual(f.id, before.id, 'it is the same fighter object');
+    assertEqual(e.round, before.round, 'the round did not restart');
+    assertEqual(e.fighters.length, before.fighters, 'no third fighter appeared');
+    assertEqual(f.health / f.maxHealth, before.hpFrac, 'health fraction held');
+    e.destroy();
+  });
+
+  test('the AI picks a branch by score, not by declaration order', () => {
+    const e = makeEngine();
+    advance(e, 2);
+    const ai = new AI.AIController(e.enemy, 'hard');
+    const me = e.player;
+    me.ignoreUnlocks = true;
+    me.form = 'naruto_kcm1';
+    me.awakening = 100;
+    me.chakra = 100;
+    me.health = me.maxHealth * 0.2;
+    const options = legalNextForms(me);
+    assertAtLeast(options.length, 2, 'the branch is open');
+
+    // Opponent nearly dead: the once-per-match finisher is worth burning.
+    const finish = ai.pickForm(me, { health: 10, maxHealth: 100 }, options);
+    assertEqual(finish, 'naruto_baryon', 'it takes the finisher to close out');
+    // Opponent healthy: spending health on a long fight is not worth it.
+    const early = ai.pickForm(me, { health: 100, maxHealth: 100 }, options);
+    assertEqual(early, 'naruto_kcm2', 'it takes the safe form early');
+    e.destroy();
+  });
+
+  test('per-form kits still resolve after the graph change', () => {
+    const wired = {
+      naruto_onetail: 'naruto_chakra_claw',
+      naruto_fourtail: 'naruto_tailed_beast_bomb',
+      naruto_kcm1: 'naruto_kcm_rasenshuriken',
+      naruto_sixpaths: 'naruto_planetary_rasenshuriken',
+      naruto_baryon: 'naruto_baryon_burst',
+    };
+    for (const [form, abilityId] of Object.entries(wired)) {
+      const ids = Object.values(TRANSFORMATIONS[form].abilityOverrides || {});
+      assert(ids.includes(abilityId), `${form} still reaches ${abilityId}`);
+      assert(getAbility(abilityId), `${abilityId} still exists`);
+    }
+    assert(getAbility('naruto_sixpaths_ultimate').projectile, 'the ultimate kept its projectile');
+    assertEqual(TRANSFORMATIONS.naruto_sixpaths.ultimateOverride, 'naruto_sixpaths_ultimate',
+      'Ashura keeps its ultimate');
   });
 
   test('an ability cannot be used without enough chakra', () => {

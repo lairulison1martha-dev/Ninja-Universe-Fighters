@@ -24,7 +24,7 @@ import { GameLoop } from './combat/game-loop.js';
 import { StageRenderer } from './combat/stage-renderer.js';
 import { FighterRenderer } from './combat/fighter-renderer.js';
 import { TrainingController, DUMMY_MODES } from './combat/training-controller.js';
-import { canTransform } from './combat/transformation-system.js';
+import { canTransform, legalNextForms } from './combat/transformation-system.js';
 import { canSubstitute } from './combat/substitution-system.js';
 
 import MenuScreen from './ui/menu-screen.js';
@@ -718,9 +718,17 @@ export class Game {
       e.requestSubstitution(f);
     }
     if (st.consume('awaken')) {
-      const check = canTransform(f);
-      if (check.ok) e.requestTransform(f);
-      else { toast(check.reason); audio.play('sfx_ui_error', { volume: 0.6 }); }
+      // A branching chain can offer more than one legal destination. One
+      // option transforms straight away; several open the chooser rather than
+      // silently picking whichever was declared first.
+      const options = legalNextForms(f);
+      if (options.length > 1) openTransformChoice(e, f, options);
+      else if (options.length === 1) e.requestTransform(f, options[0].id);
+      else {
+        const check = canTransform(f);
+        toast(check.reason);
+        audio.play('sfx_ui_error', { volume: 0.6 });
+      }
     }
     // A quick tap of CHAKRA calls the assist. They come in, act and leave —
     // the player keeps control of their own fighter throughout.

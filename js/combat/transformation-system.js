@@ -16,11 +16,54 @@ import { evaluateUnlock } from '../data/unlocks.js';
  * @returns {string|null} transformation id
  */
 export function nextFormFor(fighter) {
+  const options = nextFormOptions(fighter);
+  return options.length ? options[0] : null;
+}
+
+/**
+ * Every form that follows this fighter's current one in the graph.
+ *
+ * A chain is usually a line, but a form can branch — Naruto's Baryon Mode
+ * hangs off both Kurama stages without sitting between them and Six Paths.
+ * This returns the raw outgoing edges; legality is a separate question.
+ *
+ * @returns {string[]} transformation ids, in declaration order
+ */
+export function nextFormOptions(fighter) {
   const chain = fighter.data.transformations;
-  if (!chain || chain.length === 0) return null;
-  if (!fighter.form) return chain[0];
+  if (!chain || chain.length === 0) return [];
+  if (!fighter.form) {
+    // From base, the entry points are the forms nothing else leads to.
+    const entries = chain.filter((id) => {
+      const t = TRANSFORMATIONS[id];
+      return t && (t.previousForms ? t.previousForms.length === 0 : !t.previousForm);
+    });
+    return entries.length ? entries : [chain[0]];
+  }
   const cur = TRANSFORMATIONS[fighter.form];
-  return cur?.nextForm || null;
+  if (!cur) return [];
+  if (cur.nextForms && cur.nextForms.length) return cur.nextForms.slice();
+  return cur.nextForm ? [cur.nextForm] : [];
+}
+
+/**
+ * The forms this fighter could legally transform into right now.
+ *
+ * What the Awakening button acts on: one option means transform, several mean
+ * ask. Each carries its own reason so the UI can show why a branch is greyed
+ * out rather than silently omitting it.
+ *
+ * @returns {Array<{id, form, ok, reason}>}
+ */
+export function legalNextForms(fighter, { includeBlocked = false } = {}) {
+  const out = [];
+  for (const id of nextFormOptions(fighter)) {
+    const check = canTransform(fighter, id);
+    if (check.ok || includeBlocked) {
+      out.push({ id, form: check.form, ok: check.ok, reason: check.reason });
+    }
+  }
+  return out;
 }
 
 /**
@@ -37,12 +80,18 @@ export function canTransform(fighter, formId = null) {
 
   const req = form.activationRequirement;
 
-  // Chain order: you cannot skip a stage.
-  if (req.previousForm && fighter.form !== req.previousForm) {
-    const prev = TRANSFORMATIONS[req.previousForm];
-    return { ok: false, reason: `Requires ${prev?.displayName || req.previousForm} first`, form };
+  // Chain order: you cannot skip a stage. A branching form lists several
+  // valid predecessors, and standing in any one of them is enough.
+  const prevList = (req.previousForms && req.previousForms.length)
+    ? req.previousForms
+    : (req.previousForm ? [req.previousForm] : []);
+  if (prevList.length && !prevList.includes(fighter.form)) {
+    const names = prevList
+      .map((p) => TRANSFORMATIONS[p]?.displayName || p)
+      .join(' or ');
+    return { ok: false, reason: `Requires ${names} first`, form };
   }
-  if (!req.previousForm && fighter.form) {
+  if (!prevList.length && fighter.form) {
     // Already transformed past the first stage; only the chain path is valid.
     return { ok: false, reason: 'Already transformed', form };
   }
